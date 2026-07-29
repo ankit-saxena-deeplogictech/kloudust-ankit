@@ -17,5 +17,8 @@ export const i18n = {
 "WelcomeHeading": "Kloudust - Welcome {{{user}}}",
 "WelcomeSubheading": "Click any page from the left bar or choose from below",
 
-"ActiveProject": "Active project"
+"ActiveProject": "Active project",
+
+"SearchCommands": "Search or run a command…",
+"Help": "Help"
 }

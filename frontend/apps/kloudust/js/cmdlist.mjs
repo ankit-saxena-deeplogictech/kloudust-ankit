@@ -12,6 +12,19 @@ async function fetchCommands(listFileLocation) {
     return await getCommands(listJSON, listObject);
 }
 
+/**
+ * Same as fetchCommands but also returns the list file's optional "groups"
+ * declaration (i18n-expanded) for grouped navigation rendering.
+ * @returns {commands, groups} — groups is undefined when the file has none
+ */
+async function fetchCommandsWithGroups(listFileLocation) {
+    const listJSON = await $$.requireText(listFileLocation), listObject = JSON.parse(listJSON);
+    const mustache = await $$.librouter.getMustache(), i18nObject = {i18n: listObject.i18n?.[$$.libi18n.getSessionLang()]||{}};
+    const expandedListObject = JSON.parse(mustache.render(listJSON, i18nObject));
+    const commands = await roleman.filterRoleList(expandedListObject.rolelist);
+    return {commands, groups: expandedListObject.groups};
+}
+
 async function getCommands(listJSON, listObject) {
     if (!listJSON) listJSON = JSON.stringify(listObject);
     const mustache = await $$.librouter.getMustache(), i18nObject = {i18n: listObject.i18n?.[$$.libi18n.getSessionLang()]||{}};
@@ -20,4 +33,4 @@ async function getCommands(listJSON, listObject) {
     return cmdList;
 }
 
-export const cmdlist = {fetchCommands, getCommands}
+export const cmdlist = {fetchCommands, fetchCommandsWithGroups, getCommands}

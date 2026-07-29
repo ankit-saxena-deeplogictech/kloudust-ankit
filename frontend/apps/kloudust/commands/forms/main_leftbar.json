@@ -1,79 +1,123 @@
 {
+ "groups": [
+  {
+   "id": "overview"
+  },
+  {
+   "id": "compute",
+   "label": "{{{i18n.GroupCompute}}}"
+  },
+  {
+   "id": "cloud",
+   "label": "{{{i18n.GroupManageCloud}}}"
+  },
+  {
+   "id": "networking",
+   "label": "{{{i18n.GroupNetworking}}}"
+  },
+  {
+   "id": "automation",
+   "label": "{{{i18n.GroupAutomation}}}"
+  },
+  {
+   "id": "governance",
+   "label": "{{{i18n.GroupGovernance}}}"
+  },
+  {
+   "id": "admin",
+   "label": "{{{i18n.GroupAdministration}}}",
+   "danger": true
+  }
+ ],
  "rolelist": {
   "cloudadmin": [
    {
     "id": "cloudadmin",
     "label": "{{{i18n.CloudAdmin}}}",
-    "logo": "img/cloudadmin.svg"
+    "logo": "img/cloudadmin.svg",
+    "group": "admin"
    },
    {
     "id": "automations",
     "label": "{{{i18n.Automations}}}",
-    "logo": "img/automations.svg"
+    "logo": "img/automations.svg",
+    "group": "automation"
    }
   ],
   "orgadmin": [
    {
     "id": "automations",
     "label": "{{{i18n.Automations}}}",
-    "logo": "img/automations.svg"
+    "logo": "img/automations.svg",
+    "group": "automation"
    }
   ],
   "*": [
    {
     "id": "dashboard",
     "label": "{{{i18n.Dashboard}}}",
-    "logo": "img/monitor.svg"
+    "logo": "img/monitor.svg",
+    "group": "overview"
    },
    {
     "id": "create",
     "label": "{{{i18n.Create}}}",
-    "logo": "img/plus.svg"
+    "logo": "img/plus.svg",
+    "group": "compute"
    },
    {
     "id": "manage",
     "label": "{{{i18n.Manage}}}",
-    "logo": "img/manage.svg"
+    "logo": "img/manage.svg",
+    "group": "compute"
    },
    {
     "id": "vms",
     "label": "{{{i18n.VirtualMachines}}}",
-    "logo": "img/vms.svg"
+    "logo": "img/vms.svg",
+    "group": "compute"
    },
    {
     "id": "images",
     "label": "{{{i18n.Images}}}",
-    "logo": "img/addimage.svg"
+    "logo": "img/addimage.svg",
+    "group": "cloud"
    },
    {
     "id": "vnets",
     "label": "{{{i18n.VirtualNetworks}}}",
-    "logo": "img/vnets.svg"
+    "logo": "img/vnets.svg",
+    "group": "networking"
    },
    {
     "id": "firewallrulesets",
     "label": "{{{i18n.FirewallRulesets}}}",
-    "logo": "img/managefirewall.svg"
+    "logo": "img/managefirewall.svg",
+    "group": "networking"
    },
    {
     "id": "routers",
     "label": "{{{i18n.Routers}}}",
-    "logo": "img/routers.svg"
+    "logo": "img/routers.svg",
+    "group": "networking"
    },
    {
     "id": "projects",
     "label": "{{{i18n.Projects}}}",
-    "logo": "img/projects.svg"
+    "logo": "img/projects.svg",
+    "group": "governance"
    },
    {
     "id": "cloudcommand",
     "label": "{{{i18n.CloudCommand}}}",
-    "logo": "img/cloudcommand.svg"
+    "logo": "img/cloudcommand.svg",
+    "group": "automation"
    },
    {
     "id": "alerts",
     "label": "{{{i18n.Alerts}}}",
-    "logo": "img/alerts.svg"
+    "logo": "img/alerts.svg",
+    "group": "governance"
    }
   ]
  },
@@ -82,7 +126,7 @@
    "Create": "Create",
    "Manage": "Manage",
    "Projects": "Projects",
-   "CloudAdmin": "Manage cloud",
+   "CloudAdmin": "Admin commands",
    "Automations": "Automations",
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
@@ -95,13 +139,19 @@
    "CloudFunctions": "Cloud functions",
    "ObjectStorage": "Object storage",
    "Dashboard": "Dashboard",
-   "Images": "Images"
+   "Images": "Images",
+   "GroupCompute": "Compute",
+   "GroupManageCloud": "Manage cloud",
+   "GroupNetworking": "Networking",
+   "GroupAutomation": "Automation",
+   "GroupGovernance": "Governance",
+   "GroupAdministration": "Administration"
   },
   "hi": {
    "Create": "Create",
    "Manage": "Manage",
    "Projects": "Projects",
-   "CloudAdmin": "Manage cloud",
+   "CloudAdmin": "Admin commands",
    "Automations": "Automations",
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
@@ -111,13 +161,19 @@
    "CloudCommand": "Run cloud command",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
-   "Images": "Images"
+   "Images": "Images",
+   "GroupCompute": "Compute",
+   "GroupManageCloud": "Manage cloud",
+   "GroupNetworking": "Networking",
+   "GroupAutomation": "Automation",
+   "GroupGovernance": "Governance",
+   "GroupAdministration": "Administration"
   },
   "ja": {
    "Create": "Create",
    "Manage": "Manage",
    "Projects": "Projects",
-   "CloudAdmin": "Manage cloud",
+   "CloudAdmin": "Admin commands",
    "Automations": "Automations",
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
@@ -127,13 +183,19 @@
    "CloudCommand": "Run cloud command",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
-   "Images": "Images"
+   "Images": "Images",
+   "GroupCompute": "Compute",
+   "GroupManageCloud": "Manage cloud",
+   "GroupNetworking": "Networking",
+   "GroupAutomation": "Automation",
+   "GroupGovernance": "Governance",
+   "GroupAdministration": "Administration"
   },
   "zh": {
    "Create": "Create",
    "Manage": "Manage",
    "Projects": "Projects",
-   "CloudAdmin": "Manage cloud",
+   "CloudAdmin": "Admin commands",
    "Automations": "Automations",
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
@@ -143,7 +205,13 @@
    "CloudCommand": "Run cloud command",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
-   "Images": "Images"
+   "Images": "Images",
+   "GroupCompute": "Compute",
+   "GroupManageCloud": "Manage cloud",
+   "GroupNetworking": "Networking",
+   "GroupAutomation": "Automation",
+   "GroupGovernance": "Governance",
+   "GroupAdministration": "Administration"
   }
  }
 }
