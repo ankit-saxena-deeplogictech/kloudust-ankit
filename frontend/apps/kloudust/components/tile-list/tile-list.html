@@ -41,6 +41,7 @@ div#tiletop {
 
 <div id="tilebody">
 
+{{^embedded}}
 <div id="tiletop">
     <div>{{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}</div>
     <div id="tileclose" class="iconbtn" role="button" tabindex="0" aria-label="Close"
@@ -48,6 +49,7 @@ div#tiletop {
         <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </div>
 </div>
+{{/embedded}}
 
 {{#tiles.length}}
 <div class="tile-grid">

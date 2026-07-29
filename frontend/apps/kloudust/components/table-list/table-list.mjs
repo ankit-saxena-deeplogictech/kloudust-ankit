@@ -14,15 +14,18 @@
  *
  * Declarative rendering keys (all optional, no CSS allowed in tabledefs):
  *  - columns: [{key, type: "main"|"mono"|"muted"|"badge", badgemap: {value: variant, "*": fallback},
- *              priority: 2|3}] — replaces plain keys-driven cells with typed cells.
- *              priority feeds responsive column hiding (data-priority).
- *  - searchbar: true — renders a client-side filter toolbar.
- *  - emptystate: {title, message} — shown when the table has no rows.
- *  - popupform: {rolelist} — row actions, rendered as a native menu on row
- *              click (role filtered; each entry opens its command).
- *  - clickrow_command: "<command id>" — row click runs clickrow_javascript
- *              (typically pinning the row into APP_CONSTANTS.ENV) and then
- *              opens the given command (e.g. a detail page).
+ *              priority: 2|3}] — typed cells; priority feeds responsive hiding.
+ *  - searchbar: true — client-side text filter across the row.
+ *  - filterkey: "<column>" — chips built from that column's distinct values.
+ *  - pagesize: <n> — client-side pagination.
+ *  - selectable: true — checkbox column, select-all and the bulk action bar.
+ *  - bulkactions: [{label, command, args: [{key|const}], danger, confirm}] —
+ *              runs command once per selected row via cmdmanager.runCloudCommand.
+ *              Destructive ones require a typed acknowledgement first.
+ *  - emptystate: {title, message}
+ *  - popupform: {rolelist} — row actions as a native menu on row click.
+ *  - clickrow_command: "<id>" — row click opens that command (detail pages).
+ *  - embedded: true — skip the page heading (rendering inside a tab).
  *
  * clickrow_javascript runs on every row click in all modes. Raw HTML/CSS
  * injection (onclickrow_html, bottom_bar_html, style) is not supported —
@@ -32,13 +35,29 @@
  * License: See enclosed LICENSE file.
  */
 
-const COMPONENT_PATH = $$.libutil.getModulePath(import.meta);
+const COMPONENT_PATH = $$.libutil.getModulePath(import.meta), PAGER_MAX_BUTTONS = 7;
 
 const i18n = {
-    "en": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."},
-    "hi": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."},
-    "ja": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."},
-    "zh": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."}
+    "en": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
+        TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
+        TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
+        TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."},
+    "hi": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
+        TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
+        TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
+        TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."},
+    "ja": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
+        TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
+        TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
+        TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."},
+    "zh": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
+        TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
+        TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
+        TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."}
 }
 
 async function elementConnected(host) {
@@ -50,8 +69,19 @@ async function elementConnected(host) {
     tableObject.emptystate = {
         title: tableObject.emptystate?.title || await $$.libi18n.get("TLNoDataTitle"),
         message: tableObject.emptystate?.message || await $$.libi18n.get("TLNoDataMessage")};
+    tableObject.i18nlabels = {
+        all: await $$.libi18n.get("TLAll"), selected: await $$.libi18n.get("TLSelected"),
+        clear: await $$.libi18n.get("TLClear"), showing: await $$.libi18n.get("TLShowing"),
+        of: await $$.libi18n.get("TLOf"), prev: await $$.libi18n.get("TLPrev"), next: await $$.libi18n.get("TLNext"),
+        confirmtitle: await $$.libi18n.get("TLConfirmTitle"), confirmack: await $$.libi18n.get("TLConfirmAck"),
+        confirmgo: await $$.libi18n.get("TLConfirmGo"), cancel: await $$.libi18n.get("TLCancel"),
+        nomatch: await $$.libi18n.get("TLNoMatch")};
+    if (tableObject.bulkactions) tableObject.bulkactions.forEach((action, index) => action.index = index);
+    tableObject._view = {search: "", filter: "*", page: 1};
     table_list.setDataByHost(host, {...tableObject, ...tableData});
 }
+
+async function elementRendered(host) {_applyView(table_list.getShadowRootByHost(host));}
 
 async function close(element) {
     const onclose = await table_list.getAttrValue(table_list.getHostElement(element), "onclose");
@@ -65,14 +95,182 @@ async function hidePopup(event) {
     divOnclick.classList.remove("rowmenu-holder"); divOnclick.style.left = ""; divOnclick.style.top = "";
 }
 
+/* ------------------------------------------------------- view: search/filter/page */
+
 function searchTable(event) {
-    const shadowRoot = table_list.getShadowRootByContainedElement(event.target);
-    const filter = event.target.value.trim().toLowerCase();
-    for (const tr of shadowRoot.querySelectorAll("tbody tr"))
-        tr.style.display = (!filter || tr.textContent.toLowerCase().includes(filter)) ? "" : "none";
+    const host = table_list.getHostElement(event.target), data = table_list.getDataByHost(host);
+    data._view.search = event.target.value.trim().toLowerCase(); data._view.page = 1;
+    _applyView(table_list.getShadowRootByContainedElement(event.target));
 }
 
+function filterTable(element, value) {
+    const host = table_list.getHostElement(element), data = table_list.getDataByHost(host);
+    data._view.filter = value; data._view.page = 1;
+    const shadowRoot = table_list.getShadowRootByHost(host);
+    for (const chip of shadowRoot.querySelectorAll("div#tablefilters button.chip"))
+        chip.setAttribute("aria-pressed", String(chip.dataset.value == value));
+    _applyView(shadowRoot);
+}
+
+function gotoPage(element, page) {
+    const host = table_list.getHostElement(element), data = table_list.getDataByHost(host);
+    data._view.page = page; _applyView(table_list.getShadowRootByHost(host));
+}
+
+/** Single source of truth for what is on screen: text search, then chip
+ *  filter, then pagination over whatever survived. */
+function _applyView(shadowRoot) {
+    if (!shadowRoot) return;
+    const host = shadowRoot.host, data = table_list.getDataByHost(host); if (!data?._view) return;
+    const {search, filter} = data._view, pagesize = parseInt(data.pagesize)||0;
+    const allRows = [...shadowRoot.querySelectorAll("tbody tr")];
+
+    const matching = allRows.filter(row => {
+        const matchesSearch = !search || row.textContent.toLowerCase().includes(search);
+        const matchesFilter = filter == "*" || (row.dataset.filter||"") == filter;
+        return matchesSearch && matchesFilter;
+    });
+
+    const pages = pagesize ? Math.max(Math.ceil(matching.length/pagesize), 1) : 1;
+    if (data._view.page > pages) data._view.page = pages;
+    const page = data._view.page, from = pagesize ? (page-1)*pagesize : 0,
+        to = pagesize ? from+pagesize : matching.length;
+
+    for (const row of allRows) row.classList.add("hide");
+    for (const row of matching.slice(from, to)) row.classList.remove("hide");
+
+    const noMatch = shadowRoot.querySelector("div#tablenomatch");
+    if (noMatch) noMatch.classList.toggle("hide", matching.length > 0 || allRows.length == 0);
+
+    _renderPager(shadowRoot, data, matching.length, page, pages, from, to);
+    _refreshSelectionState(shadowRoot);
+}
+
+function _renderPager(shadowRoot, data, total, page, pages, from, to) {
+    const foot = shadowRoot.querySelector("div#tablefoot"); if (!foot) return;
+    if (!parseInt(data.pagesize) || total == 0) {foot.classList.add("hide"); return;}
+    foot.classList.remove("hide");
+
+    const labels = data.i18nlabels;
+    shadowRoot.querySelector("span#tablecount").textContent =
+        `${labels.showing} ${Math.min(from+1, total)}–${Math.min(to, total)} ${labels.of} ${total}`;
+
+    let start = 1, end = pages;
+    if (pages > PAGER_MAX_BUTTONS) {
+        start = Math.max(1, page - Math.floor(PAGER_MAX_BUTTONS/2));
+        end = Math.min(pages, start + PAGER_MAX_BUTTONS - 1);
+        start = Math.max(1, end - PAGER_MAX_BUTTONS + 1);
+    }
+    let html = `<button ${page<=1?"disabled":""} aria-label="${labels.prev}"
+        onclick="monkshu_env.components['table-list'].gotoPage(this, ${page-1})">‹</button>`;
+    for (let index = start; index <= end; index++) html += `<button ${index==page?'aria-current="true"':""}
+        onclick="monkshu_env.components['table-list'].gotoPage(this, ${index})">${index}</button>`;
+    html += `<button ${page>=pages?"disabled":""} aria-label="${labels.next}"
+        onclick="monkshu_env.components['table-list'].gotoPage(this, ${page+1})">›</button>`;
+    shadowRoot.querySelector("div#tablepager").innerHTML = html;
+}
+
+/* ------------------------------------------------------------------ selection */
+
+function rowSelected(element) {_refreshSelectionState(table_list.getShadowRootByContainedElement(element));}
+
+function selectAll(element) {
+    const shadowRoot = table_list.getShadowRootByContainedElement(element);
+    // Select-all applies to what is actually on screen, never to hidden rows.
+    for (const row of shadowRoot.querySelectorAll("tbody tr:not(.hide)")) {
+        const box = row.querySelector("input[data-select-row]"); if (box) box.checked = element.checked;
+    }
+    _refreshSelectionState(shadowRoot);
+}
+
+function clearSelection(element) {
+    const shadowRoot = table_list.getShadowRootByContainedElement(element);
+    for (const box of shadowRoot.querySelectorAll("input[data-select-row]")) box.checked = false;
+    const selectAllBox = shadowRoot.querySelector("input#tableselectall"); if (selectAllBox) selectAllBox.checked = false;
+    _refreshSelectionState(shadowRoot);
+}
+
+function _refreshSelectionState(shadowRoot) {
+    const bulkbar = shadowRoot.querySelector("div#tablebulkbar"); if (!bulkbar) return;
+    const selected = _selectedRows(shadowRoot);
+    bulkbar.classList.toggle("active", selected.length > 0);
+    const count = shadowRoot.querySelector("span#tablebulkcount");
+    if (count) count.textContent = `${selected.length} ${table_list.getDataByHost(shadowRoot.host).i18nlabels.selected}`;
+
+    const visible = [...shadowRoot.querySelectorAll("tbody tr:not(.hide) input[data-select-row]")];
+    const selectAllBox = shadowRoot.querySelector("input#tableselectall");
+    if (selectAllBox) selectAllBox.checked = visible.length > 0 && visible.every(box => box.checked);
+}
+
+const _selectedRows = shadowRoot => [...shadowRoot.querySelectorAll("input[data-select-row]:checked")]
+    .map(box => {try {return JSON.parse($$.libutil.base64ToString(box.closest("tr").dataset.rowdata));} catch (err) {return null;}})
+    .filter(row => row);
+
+/* ---------------------------------------------------------------- bulk actions */
+
+function bulkAction(element, actionIndex) {
+    const host = table_list.getHostElement(element), shadowRoot = table_list.getShadowRootByHost(host);
+    const data = table_list.getDataByHost(host), action = (data.bulkactions||[])[actionIndex];
+    const selected = _selectedRows(shadowRoot); if (!action || !selected.length) return;
+
+    if (action.danger) {_openBulkConfirm(shadowRoot, data, action, selected); return;}
+    _executeBulk(shadowRoot, action, selected);
+}
+
+function _openBulkConfirm(shadowRoot, data, action, selected) {
+    const overlay = shadowRoot.querySelector("div#tableconfirm"); if (!overlay) return;
+    shadowRoot.querySelector("div#tableconfirmwhat").textContent =
+        (action.confirm || `${action.label} will run on ${selected.length} row(s). This cannot be undone.`)
+            .replace("{count}", selected.length);
+    shadowRoot.querySelector("div#tableconfirmlist").textContent =
+        selected.map(row => row[action.args?.[0]?.key] || row.name_raw || row.name || "").filter(name => name).join("\n");
+    const ack = shadowRoot.querySelector("input#tableconfirmack"), go = shadowRoot.querySelector("button#tableconfirmgo");
+    ack.checked = false; go.disabled = true;
+    data._pendingbulk = {action, selected};
+    overlay.classList.add("open");
+}
+
+function confirmAckChanged(element) {
+    const shadowRoot = table_list.getShadowRootByContainedElement(element);
+    shadowRoot.querySelector("button#tableconfirmgo").disabled = !element.checked;
+}
+
+function closeBulkConfirm(element) {
+    table_list.getShadowRootByContainedElement(element).querySelector("div#tableconfirm")?.classList.remove("open");
+}
+
+function confirmBulk(element) {
+    const host = table_list.getHostElement(element), shadowRoot = table_list.getShadowRootByHost(host);
+    const data = table_list.getDataByHost(host), pending = data._pendingbulk;
+    closeBulkConfirm(element); delete data._pendingbulk;
+    if (pending) _executeBulk(shadowRoot, pending.action, pending.selected);
+}
+
+/** Runs the action's command once per selected row, in order. Output goes to
+ *  the alerts stack through cmdmanager, exactly as a form submit would. */
+async function _executeBulk(shadowRoot, action, selected) {
+    const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
+    const bulkbar = shadowRoot.querySelector("div#tablebulkbar");
+    bulkbar?.classList.add("running");
+
+    for (const row of selected) {
+        const params = [], values = {};
+        (action.args||[]).forEach((arg, index) => {
+            const name = `arg${index}`; params.push(name);
+            values[name] = arg.const !== undefined ? arg.const : (row[arg.key] !== undefined ? row[arg.key] : "");
+        });
+        try {await cmdmanager.runCloudCommand(action.command, params, values);}
+        catch (err) {LOG.error(`Bulk ${action.command} failed: ${err}`);}
+    }
+
+    bulkbar?.classList.remove("running");
+    cmdmanager.reloadForm();    // re-read the table so the result is visible
+}
+
+/* --------------------------------------------------------------- row clicking */
+
 async function rowClicked(event, rowdataJSON) {
+    if (event.target.closest("td.col-check")) return;   // selecting is not opening
     const rowDataJSON = rowdataJSON?$$.libutil.base64ToString(rowdataJSON):undefined, rowData = JSON.parse(rowDataJSON||"{}");
     const data = table_list.getDataByContainedElement(event.target);
     await _runRowOnClickJavascript(event, rowData);
@@ -115,6 +313,8 @@ async function _runRowOnClickJavascript(event, rowData) {
     await (new AsyncFunction(onclickjs))(rowData, tableObject);
 }
 
+/* -------------------------------------------------------------------- loading */
+
 async function _runOnLoadJavascript(tabledef) {
     let loadResult;
     if (!tabledef.load_javascript) loadResult = tabledef.table;
@@ -144,12 +344,26 @@ async function _runOnLoadJavascript(tabledef) {
             } else cell.tdclass = col.type == "main" ? "cell-main" : col.type == "mono" ? "mono" : col.type == "muted" ? "muted" : "";
             cells.push(cell);
         }
-        rows.push({cells, rowdata_json_base64: $$.libutil.stringToBase64(JSON.stringify(row))});
+        rows.push({cells, filtervalue: tabledef.filterkey ? String(row[tabledef.filterkey]||"") : "",
+            rowdata_json_base64: $$.libutil.stringToBase64(JSON.stringify(row))});
     }
-    return {headers, rows};
+
+    // Filter chips are derived from the data, so they can never offer a value
+    // that no row has.
+    let filterchips;
+    if (tabledef.filterkey) {
+        const values = [...new Set((loadResult.table||[])
+            .map(row => String(row[tabledef.filterkey]||"").trim()).filter(value => value))].sort();
+        if (values.length > 1) filterchips = [{value: "*", label: await $$.libi18n.get("TLAll"), active: true},
+            ...values.map(value => ({value, label: value}))];
+    }
+
+    return {headers, rows, filterchips};
 }
 
 const _getArrayAsJoinedString = (array, skipEOLs) => array?(Array.isArray(array)?array:[array]).join(skipEOLs?"":"\n"):"";
 
-export const table_list = {trueWebComponentMode: true, elementConnected, close, rowClicked, hidePopup, searchTable};
+export const table_list = {trueWebComponentMode: true, elementConnected, elementRendered, close, rowClicked,
+    hidePopup, searchTable, filterTable, gotoPage, rowSelected, selectAll, clearSelection, bulkAction,
+    confirmAckChanged, closeBulkConfirm, confirmBulk};
 $$.libmonkshu_component.register("table-list", `${COMPONENT_PATH}/table-list.html`, table_list);

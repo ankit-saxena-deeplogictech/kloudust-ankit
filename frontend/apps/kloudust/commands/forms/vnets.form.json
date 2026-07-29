@@ -1,5 +1,5 @@
 {
- "id": "vms",
+ "id": "vnets",
  "command": "tablelist",
  "type": "table_display",
  "i18n": {

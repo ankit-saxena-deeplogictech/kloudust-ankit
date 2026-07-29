@@ -5,7 +5,8 @@
  * Styling contract: design tokens inherit from the document (css/tokens.css)
  * through the shadow boundary; shared classes come from css/components.css.
  * Tabledefs are purely declarative — there is deliberately NO style
- * passthrough; use columns/badgemap/searchbar/emptystate keys instead.
+ * passthrough; use columns/badgemap/searchbar/filterkey/pagesize/selectable/
+ * bulkactions/emptystate keys instead.
  *
  * Backward compatibility: ids div#onclick_html and div#hider are queried by
  * table-list.mjs; div#tablebody, div#tablemain and div#tableclose are kept as
@@ -46,6 +47,9 @@ div#tabletop {
 div#tablemain {
     width: 100%;
 }
+
+/* Bulk bar dims while its commands are running */
+div#tablebulkbar.running { opacity: 0.6; pointer-events: none; }
 
 /* --- Native row-actions menu (popupform) ----------------------------------- */
 div#hider {
@@ -110,10 +114,12 @@ td[data-copied="true"]::after {
 }
 
 .dt tbody tr { cursor: pointer; }
+.dt td.col-check, .dt th.col-check { cursor: default; }
 </style>
 
 <div id="tablebody">
 
+{{^embedded}}
 <div id="tabletop">
     <div>{{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}</div>
     <div id="tableclose" class="iconbtn" role="button" tabindex="0" aria-label="Close"
@@ -121,6 +127,7 @@ td[data-copied="true"]::after {
         <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </div>
 </div>
+{{/embedded}}
 
 <div id="tablemain" class="card table-card">
 
@@ -131,14 +138,38 @@ td[data-copied="true"]::after {
         <input class="input" type="search" placeholder="Search…" aria-label="Search table"
             oninput="monkshu_env.components['table-list'].searchTable(event)">
     </div>
+    <div class="cluster" id="tablefilters" role="group" aria-label="Filter">
+    {{#filterchips}}
+        <button class="chip" data-value="{{value}}" aria-pressed="{{#active}}true{{/active}}{{^active}}false{{/active}}"
+            onclick="monkshu_env.components['table-list'].filterTable(this, '{{value}}')">{{label}}</button>
+    {{/filterchips}}
+    </div>
 </div>
 {{/searchbar}}
+
+{{#selectable}}
+<div class="bulkbar" id="tablebulkbar" role="toolbar" aria-label="Bulk actions">
+    <span class="count" id="tablebulkcount">0</span>
+    {{#bulkactions}}
+    <button class="btn btn-sm {{#danger}}btn-danger-outline{{/danger}}{{^danger}}btn-secondary{{/danger}}"
+        onclick="monkshu_env.components['table-list'].bulkAction(this, {{index}})">{{label}}</button>
+    {{/bulkactions}}
+    <button class="btn btn-sm btn-ghost"
+        onclick="monkshu_env.components['table-list'].clearSelection(this)">{{i18nlabels.clear}}</button>
+</div>
+{{/selectable}}
 
 {{#rows.length}}
 <div class="table-scroll">
 <table class="dt">
     <thead>
     <tr>
+    {{#selectable}}
+    <th class="col-check">
+        <input type="checkbox" id="tableselectall" aria-label="Select all rows on this page"
+            onclick="monkshu_env.components['table-list'].selectAll(this)">
+    </th>
+    {{/selectable}}
     {{#headers}}<th {{#priority}}data-priority="{{.}}"{{/priority}}>{{label}}</th>{{/headers}}
     </tr>
     </thead>
@@ -153,8 +184,15 @@ td[data-copied="true"]::after {
     " {{/enable_copy}}>
 
     {{#rows}}
-    <tr {{#enable_copy}}onclick="if (!event.shiftKey) {monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')}"{{/enable_copy}}
+    <tr data-rowdata="{{{rowdata_json_base64}}}" data-filter="{{filtervalue}}"
+        {{#enable_copy}}onclick="if (!event.shiftKey) {monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')}"{{/enable_copy}}
         {{^enable_copy}}onclick="monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')"{{/enable_copy}}>
+    {{#selectable}}
+    <td class="col-check">
+        <input type="checkbox" data-select-row aria-label="Select row"
+            onclick="event.stopPropagation(); monkshu_env.components['table-list'].rowSelected(this)">
+    </td>
+    {{/selectable}}
     {{#cells}}
     <td {{#priority}}data-priority="{{.}}"{{/priority}} {{#tdclass}}class="{{.}}"{{/tdclass}}>
         {{#isbadge}}<span class="badge {{badgeclass}}"><span class="dot"></span>{{value}}</span>{{/isbadge}}{{^isbadge}}{{value}}{{/isbadge}}
@@ -164,6 +202,16 @@ td[data-copied="true"]::after {
     {{/rows}}
     </tbody>
 </table>
+</div>
+
+<div class="empty hide" id="tablenomatch">
+    <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <h3>{{i18nlabels.nomatch}}</h3>
+</div>
+
+<div class="table-foot hide" id="tablefoot">
+    <span id="tablecount"></span>
+    <div class="pager" id="tablepager"></div>
 </div>
 {{/rows.length}}
 
@@ -179,5 +227,37 @@ td[data-copied="true"]::after {
 
 <div id="hider" onclick="monkshu_env.components['table-list'].hidePopup(event)"></div>
 <div id="onclick_html"></div>
+
+{{#selectable}}
+<div class="overlay" id="tableconfirm" role="dialog" aria-modal="true" aria-label="{{i18nlabels.confirmtitle}}">
+    <div class="modal danger">
+        <div class="modal-head">
+            <h2>{{i18nlabels.confirmtitle}}</h2>
+            <span class="iconbtn" role="button" tabindex="0" aria-label="Close"
+                onclick="monkshu_env.components['table-list'].closeBulkConfirm(this)">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </span>
+        </div>
+        <div class="modal-body">
+            <div class="banner banner-danger" style="margin-bottom:var(--sp-4);">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4m0 3v.01"/></svg>
+                <div id="tableconfirmwhat"></div>
+            </div>
+            <div class="console" id="tableconfirmlist" style="margin-bottom:var(--sp-4); white-space:pre-wrap;"></div>
+            <label class="checkbox mb-0">
+                <input type="checkbox" id="tableconfirmack"
+                    onchange="monkshu_env.components['table-list'].confirmAckChanged(this)">
+                <span>{{i18nlabels.confirmack}}</span>
+            </label>
+        </div>
+        <div class="modal-foot">
+            <span class="btn btn-secondary" role="button" tabindex="0"
+                onclick="monkshu_env.components['table-list'].closeBulkConfirm(this)">{{i18nlabels.cancel}}</span>
+            <button class="btn btn-danger" id="tableconfirmgo" disabled
+                onclick="monkshu_env.components['table-list'].confirmBulk(this)">{{i18nlabels.confirmgo}}</button>
+        </div>
+    </div>
+</div>
+{{/selectable}}
 
 </div>

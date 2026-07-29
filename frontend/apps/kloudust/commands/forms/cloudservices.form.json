@@ -1,5 +1,5 @@
 {
- "id": "vms",
+ "id": "cloudservices",
  "command": "tablelist",
  "type": "table_display",
  "i18n": {

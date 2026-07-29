@@ -1,0 +1,83 @@
+{
+ "id": "deletehost",
+ "command": "deleteHost",
+ "type": "kloudust_cmdline",
+ "kloudust_cmdline_params": [
+  "hostname",
+  "cleanhost"
+ ],
+ "title": "{{{i18n.DeleteHostTitle}}}",
+ "i18n": {
+  "en": {
+   "DeleteHostTitle": "Delete host",
+   "DeleteHostDescription": "Remove this host from the cloud. Virtual machines placed on it become unreachable. This cannot be undone.",
+   "HostName": "Host name",
+   "CleanHost": "Also wipe Kloudust from the host machine?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteHostSubmitLabel": "Delete host"
+  },
+  "hi": {
+   "DeleteHostTitle": "Delete host",
+   "DeleteHostDescription": "Remove this host from the cloud. Virtual machines placed on it become unreachable. This cannot be undone.",
+   "HostName": "Host name",
+   "CleanHost": "Also wipe Kloudust from the host machine?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteHostSubmitLabel": "Delete host"
+  },
+  "ja": {
+   "DeleteHostTitle": "Delete host",
+   "DeleteHostDescription": "Remove this host from the cloud. Virtual machines placed on it become unreachable. This cannot be undone.",
+   "HostName": "Host name",
+   "CleanHost": "Also wipe Kloudust from the host machine?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteHostSubmitLabel": "Delete host"
+  },
+  "zh": {
+   "DeleteHostTitle": "Delete host",
+   "DeleteHostDescription": "Remove this host from the cloud. Virtual machines placed on it become unreachable. This cannot be undone.",
+   "HostName": "Host name",
+   "CleanHost": "Also wipe Kloudust from the host machine?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteHostSubmitLabel": "Delete host"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.DeleteHostDescription}}}",
+  "required_fields": [
+   {
+    "id": "hostname",
+    "type": "text",
+    "placeholder": "{{{i18n.HostName}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._hosts_form_data.hostname}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._hosts_form_data.hostname}}true{{/APP_CONSTANTS.ENV._hosts_form_data.hostname}}"
+   },
+   {
+    "id": "cleanhost",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.CleanHost}}}",
+    "options": [
+     {
+      "value": "",
+      "label": "{{{i18n.No}}}"
+     },
+     {
+      "value": "cleanhost",
+      "label": "{{{i18n.Yes}}}"
+     }
+    ]
+   }
+  ],
+  "submitlabel": "{{{i18n.DeleteHostSubmitLabel}}}"
+ }
+}

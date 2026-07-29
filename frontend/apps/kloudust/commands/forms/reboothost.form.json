@@ -1,0 +1,54 @@
+{
+ "id": "reboothost",
+ "command": "rebootHost",
+ "type": "kloudust_cmdline",
+ "kloudust_cmdline_params": [
+  "hostname"
+ ],
+ "title": "{{{i18n.RebootHostTitle}}}",
+ "i18n": {
+  "en": {
+   "RebootHostTitle": "Reboot host",
+   "RebootHostDescription": "Reboot this physical host. Virtual machines running on it will be interrupted.",
+   "HostName": "Host name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RebootHostSubmitLabel": "Reboot host"
+  },
+  "hi": {
+   "RebootHostTitle": "Reboot host",
+   "RebootHostDescription": "Reboot this physical host. Virtual machines running on it will be interrupted.",
+   "HostName": "Host name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RebootHostSubmitLabel": "Reboot host"
+  },
+  "ja": {
+   "RebootHostTitle": "Reboot host",
+   "RebootHostDescription": "Reboot this physical host. Virtual machines running on it will be interrupted.",
+   "HostName": "Host name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RebootHostSubmitLabel": "Reboot host"
+  },
+  "zh": {
+   "RebootHostTitle": "Reboot host",
+   "RebootHostDescription": "Reboot this physical host. Virtual machines running on it will be interrupted.",
+   "HostName": "Host name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RebootHostSubmitLabel": "Reboot host"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.RebootHostDescription}}}",
+  "required_fields": [
+   {
+    "id": "hostname",
+    "type": "text",
+    "placeholder": "{{{i18n.HostName}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._hosts_form_data.hostname}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._hosts_form_data.hostname}}true{{/APP_CONSTANTS.ENV._hosts_form_data.hostname}}"
+   }
+  ],
+  "submitlabel": "{{{i18n.RebootHostSubmitLabel}}}"
+ }
+}

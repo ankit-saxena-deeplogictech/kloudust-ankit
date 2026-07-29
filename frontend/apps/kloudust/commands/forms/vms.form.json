@@ -27,7 +27,11 @@
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
    "VMSEmptyTitle": "No virtual machines yet",
-   "VMSEmptyMessage": "Create your first virtual machine to get started."
+   "VMSEmptyMessage": "Create your first virtual machine to get started.",
+   "VMSBulkStart": "Start",
+   "VMSBulkStop": "Stop",
+   "VMSBulkDelete": "Delete",
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
   },
   "hi": {
    "VMS_name_raw": "Name",
@@ -53,7 +57,11 @@
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
    "VMSEmptyTitle": "No virtual machines yet",
-   "VMSEmptyMessage": "Create your first virtual machine to get started."
+   "VMSEmptyMessage": "Create your first virtual machine to get started.",
+   "VMSBulkStart": "Start",
+   "VMSBulkStop": "Stop",
+   "VMSBulkDelete": "Delete",
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
   },
   "ja": {
    "VMS_name_raw": "Name",
@@ -79,7 +87,11 @@
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
    "VMSEmptyTitle": "No virtual machines yet",
-   "VMSEmptyMessage": "Create your first virtual machine to get started."
+   "VMSEmptyMessage": "Create your first virtual machine to get started.",
+   "VMSBulkStart": "Start",
+   "VMSBulkStop": "Stop",
+   "VMSBulkDelete": "Delete",
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
   },
   "zh": {
    "VMS_name_raw": "Name",
@@ -106,7 +118,11 @@
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
    "VMSEmptyTitle": "No virtual machines yet",
-   "VMSEmptyMessage": "Create your first virtual machine to get started."
+   "VMSEmptyMessage": "Create your first virtual machine to get started.",
+   "VMSBulkStart": "Start",
+   "VMSBulkStop": "Stop",
+   "VMSBulkDelete": "Delete",
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
   }
  },
  "tabledef": {
@@ -177,7 +193,47 @@
   "emptystate": {
    "title": "{{{i18n.VMSEmptyTitle}}}",
    "message": "{{{i18n.VMSEmptyMessage}}}"
-  }
+  },
+  "selectable": true,
+  "filterkey": "hostname",
+  "pagesize": 25,
+  "bulkactions": [
+   {
+    "label": "{{{i18n.VMSBulkStart}}}",
+    "command": "powerOpVM",
+    "args": [
+     {
+      "key": "name_raw"
+     },
+     {
+      "const": "start"
+     }
+    ]
+   },
+   {
+    "label": "{{{i18n.VMSBulkStop}}}",
+    "command": "powerOpVM",
+    "args": [
+     {
+      "key": "name_raw"
+     },
+     {
+      "const": "stop"
+     }
+    ]
+   },
+   {
+    "label": "{{{i18n.VMSBulkDelete}}}",
+    "command": "deleteVM",
+    "args": [
+     {
+      "key": "name_raw"
+     }
+    ],
+    "danger": true,
+    "confirm": "{{{i18n.VMSBulkDeleteConfirm}}}"
+   }
+  ]
  },
  "title": "{{{i18n.VMSTitle}}}"
 }

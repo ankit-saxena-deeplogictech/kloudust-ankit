@@ -1,49 +1,64 @@
 {
-"id": "create",
-"command": "iconlist",
-"type": "frontend_module",
-
-"rolelist": {
-"*": [
-    {"id": "snapshots", "label": "{{{i18n.VirtualMachineSnapshots}}}", "logo": "img/snapshot.svg"},
-    {"id": "deletevm", "label": "{{{i18n.DeleteVirtualMachine}}}", "logo": "img/deletevm_manage.svg"},
-    {"id": "deletevnet", "label": "{{{i18n.DeleteVirtualNetwork}}}", "logo": "img/deletevnet.svg"},
-    {"id": "deletefirewallruleset", "label": "{{{i18n.DeleteFirewall}}}", "logo": "img/deletefirewall.svg"},
-    {"id": "deleterouter", "label": "{{{i18n.DeleteRouter}}}", "logo": "img/deleterouter_manage.svg"}
-]
-},
-
-"i18n": {
-"en": {
-    "VirtualMachineSnapshots": "Snapshots",
-    "DeleteVirtualMachine": "Delete virtual machine",
-    "DeleteVirtualNetwork": "Delete virtual network",
-    "DeleteFirewall": "Delete firewall ruleset",
-    "DeleteRouter": "Delete Router"
-},
-
-"hi": {
-    "VirtualMachineSnapshots": "Snapshots",
-    "DeleteVirtualMachine": "Delete virtual machine",
-    "DeleteVirtualNetwork": "Delete virtual network",
-    "DeleteFirewall": "Delete firewall ruleset",
-    "DeleteRouter": "Delete Router"
-},
-
-"ja": {
-    "VirtualMachineSnapshots": "Snapshots",
-    "DeleteVirtualMachine": "Delete virtual machine",
-    "DeleteVirtualNetwork": "Delete virtual network",
-    "DeleteFirewall": "Delete firewall ruleset",
-    "DeleteRouter": "Delete Router"
-},
-
-"zh": {
-    "VirtualMachineSnapshots": "Snapshots",
-    "DeleteVirtualMachine": "Delete virtual machine",
-    "DeleteVirtualNetwork": "Delete virtual network",
-    "DeleteFirewall": "Delete firewall ruleset",
-    "DeleteRouter": "Delete Router"
-}
-}
+ "id": "manage",
+ "command": "iconlist",
+ "type": "frontend_module",
+ "rolelist": {
+  "*": [
+   {
+    "id": "snapshots",
+    "label": "{{{i18n.VirtualMachineSnapshots}}}",
+    "logo": "img/snapshot.svg"
+   },
+   {
+    "id": "deletevm",
+    "label": "{{{i18n.DeleteVirtualMachine}}}",
+    "logo": "img/deletevm_manage.svg"
+   },
+   {
+    "id": "deletevnet",
+    "label": "{{{i18n.DeleteVirtualNetwork}}}",
+    "logo": "img/deletevnet.svg"
+   },
+   {
+    "id": "deletefirewallruleset",
+    "label": "{{{i18n.DeleteFirewall}}}",
+    "logo": "img/deletefirewall.svg"
+   },
+   {
+    "id": "deleterouter",
+    "label": "{{{i18n.DeleteRouter}}}",
+    "logo": "img/deleterouter_manage.svg"
+   }
+  ]
+ },
+ "i18n": {
+  "en": {
+   "VirtualMachineSnapshots": "Snapshots",
+   "DeleteVirtualMachine": "Delete virtual machine",
+   "DeleteVirtualNetwork": "Delete virtual network",
+   "DeleteFirewall": "Delete firewall ruleset",
+   "DeleteRouter": "Delete Router"
+  },
+  "hi": {
+   "VirtualMachineSnapshots": "Snapshots",
+   "DeleteVirtualMachine": "Delete virtual machine",
+   "DeleteVirtualNetwork": "Delete virtual network",
+   "DeleteFirewall": "Delete firewall ruleset",
+   "DeleteRouter": "Delete Router"
+  },
+  "ja": {
+   "VirtualMachineSnapshots": "Snapshots",
+   "DeleteVirtualMachine": "Delete virtual machine",
+   "DeleteVirtualNetwork": "Delete virtual network",
+   "DeleteFirewall": "Delete firewall ruleset",
+   "DeleteRouter": "Delete Router"
+  },
+  "zh": {
+   "VirtualMachineSnapshots": "Snapshots",
+   "DeleteVirtualMachine": "Delete virtual machine",
+   "DeleteVirtualNetwork": "Delete virtual network",
+   "DeleteFirewall": "Delete firewall ruleset",
+   "DeleteRouter": "Delete Router"
+  }
+ }
 }

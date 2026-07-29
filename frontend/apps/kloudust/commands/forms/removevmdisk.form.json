@@ -1,0 +1,116 @@
+{
+ "id": "removevmdisk",
+ "command": "removeVMDisk",
+ "type": "kloudust_cmdline",
+ "kloudust_cmdline_params": [
+  "vm_name",
+  "disk_name",
+  "delete_disk",
+  "restart"
+ ],
+ "title": "{{{i18n.RemoveDiskTitle}}}",
+ "i18n": {
+  "en": {
+   "RemoveDiskTitle": "Detach a disk",
+   "RemoveDiskDescription": "Detach a disk from this virtual machine. Deleting the disk destroys its data and cannot be undone.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "DeleteDisk": "Also delete the disk and its data?",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RemoveDiskSubmit": "Detach disk"
+  },
+  "hi": {
+   "RemoveDiskTitle": "Detach a disk",
+   "RemoveDiskDescription": "Detach a disk from this virtual machine. Deleting the disk destroys its data and cannot be undone.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "DeleteDisk": "Also delete the disk and its data?",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RemoveDiskSubmit": "Detach disk"
+  },
+  "ja": {
+   "RemoveDiskTitle": "Detach a disk",
+   "RemoveDiskDescription": "Detach a disk from this virtual machine. Deleting the disk destroys its data and cannot be undone.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "DeleteDisk": "Also delete the disk and its data?",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RemoveDiskSubmit": "Detach disk"
+  },
+  "zh": {
+   "RemoveDiskTitle": "Detach a disk",
+   "RemoveDiskDescription": "Detach a disk from this virtual machine. Deleting the disk destroys its data and cannot be undone.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "DeleteDisk": "Also delete the disk and its data?",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "RemoveDiskSubmit": "Detach disk"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.RemoveDiskDescription}}}",
+  "required_fields": [
+   {
+    "id": "vm_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VMName}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"
+   },
+   {
+    "id": "disk_name",
+    "type": "text",
+    "placeholder": "{{{i18n.DiskName}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "delete_disk",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.DeleteDisk}}}",
+    "options": [
+     {
+      "value": "false",
+      "label": "{{{i18n.No}}}"
+     },
+     {
+      "value": "true",
+      "label": "{{{i18n.Yes}}}"
+     }
+    ]
+   },
+   {
+    "id": "restart",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.Restart}}}",
+    "options": [
+     {
+      "value": "false",
+      "label": "{{{i18n.No}}}"
+     },
+     {
+      "value": "true",
+      "label": "{{{i18n.Yes}}}"
+     }
+    ]
+   }
+  ],
+  "submitlabel": "{{{i18n.RemoveDiskSubmit}}}"
+ }
+}

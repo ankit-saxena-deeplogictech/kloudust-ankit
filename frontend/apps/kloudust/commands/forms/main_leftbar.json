@@ -32,6 +32,18 @@
  "rolelist": {
   "cloudadmin": [
    {
+    "id": "hosts",
+    "label": "{{{i18n.Hosts}}}",
+    "logo": "img/addhost.svg",
+    "group": "cloud"
+   },
+   {
+    "id": "livemigrate",
+    "label": "{{{i18n.LiveMigration}}}",
+    "logo": "img/monitor.svg",
+    "group": "cloud"
+   },
+   {
     "id": "cloudadmin",
     "label": "{{{i18n.CloudAdmin}}}",
     "logo": "img/cloudadmin.svg",
@@ -84,21 +96,9 @@
     "group": "cloud"
    },
    {
-    "id": "vnets",
-    "label": "{{{i18n.VirtualNetworks}}}",
+    "id": "networking",
+    "label": "{{{i18n.Networking}}}",
     "logo": "img/vnets.svg",
-    "group": "networking"
-   },
-   {
-    "id": "firewallrulesets",
-    "label": "{{{i18n.FirewallRulesets}}}",
-    "logo": "img/managefirewall.svg",
-    "group": "networking"
-   },
-   {
-    "id": "routers",
-    "label": "{{{i18n.Routers}}}",
-    "logo": "img/routers.svg",
     "group": "networking"
    },
    {
@@ -145,7 +145,10 @@
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
    "GroupAdministration": "Administration",
-   "CloudShell": "Cloud shell"
+   "CloudShell": "Cloud shell",
+   "Networking": "Networking",
+   "Hosts": "Hosts",
+   "LiveMigration": "Live migration"
   },
   "hi": {
    "Create": "Create",
@@ -167,7 +170,10 @@
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
    "GroupAdministration": "Administration",
-   "CloudShell": "Cloud shell"
+   "CloudShell": "Cloud shell",
+   "Networking": "Networking",
+   "Hosts": "Hosts",
+   "LiveMigration": "Live migration"
   },
   "ja": {
    "Create": "Create",
@@ -189,7 +195,10 @@
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
    "GroupAdministration": "Administration",
-   "CloudShell": "Cloud shell"
+   "CloudShell": "Cloud shell",
+   "Networking": "Networking",
+   "Hosts": "Hosts",
+   "LiveMigration": "Live migration"
   },
   "zh": {
    "Create": "Create",
@@ -211,7 +220,10 @@
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
    "GroupAdministration": "Administration",
-   "CloudShell": "Cloud shell"
+   "CloudShell": "Cloud shell",
+   "Networking": "Networking",
+   "Hosts": "Hosts",
+   "LiveMigration": "Live migration"
   }
  }
 }

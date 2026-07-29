@@ -1,0 +1,155 @@
+{
+ "id": "hosts",
+ "command": "tablelist",
+ "type": "table_display",
+ "title": "{{{i18n.HostsTitle}}}",
+ "i18n": {
+  "en": {
+   "HOSTS_hostname": "Name",
+   "HOSTS_hostaddress": "Address",
+   "HOSTS_type": "OS",
+   "HOSTS_cores": "Cores",
+   "HOSTS_memory_display": "Memory",
+   "HOSTS_disk_display": "Disk",
+   "HOSTS_processorarchitecture": "Arch",
+   "HOSTS_vmcount": "VMs",
+   "HostsTitle": "Hosts",
+   "HostsView": "View details",
+   "HostsReboot": "Reboot",
+   "HostsDelete": "Delete",
+   "HostsEmptyTitle": "No hosts attached yet",
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+  },
+  "hi": {
+   "HOSTS_hostname": "Name",
+   "HOSTS_hostaddress": "Address",
+   "HOSTS_type": "OS",
+   "HOSTS_cores": "Cores",
+   "HOSTS_memory_display": "Memory",
+   "HOSTS_disk_display": "Disk",
+   "HOSTS_processorarchitecture": "Arch",
+   "HOSTS_vmcount": "VMs",
+   "HostsTitle": "Hosts",
+   "HostsView": "View details",
+   "HostsReboot": "Reboot",
+   "HostsDelete": "Delete",
+   "HostsEmptyTitle": "No hosts attached yet",
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+  },
+  "ja": {
+   "HOSTS_hostname": "Name",
+   "HOSTS_hostaddress": "Address",
+   "HOSTS_type": "OS",
+   "HOSTS_cores": "Cores",
+   "HOSTS_memory_display": "Memory",
+   "HOSTS_disk_display": "Disk",
+   "HOSTS_processorarchitecture": "Arch",
+   "HOSTS_vmcount": "VMs",
+   "HostsTitle": "Hosts",
+   "HostsView": "View details",
+   "HostsReboot": "Reboot",
+   "HostsDelete": "Delete",
+   "HostsEmptyTitle": "No hosts attached yet",
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+  },
+  "zh": {
+   "HOSTS_hostname": "Name",
+   "HOSTS_hostaddress": "Address",
+   "HOSTS_type": "OS",
+   "HOSTS_cores": "Cores",
+   "HOSTS_memory_display": "Memory",
+   "HOSTS_disk_display": "Disk",
+   "HOSTS_processorarchitecture": "Arch",
+   "HOSTS_vmcount": "VMs",
+   "HostsTitle": "Hosts",
+   "HostsView": "View details",
+   "HostsReboot": "Reboot",
+   "HostsDelete": "Delete",
+   "HostsEmptyTitle": "No hosts attached yet",
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+  }
+ },
+ "tabledef": {
+  "i18nPrefix": "HOSTS",
+  "searchbar": true,
+  "enable_copy": true,
+  "popupform": {
+   "rolelist": {
+    "*": [
+     {
+      "id": "hostdetail",
+      "label": "{{{i18n.HostsView}}}",
+      "logo": "img/monitor.svg"
+     },
+     {
+      "id": "reboothost",
+      "label": "{{{i18n.HostsReboot}}}",
+      "logo": "img/poweropvm.svg"
+     },
+     {
+      "id": "deletehost",
+      "label": "{{{i18n.HostsDelete}}}",
+      "logo": "img/delete.svg"
+     }
+    ]
+   }
+  },
+  "columns": [
+   {
+    "key": "hostname",
+    "type": "main"
+   },
+   {
+    "key": "hostaddress",
+    "type": "mono"
+   },
+   {
+    "key": "type",
+    "type": "badge",
+    "badgemap": {
+     "*": "neutral"
+    }
+   },
+   {
+    "key": "vmcount"
+   },
+   {
+    "key": "cores"
+   },
+   {
+    "key": "memory_display"
+   },
+   {
+    "key": "disk_display",
+    "priority": 2
+   },
+   {
+    "key": "processorarchitecture",
+    "type": "muted",
+    "priority": 3
+   }
+  ],
+  "emptystate": {
+   "title": "{{{i18n.HostsEmptyTitle}}}",
+   "message": "{{{i18n.HostsEmptyMessage}}}"
+  },
+  "clickrow_javascript": [
+   "const data = arguments[0]; APP_CONSTANTS.ENV._hosts_form_data = data;"
+  ],
+  "load_javascript": [
+   "const hostsResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {cmd: 'listHosts'}, true);",
+   "const hosts = hostsResult?.resources||[];",
+   "const vmsResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
+   "  cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPE_VM}\"`,",
+   "  project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const gb = bytes => {const g = (parseInt(bytes)||0)/1073741824; return g >= 1024 ? (g/1024).toFixed(1)+' TB' : Math.round(g)+' GB';};",
+   "for (const host of hosts) {",
+   "  host.memory_display = gb(host.memory); host.disk_display = gb(host.disk);",
+   "  host.vmcount = (vmsResult?.vms||[]).filter(vm => vm.hostname == host.hostname).length;",
+   "}",
+   "return {keys: ['hostname','hostaddress','type','vmcount','cores','memory_display','disk_display','processorarchitecture'], table: hosts};"
+  ],
+  "filterkey": "type",
+  "pagesize": 25
+ }
+}

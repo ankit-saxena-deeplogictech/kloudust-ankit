@@ -1,0 +1,95 @@
+{
+ "id": "addvmdisk",
+ "command": "addVMDisk",
+ "type": "kloudust_cmdline",
+ "kloudust_cmdline_params": [
+  "vm_name",
+  "disk_name",
+  "restart"
+ ],
+ "title": "{{{i18n.AddDiskTitle}}}",
+ "i18n": {
+  "en": {
+   "AddDiskTitle": "Attach a disk",
+   "AddDiskDescription": "Attach an additional disk to this virtual machine.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddDiskSubmit": "Attach disk"
+  },
+  "hi": {
+   "AddDiskTitle": "Attach a disk",
+   "AddDiskDescription": "Attach an additional disk to this virtual machine.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddDiskSubmit": "Attach disk"
+  },
+  "ja": {
+   "AddDiskTitle": "Attach a disk",
+   "AddDiskDescription": "Attach an additional disk to this virtual machine.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddDiskSubmit": "Attach disk"
+  },
+  "zh": {
+   "AddDiskTitle": "Attach a disk",
+   "AddDiskDescription": "Attach an additional disk to this virtual machine.",
+   "VMName": "Virtual machine",
+   "DiskName": "Disk name",
+   "Restart": "Restart the machine now?",
+   "Yes": "Yes",
+   "No": "No",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddDiskSubmit": "Attach disk"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.AddDiskDescription}}}",
+  "required_fields": [
+   {
+    "id": "vm_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VMName}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"
+   },
+   {
+    "id": "disk_name",
+    "type": "text",
+    "placeholder": "{{{i18n.DiskName}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "restart",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.Restart}}}",
+    "options": [
+     {
+      "value": "false",
+      "label": "{{{i18n.No}}}"
+     },
+     {
+      "value": "true",
+      "label": "{{{i18n.Yes}}}"
+     }
+    ]
+   }
+  ],
+  "submitlabel": "{{{i18n.AddDiskSubmit}}}"
+ }
+}

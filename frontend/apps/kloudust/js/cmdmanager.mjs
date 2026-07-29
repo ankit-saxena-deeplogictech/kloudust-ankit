@@ -63,6 +63,17 @@ async function formSubmitted(id, values) {
     } else if (form.type == KLOUDUST_CMDLINE) await _kdcmd(form.command, form.kloudust_cmdline_params, values);
 }
 
+/**
+ * Runs a Kloudust command line directly, outside the form flow — used by bulk
+ * table actions. Output lands in the alerts stack exactly as a form submit does.
+ * @param {string} command The Kloudust command verb
+ * @param {array} params Ordered value keys, mapped to quoted command arguments
+ * @param {Object} values The values, keyed by the names in params
+ * @param {string} projectOverride Optional project to run against
+ * @returns The command result
+ */
+const runCloudCommand = (command, params, values, projectOverride) => _kdcmd(command, params, values, projectOverride);
+
 function addAlert(id, text, isError) {
     const formattedAlert = {type: isError?ALERT_ERROR:ALERT_INFO, message: text};
     const alertObject = $$.libsession.get(ALERT_OBJECT_KEY, {});
@@ -106,12 +117,18 @@ function _processCommandOutput(id, text, isError=false) {
     else addAlert(id, text);
 }
 
-async function _getFormHTML(formJSON) {
+/**
+ * Builds the HTML for a form JSON.
+ * @param {Object} formJSON The parsed form.json
+ * @param {boolean} embedded Optional: rendering inside another page (a tab, say),
+ *                  so the component should skip its own page heading and close button
+ */
+async function _getFormHTML(formJSON, embedded) {
     let html = "";
 
     if (formJSON.type.toLowerCase() == KLOUDUST_CMDLINE || formJSON.type.toLowerCase() == AUTOMATION_CMDLINE) {
         // formtitle lets the component render a page heading; dropped by JSON.stringify if the form has no title
-        const base64FormJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.form, formtitle: formJSON.title})), id = formJSON.id;
+        const base64FormJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.form, formtitle: formJSON.title, embedded})), id = formJSON.id;
         if (formJSON.i18n) for (const [lang, i18nObject] of Object.entries(formJSON.i18n)) await $$.libi18n.setI18NObject(lang, i18nObject);
 
         const formComponent = formJSON.display?.toLowerCase() == "wizard" ? "form-wizard" : "form-runner";
@@ -121,7 +138,7 @@ async function _getFormHTML(formJSON) {
     }
 
     if (formJSON.type.toLowerCase() == TABLE_DISPLAY) {
-        const base64TabledefJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.tabledef, formtitle: formJSON.title})), id = formJSON.id;
+        const base64TabledefJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.tabledef, formtitle: formJSON.title, embedded})), id = formJSON.id;
         if (formJSON.i18n) for (const [lang, i18nObject] of Object.entries(formJSON.i18n)) await $$.libi18n.setI18NObject(lang, i18nObject);
 
         const tableComponent = formJSON.display?.toLowerCase() == "tiles" ? "tile-list" : "table-list";
@@ -138,4 +155,5 @@ async function _getFormHTML(formJSON) {
 }
 
 export const cmdmanager = {registerCommand, cmdClicked, formSubmitted, closeForm, addAlert, getAlerts, clearAlerts,
-    reloadForm, isCloudAdminLoggedIn: roleman.isCloudAdminLoggedIn, ALERT_ERROR, ALERT_INFO};
+    reloadForm, isCloudAdminLoggedIn: roleman.isCloudAdminLoggedIn, getFormHTML: _getFormHTML,
+    runCloudCommand, ALERT_ERROR, ALERT_INFO};
