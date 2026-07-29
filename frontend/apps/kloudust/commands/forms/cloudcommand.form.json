@@ -1,57 +1,60 @@
 {
-"id": "cloudcommand",
-"command": "RAW_COMMANDLINE",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["command"],
-
-"title": "{{{i18n.RunCloudCommand}}}",
-
-"i18n": {
-    "en": {
-        "RunCloudCommand": "Run a cloud command",
-        "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
-        "Required": "Required",
-        "CloudCommandType": "Type the command",
-        "CloudCommandRun": "Run",
-        "FieldValidationErrorGeneric": "Validation error"
-    },
-    "hi": {
-        "RunCloudCommand": "Run a cloud command",
-        "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
-        "Required": "Required",
-        "CloudCommandType": "Type the command",
-        "CloudCommandRun": "Run",
-        "FieldValidationErrorGeneric": "Validation error"
-    },
-    "ja": {
-        "RunCloudCommand": "Run a cloud command",
-        "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
-        "Required": "Required",
-        "CloudCommandType": "Type the command",
-        "CloudCommandRun": "Run",
-        "FieldValidationErrorGeneric": "Validation error"
-    },
-    "zh": {
-        "RunCloudCommand": "Run a cloud command",
-        "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
-        "Required": "Required",
-        "CloudCommandType": "Type the command",
-        "CloudCommandRun": "Run",
-        "FieldValidationErrorGeneric": "Validation error"
-    }
-},
-
-"form": {
-    "description": "{{{i18n.CloudCommandDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "command", "inputtype": "textarea", "type": "text", "placeholder": "{{{i18n.CloudCommandType}}}", 
-    "required": true, "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}", 
-    "style":"height: 50vh; font-family: monospace; font-size: larger; background-color: #212121;"}
-    ],
-
-    "submitlabel": "{{{i18n.CloudCommandRun}}}"
-}
-
+ "id": "cloudcommand",
+ "command": "RAW_COMMANDLINE",
+ "type": "kloudust_cmdline",
+ "kloudust_cmdline_params": [
+  "command"
+ ],
+ "title": "{{{i18n.RunCloudCommand}}}",
+ "i18n": {
+  "en": {
+   "RunCloudCommand": "Run a cloud command",
+   "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
+   "Required": "Required",
+   "CloudCommandType": "Type the command",
+   "CloudCommandRun": "Run",
+   "FieldValidationErrorGeneric": "Validation error"
+  },
+  "hi": {
+   "RunCloudCommand": "Run a cloud command",
+   "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
+   "Required": "Required",
+   "CloudCommandType": "Type the command",
+   "CloudCommandRun": "Run",
+   "FieldValidationErrorGeneric": "Validation error"
+  },
+  "ja": {
+   "RunCloudCommand": "Run a cloud command",
+   "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
+   "Required": "Required",
+   "CloudCommandType": "Type the command",
+   "CloudCommandRun": "Run",
+   "FieldValidationErrorGeneric": "Validation error"
+  },
+  "zh": {
+   "RunCloudCommand": "Run a cloud command",
+   "CloudCommandDescription": "Run any cloud command below. Type the command using Kloudust command syntax. For help on cloud commands refer to the product documentation.",
+   "Required": "Required",
+   "CloudCommandType": "Type the command",
+   "CloudCommandRun": "Run",
+   "FieldValidationErrorGeneric": "Validation error"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.CloudCommandDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "command",
+    "inputtype": "textarea",
+    "type": "text",
+    "placeholder": "{{{i18n.CloudCommandType}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "variant": "console",
+    "rows": 20
+   }
+  ],
+  "submitlabel": "{{{i18n.CloudCommandRun}}}"
+ }
 }

@@ -9,32 +9,12 @@ const RESOURCES_PATH = $$.libutil.getModulePath(import.meta)+"/resources";
 
 const HTML_TEMPLATE = `
 <style>
-::-webkit-scrollbar {
-    width: 0.5em !important;
-    height: 0.5em !important;
-    scroll-behavior: smooth !important;
-}
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
-    margin: 5em;
-    border-radius: 1em !important;
-}
-::-webkit-scrollbar-thumb {
-    background-color: darkgrey !important;
-    border-radius: 1em !important;
-    background-clip: padding-box;
-}
-
-body {height: 100%; margin: 0;}
-
+/* Redesign skin — colors/spacing come from css/tokens.css (document level).
+   Ids kept stable; structure unchanged. */
 div#body {
-    overflow: hidden;
-    max-height: 100vh;
     box-sizing: border-box;
-    color: #DCDCDC;
-    background-color: #4C4C4C;
-    height: 100vh;
+    color: var(--text);
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -43,25 +23,22 @@ div#body {
 span#header {
     display: flex;
     flex-direction: row;
+    gap: var(--sp-1);
+    margin-bottom: var(--sp-3);
 }
-div#clear {
-    padding: 0.4em 0.6em;
-    background-color: #2395EC;
-    border-radius: 0.2em;
-    margin: 1em;
+div#clear, div#close {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--r-sm);
+    color: var(--text-3);
     cursor: pointer;
-    height: 1em;
-    width: 0.8em;
-    display: flex;
-    justify-content: center;
+    font: 500 var(--fs-md) var(--font-sans);
 }
-div#close {
-    padding: 0.2em 0.6em;
-    background-color: #BC5205;
-    border-radius: 0.2em;
-    margin: 1em;
-    cursor: pointer;
-}
+div#clear:hover, div#close:hover {background-color: var(--surface-2); color: var(--text);}
+div#clear img {width: 16px; height: 16px;}
+[data-theme="dark"] div#clear img {filter: brightness(0) invert(0.8);}
 
 div#main {
     display: flex;
@@ -74,45 +51,53 @@ div#main {
 }
 
 span#alertpartition {
-    font-size: 0.9rem;
-    margin: 0.5rem;
-    padding: 0rem 1.5rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--text-2);
+    margin: var(--sp-2) 0;
+    padding: var(--sp-1) var(--sp-2);
     cursor: pointer;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 0;
+    border-radius: var(--r-sm);
 }
+span#alertpartition:hover {background-color: var(--surface-2); color: var(--text);}
 div#alertcontainer {
-    margin: 0em 1.5em;
-    border: 1px solid white;
-    border-radius: 1em;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background-color: var(--surface);
+    box-shadow: var(--shadow-sm);
     overflow: clip;
     height: 0;
     flex-shrink: 0;
 }
-div#alertcontainer.visible {height: auto;}
+div#alertcontainer.visible {height: auto; margin-bottom: var(--sp-3);}
 div#alertdiv {
-    padding: 0.5em;
+    padding: var(--sp-2) var(--sp-3);
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: center;
+    border-bottom: 1px solid var(--border);
 }
-div#main div#alertdiv:nth-child(odd) {background-color: #858585;}
+div#alertcontainer div#alertdiv:last-child {border-bottom: none;}
 span#alertmessage {
     width: calc(100% - 2.5em);
-    font-family: monospace;
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
     user-select: text;
     overflow-x: auto;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
 span#alerticon {
-    margin-right: 1em;
-    height: 1.5em;
-    width: 1.5em;
+    margin-right: var(--sp-3);
+    height: 18px;
+    width: 18px;
+    flex: none;
 }
 span#alerticon img {height: 100%;}
 </style>

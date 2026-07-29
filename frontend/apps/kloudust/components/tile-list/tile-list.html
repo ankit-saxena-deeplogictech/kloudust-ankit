@@ -1,0 +1,85 @@
+<!--
+/**
+ * Tile list HTML — catalog card grid per the Kloudust redesign (images
+ * wireframe). Tokens inherit from the document; shared classes come from
+ * components.css. Tiledefs are purely declarative — no style support.
+ *
+ * (C) 2026 TekMonks. All rights reserved.
+ * License: See enclosed license file.
+ */
+ -->
+
+<style>
+@import url('./css/components.css');
+
+:host {
+    display: block;
+    height: 100%;
+    overflow-y: auto;
+}
+
+div#tilebody {
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+div#tiletop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-4);
+    min-height: 32px;
+}
+
+.tile .card-head { gap: var(--sp-3); justify-content: flex-start; }
+.tile .tile-sub { color: var(--text-3); font-size: var(--fs-sm); margin-top: 2px; }
+</style>
+
+<div id="tilebody">
+
+<div id="tiletop">
+    <div>{{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}</div>
+    <div id="tileclose" class="iconbtn" role="button" tabindex="0" aria-label="Close"
+        onclick='event.stopPropagation(); monkshu_env.components["tile-list"].close(this)'>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </div>
+</div>
+
+{{#tiles.length}}
+<div class="tile-grid">
+{{#tiles}}
+<div class="card tile">
+    <div class="card-head">
+        <span class="os-mark" {{#os}}data-os="{{.}}"{{/os}}>{{monogram}}</span>
+        <div>
+            <span class="tile-name">{{title}}</span>
+            {{#subtitle}}<div class="tile-sub">{{.}}</div>{{/subtitle}}
+        </div>
+    </div>
+    {{#haskv}}
+    <div class="card-body">
+        <dl class="kv">
+        {{#kv}}
+            <dt>{{label}}</dt><dd>{{value}}</dd>
+        {{/kv}}
+        </dl>
+    </div>
+    {{/haskv}}
+</div>
+{{/tiles}}
+</div>
+{{/tiles.length}}
+
+{{^tiles}}
+<div class="empty">
+    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+    <h3>{{emptystate.title}}</h3>
+    <p>{{emptystate.message}}</p>
+</div>
+{{/tiles}}
+
+</div>

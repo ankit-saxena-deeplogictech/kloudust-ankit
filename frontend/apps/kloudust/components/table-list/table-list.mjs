@@ -2,29 +2,32 @@
  * Interprets and runs table list files. Renders the
  * UI for the tables. This component is a table UI generator
  * basically.
- * 
+ *
  * tabledef attribute contains the table as a Base64 JSON. It can
  * have second level mustache using {{{mustache_start}}} and {{{mustache_end}}}
  * to wrap the second level templates.
- * 
+ *
  * Each tabledef should either contain a static table as a table object or
  * have its load_javascript return such a table. The structure of this object is
- * { keys: [list of keys whose value will be combined with the i18nPrefix to generate header titles], 
+ * { keys: [list of keys whose value will be combined with the i18nPrefix to generate header titles],
  *   table: [array of objects in {key (same as keys above): value} pairs] }
- * 
- * Each row's data is sent back when the row is clicked. This data is the row object
- * in the table array above corresponding to that row. Then the onclickrow_html is shown
- * when the row is clicked and clickrow_javascript is ran once the HTML has been shown.
- * 
- * In case of VMs form for example, onclickrow_html style is static, then an iconlist is
- * used to generate HTML to display the icons and added to onclickrow_html during its 
- * load_javascript method. So when row is clicked the icons are shown and clicking them 
- * opens the command (as that's what iconlist does).
- * 
- * Then the clickrow_javascript sets the VM's _vms_form_data inside APP_CONSTANTS.ENV._vms_form_data
- * which is then used inside the VM's resize, etc forms to hard code the VM name when the operation
- * is called in such a manner, pinning the VM for that operation.
- *  
+ *
+ * Declarative rendering keys (all optional, no CSS allowed in tabledefs):
+ *  - columns: [{key, type: "main"|"mono"|"muted"|"badge", badgemap: {value: variant, "*": fallback},
+ *              priority: 2|3}] — replaces plain keys-driven cells with typed cells.
+ *              priority feeds responsive column hiding (data-priority).
+ *  - searchbar: true — renders a client-side filter toolbar.
+ *  - emptystate: {title, message} — shown when the table has no rows.
+ *  - popupform: {rolelist} — row actions, rendered as a native menu on row
+ *              click (role filtered; each entry opens its command).
+ *  - clickrow_command: "<command id>" — row click runs clickrow_javascript
+ *              (typically pinning the row into APP_CONSTANTS.ENV) and then
+ *              opens the given command (e.g. a detail page).
+ *
+ * clickrow_javascript runs on every row click in all modes. Raw HTML/CSS
+ * injection (onclickrow_html, bottom_bar_html, style) is not supported —
+ * tabledefs are data only.
+ *
  * (C) 2023 TekMonks. All rights reserved.
  * License: See enclosed LICENSE file.
  */
@@ -32,20 +35,22 @@
 const COMPONENT_PATH = $$.libutil.getModulePath(import.meta);
 
 const i18n = {
-    "en": {ClickToCopy: "Shift+click to copy", Copied: "Copied"},
-    "hi": {ClickToCopy: "Shift+click to copy", Copied: "Copied"},
-    "ja": {ClickToCopy: "Shift+click to copy", Copied: "Copied"},
-    "zh": {ClickToCopy: "Shift+click to copy", Copied: "Copied"}
+    "en": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."},
+    "hi": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."},
+    "ja": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."},
+    "zh": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet", TLNoDataMessage: "No records were found for this view."}
 }
 
 async function elementConnected(host) {
+    for (const lang of Object.keys(i18n)) await $$.libi18n.setI18NObject(lang, i18n[lang]);
     const tableDefinition = $$.libutil.base64ToString(host.dataset.tabledef);
     const expandedData = await $$.librouter.expandPageData(tableDefinition, undefined, {mustache_start: "{{{", mustache_end: "}}}"});
     let tableObject = JSON.parse(expandedData);
-    if (tableObject.style) tableObject.style = _getArrayAsJoinedString(tableObject.style);
     const tableData = await _runOnLoadJavascript(tableObject);
+    tableObject.emptystate = {
+        title: tableObject.emptystate?.title || await $$.libi18n.get("TLNoDataTitle"),
+        message: tableObject.emptystate?.message || await $$.libi18n.get("TLNoDataMessage")};
     table_list.setDataByHost(host, {...tableObject, ...tableData});
-    for (const lang of Object.keys(i18n)) await $$.libi18n.setI18NObject(lang, i18n[lang]);
 }
 
 async function close(element) {
@@ -57,25 +62,49 @@ async function hidePopup(event) {
     const shadowRoot = table_list.getShadowRootByContainedElement(event.target);
     const divOnclick = shadowRoot.querySelector("div#onclick_html"), divHider = shadowRoot.querySelector("div#hider");
     divOnclick.classList.remove("visible"); divHider.classList.remove("visible");
+    divOnclick.classList.remove("rowmenu-holder"); divOnclick.style.left = ""; divOnclick.style.top = "";
+}
+
+function searchTable(event) {
+    const shadowRoot = table_list.getShadowRootByContainedElement(event.target);
+    const filter = event.target.value.trim().toLowerCase();
+    for (const tr of shadowRoot.querySelectorAll("tbody tr"))
+        tr.style.display = (!filter || tr.textContent.toLowerCase().includes(filter)) ? "" : "none";
 }
 
 async function rowClicked(event, rowdataJSON) {
     const rowDataJSON = rowdataJSON?$$.libutil.base64ToString(rowdataJSON):undefined, rowData = JSON.parse(rowDataJSON||"{}");
-    await _displayRowOnClickHTML(event, rowData);
-    _runRowOnClickJavascript(event, rowData);
+    const data = table_list.getDataByContainedElement(event.target);
+    await _runRowOnClickJavascript(event, rowData);
+
+    if (data.clickrow_command) {    // detail-page mode: pin the row (clickrow_javascript) then open the command
+        const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
+        cmdmanager.registerCommand({id: data.clickrow_command});
+        cmdmanager.cmdClicked(data.clickrow_command); return;
+    }
+
+    if (data.popupform) await _displayRowActionsMenu(event, data);    // native row actions menu
 }
 
-async function _displayRowOnClickHTML(event, rowData) {
-    const containedElement = event.target, host = table_list.getHostElement(containedElement);
-    const data = table_list.getDataByHost(host); let onclickHTML = _getArrayAsJoinedString(data.onclickrow_html);
-    if (onclickHTML == "") return; onclickHTML = (await $$.librouter.getMustache()).render(onclickHTML, rowData);
-    const wrapper = document.createElement("div"); wrapper.id="onclickrow_html"; wrapper.append(...$$.libutil.htmlToDOMNodes(onclickHTML));
+async function _displayRowActionsMenu(event, data) {
+    const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
+    const cmdlist = (await import(`${APP_CONSTANTS.LIB_PATH}/cmdlist.mjs`)).cmdlist;
+    const commands = await cmdlist.getCommands(undefined, data.popupform);
+    if (!commands || !commands.length) return;
+    for (const command of commands) cmdmanager.registerCommand(command);
 
-    const shadowRoot = table_list.getShadowRootByContainedElement(containedElement);
+    let menuHTML = `<div class="menu open" role="menu">`;
+    for (const command of commands) menuHTML +=
+        `<button onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('${command.id}')"><img src="${command.logo}" alt="">${command.label}</button>`;
+    menuHTML += `</div>`;
+
+    const shadowRoot = table_list.getShadowRootByContainedElement(event.target);
     const divOnclick = shadowRoot.querySelector("div#onclick_html"), divHider = shadowRoot.querySelector("div#hider");
-    divOnclick.replaceChildren(wrapper); const emHeight = parseFloat(getComputedStyle(divOnclick).fontSize), popupEmHeight = 4*emHeight;
-    const yCalc = event.y+10+popupEmHeight >= window.innerHeight ? window.innerHeight - popupEmHeight + 5 : event.y+10; 
-    divOnclick.style.top = yCalc; divHider.classList.add("visible"); divOnclick.classList.add("visible");
+    divOnclick.innerHTML = menuHTML; divOnclick.classList.add("rowmenu-holder");
+    const menuWidth = 240, menuHeight = commands.length*40 + 16;
+    divOnclick.style.left = Math.max(8, Math.min(event.clientX, window.innerWidth - menuWidth - 16)) + "px";
+    divOnclick.style.top = Math.max(8, Math.min(event.clientY + 8, window.innerHeight - menuHeight - 16)) + "px";
+    divHider.classList.add("visible"); divOnclick.classList.add("visible");
 }
 
 async function _runRowOnClickJavascript(event, rowData) {
@@ -87,27 +116,40 @@ async function _runRowOnClickJavascript(event, rowData) {
 }
 
 async function _runOnLoadJavascript(tabledef) {
-    if (!tabledef.load_javascript) return tabledef.table||{};
-    const onloadjs = _getArrayAsJoinedString(tabledef.load_javascript);
-
-    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-    const load_js_result = await (new AsyncFunction(onloadjs))(tabledef);
-    if (!load_js_result) {
-        LOG.error(`Form load JS failed`);
-        return {};
-    } 
-
-    const tableObject = {headers: [], rows: []};
-    for (const key of load_js_result.keys) 
-        tableObject.headers.push(await $$.libi18n.get(`${tabledef.i18nPrefix}_${key}`));
-    for (const row of load_js_result.table) {
-        const rowData = []; for (const key of load_js_result.keys) rowData.push(row[key]||"");
-        rowData.rowdata_json_base64 = $$.libutil.stringToBase64(JSON.stringify(row)); tableObject.rows.push(rowData);
+    let loadResult;
+    if (!tabledef.load_javascript) loadResult = tabledef.table;
+    else {
+        const onloadjs = _getArrayAsJoinedString(tabledef.load_javascript);
+        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+        loadResult = await (new AsyncFunction(onloadjs))(tabledef);
+        if (!loadResult) {LOG.error(`Table load JS failed`); return {headers: [], rows: []};}
     }
-    return tableObject;
+    if (!loadResult) return {headers: [], rows: []};
+
+    const columns = tabledef.columns;
+    const displayKeys = columns ? columns.map(col=>col.key) : (loadResult.keys||[]);
+    const colByKey = {}; if (columns) for (const col of columns) colByKey[col.key] = col;
+
+    const headers = []; for (const key of displayKeys)
+        headers.push({label: await $$.libi18n.get(`${tabledef.i18nPrefix}_${key}`), priority: colByKey[key]?.priority});
+
+    const rows = []; for (const row of loadResult.table||[]) {
+        const cells = []; for (const key of displayKeys) {
+            const col = colByKey[key]||{}, value = row[key] !== undefined ? row[key] : "";
+            const cell = {value, priority: col.priority};
+            if (col.type == "badge") {
+                cell.isbadge = true;
+                const variant = col.badgemap?.[String(value).toLowerCase()] || col.badgemap?.["*"] || "neutral";
+                cell.badgeclass = `badge-${variant}`;
+            } else cell.tdclass = col.type == "main" ? "cell-main" : col.type == "mono" ? "mono" : col.type == "muted" ? "muted" : "";
+            cells.push(cell);
+        }
+        rows.push({cells, rowdata_json_base64: $$.libutil.stringToBase64(JSON.stringify(row))});
+    }
+    return {headers, rows};
 }
 
 const _getArrayAsJoinedString = (array, skipEOLs) => array?(Array.isArray(array)?array:[array]).join(skipEOLs?"":"\n"):"";
 
-export const table_list = {trueWebComponentMode: true, elementConnected, close, rowClicked, hidePopup};
+export const table_list = {trueWebComponentMode: true, elementConnected, close, rowClicked, hidePopup, searchTable};
 $$.libmonkshu_component.register("table-list", `${COMPONENT_PATH}/table-list.html`, table_list);

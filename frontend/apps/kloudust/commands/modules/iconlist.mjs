@@ -67,7 +67,6 @@ div#button img {width: 40px; height: 40px;}
 [data-theme="dark"] div#button img {filter: brightness(0) invert(0.85);}
 div#button span {text-align: center; color: var(--text);}
 </style>
-{{#style}}<style>{{{.}}}</style>{{/style}}
 
 <div id="body">
 <div id="close" onclick='event.stopPropagation(); monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm(this)'>X</div>
@@ -91,7 +90,7 @@ async function getHTML(formObject, cmdmanager) {
     const commands = await cmdlist.getCommands(undefined, formObject); 
     for (const command of commands) cmdmanager.registerCommand(command);
 
-    const html = await $$.librouter.expandPageData(HTML_TEMPLATE, undefined, {icons: commands, style: formObject.style});
+    const html = await $$.librouter.expandPageData(HTML_TEMPLATE, undefined, {icons: commands});
     return html;
 }
 

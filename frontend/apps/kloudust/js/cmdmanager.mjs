@@ -114,17 +114,19 @@ async function _getFormHTML(formJSON) {
         const base64FormJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.form, formtitle: formJSON.title})), id = formJSON.id;
         if (formJSON.i18n) for (const [lang, i18nObject] of Object.entries(formJSON.i18n)) await $$.libi18n.setI18NObject(lang, i18nObject);
 
-        html = `<form-runner id="${id}" data-form='${base64FormJSON}'
+        const formComponent = formJSON.display?.toLowerCase() == "wizard" ? "form-wizard" : "form-runner";
+        html = `<${formComponent} id="${id}" data-form='${base64FormJSON}'
             onclose='monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm()'
-            onsubmit='monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.formSubmitted("${id}", formdata)'></form-runner>`;
+            onsubmit='monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.formSubmitted("${id}", formdata)'></${formComponent}>`;
     }
 
     if (formJSON.type.toLowerCase() == TABLE_DISPLAY) {
         const base64TabledefJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.tabledef, formtitle: formJSON.title})), id = formJSON.id;
         if (formJSON.i18n) for (const [lang, i18nObject] of Object.entries(formJSON.i18n)) await $$.libi18n.setI18NObject(lang, i18nObject);
 
-        html = `<table-list id="${id}" data-tabledef='${base64TabledefJSON}'
-            onclose='monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm()'></table-list>`;
+        const tableComponent = formJSON.display?.toLowerCase() == "tiles" ? "tile-list" : "table-list";
+        html = `<${tableComponent} id="${id}" data-tabledef='${base64TabledefJSON}'
+            onclose='monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm()'></${tableComponent}>`;
     }
     
     if (formJSON.type.toLowerCase() == FRONTEND_MODULE) {

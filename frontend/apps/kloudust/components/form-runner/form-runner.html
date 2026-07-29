@@ -3,20 +3,23 @@
  * Form runner HTML — Kloudust redesign skin.
  *
  * Styling contract:
- *  - Design tokens (colors, spacing, type) inherit from the document
- *    (css/tokens.css linked by main.html) through the shadow boundary.
- *  - Shared classes come from css/components.css via @import below.
- *  - Generated controls are styled through ELEMENT selectors (input, select,
- *    textarea, label) — never classes — so custom field components declared
- *    via "inputtype" in form.json (firewall-rules, vnet-ip, …) are untouched.
+ *  - Design tokens inherit from the document (css/tokens.css) through the
+ *    shadow boundary; shared classes come from css/components.css.
+ *  - Generated controls are styled through ELEMENT selectors so custom field
+ *    components declared via "inputtype" (firewall-rules, vnet-ip, …) are
+ *    untouched.
+ *  - Fields are purely declarative — there is deliberately NO style
+ *    passthrough. Semantic keys instead: label, hint, fieldrow (side-by-side
+ *    pairing), variant ("console" for dark monospace editors), rows
+ *    (textarea height in lines).
  *
- * Backward compatibility notes (do not break):
- *  - Field ids become element ids; form.json scripts query select#id, input#id
- *    and label[for=id]. Labels and inputs stay flat siblings (no wrappers) so
- *    scripts that hide an input + its label leave no empty boxes behind.
- *  - data-optional, the expander toggle, span#submit and div#close keep their
- *    original ids/handlers. The per-field {{style}} passthrough is deprecated
- *    but still honored.
+ * Backward compatibility (do not break):
+ *  - Field ids become element ids; form.json scripts query select#id,
+ *    input#id and label[for=id]. Labels and inputs stay flat siblings inside
+ *    the group wrapper so scripts that hide an input + its label leave no
+ *    empty boxes behind. Fields without "label" promote their placeholder to
+ *    the label. data-optional, the expander toggle, span#submit and
+ *    div#close keep their original ids/handlers.
  *
  * (C) 2023 TekMonks. All rights reserved.
  * License: See enclosed license file.
@@ -101,6 +104,26 @@ select option { background-color: var(--surface); color: var(--text); }
 
 input.error { color: var(--danger-600); border-color: var(--danger-600); }
 
+/* Hint sits tight under its input (inputs carry the block spacing) */
+span.hint {
+    display: block;
+    font-size: var(--fs-sm);
+    color: var(--text-3);
+    margin-top: calc(var(--sp-1) - var(--sp-4));
+    margin-bottom: var(--sp-4);
+}
+
+/* variant: "console" — dark monospace editor (SQL, shell, cloud-init, code) */
+.variant-console {
+    background-color: var(--n-900) !important;
+    color: var(--n-200) !important;
+    font-family: var(--font-mono) !important;
+    font-size: var(--fs-sm) !important;
+    border-color: var(--n-700) !important;
+    line-height: 1.7;
+}
+.variant-console::placeholder { color: var(--n-500); }
+
 /* --- Advanced/optional disclosure ---------------------------------------- */
 span#expander {
     display: inline-flex;
@@ -116,15 +139,6 @@ span#expander {
 span#expander:hover { color: var(--primary-hover); }
 div.expanded { height: auto; display: block; }
 div.collapsed { height: 0px; display: none; }
-
-/* --- LEGACY COMPAT (remove in phase 5) ------------------------------------
-   Some form.jsons force dark monospace consoles via inline style
-   (background-color: #212121) without setting a text color; the old base
-   theme was light-on-dark so they worked. Keep them readable. */
-textarea[style*="#212121"], input[style*="#212121"] {
-    color: #E2E8F0 !important;
-    border-color: #334155 !important;
-}
 </style>
 
 <div id="body">
@@ -141,9 +155,12 @@ textarea[style*="#212121"], input[style*="#212121"] {
 
 <div id="main">
 <div id="required">
-{{#required_fields}}
+{{#required_rowgroups}}
+<div {{#isrow}}class="field-row"{{/isrow}}>
+{{#fields}}
 {{^multioption}}
-{{#placeholder}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/placeholder}}
+{{#label}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/label}}
+{{^label}}{{#placeholder}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/placeholder}}{{/label}}
 <{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}} id="{{id}}"
     {{#type}}type="{{.}}"{{/type}}
     {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
@@ -152,24 +169,29 @@ textarea[style*="#212121"], input[style*="#212121"] {
     {{#pattern}}pattern="{{.}}"{{/pattern}}
     {{#min}}min="{{.}}"{{/min}}
     {{#max}}max="{{.}}"{{/max}}
+    {{#rows}}rows="{{.}}"{{/rows}}
     {{#title}}title="{{.}}"{{/title}}
-    {{#style}}style="{{{.}}}"{{/style}}
+    {{#variant}}class="variant-{{.}}"{{/variant}}
     {{#validation_error}}oninvalid="this.setCustomValidity('{{.}}')"{{/validation_error}}
     {{#validation_error}}oninput="setCustomValidity('')"{{/validation_error}}
     {{#readonly}}readonly{{/readonly}}
     {{#list}}list="{{.}}"{{/list}}>
 </{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}}>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
 {{/multioption}}
 
 {{#multioption}}
 <label for="{{id}}">{{label}}</label>
-<select id="{{id}}" name="{{id}}" {{#disabled}}disabled="{{.}}"{{/disabled}} {{#style}}style="{{{.}}}"{{/style}}>
+<select id="{{id}}" name="{{id}}" {{#disabled}}disabled="{{.}}"{{/disabled}}>
     {{#options}}
     <option value="{{value}}">{{label}}</option>
     {{/options}}
 </select>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
 {{/multioption}}
-{{/required_fields}}
+{{/fields}}
+</div>
+{{/required_rowgroups}}
 </div>
 
 {{#showOptional}}
@@ -180,9 +202,12 @@ textarea[style*="#212121"], input[style*="#212121"] {
     if (this.innerText.endsWith("▶")) this.innerText = this.innerText.split("▶")[0]+"▼";
     else this.innerText = this.innerText.split("▼")[0]+"▶";'>{{optional_label}} ▶</span>
 <div id="advanced" class="collapsed">
-{{#optional_fields}}
+{{#optional_rowgroups}}
+<div {{#isrow}}class="field-row"{{/isrow}}>
+{{#fields}}
 {{^multioption}}
-{{#placeholder}}<label for="{{id}}">{{.}}</label>{{/placeholder}}
+{{#label}}<label for="{{id}}">{{.}}</label>{{/label}}
+{{^label}}{{#placeholder}}<label for="{{id}}">{{.}}</label>{{/placeholder}}{{/label}}
 <{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}} id="{{id}}"
     data-optional="true"
     {{#type}}type="{{.}}"{{/type}}
@@ -192,24 +217,29 @@ textarea[style*="#212121"], input[style*="#212121"] {
     {{#pattern}}pattern="{{.}}"{{/pattern}}
     {{#min}}min="{{.}}"{{/min}}
     {{#max}}max="{{.}}"{{/max}}
+    {{#rows}}rows="{{.}}"{{/rows}}
     {{#title}}title="{{.}}"{{/title}}
-    {{#style}}style="{{{.}}}"{{/style}}
+    {{#variant}}class="variant-{{.}}"{{/variant}}
     {{#validation_error}}oninvalid="this.setCustomValidity('{{.}}')"{{/validation_error}}
     {{#validation_error}}oninput="setCustomValidity('')"{{/validation_error}}
     {{#readonly}}readonly{{/readonly}}
     {{#list}}list="{{.}}"{{/list}}>
 </{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}}>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
 {{/multioption}}
 
 {{#multioption}}
 <label for="{{id}}">{{label}}</label>
-<select id="{{id}}" name="{{id}}" data-optional="true" {{#disabled}}disabled="{{.}}"{{/disabled}} {{#style}}style="{{{.}}}"{{/style}}>
+<select id="{{id}}" name="{{id}}" data-optional="true" {{#disabled}}disabled="{{.}}"{{/disabled}}>
     {{#options}}
     <option value="{{value}}">{{label}}</option>
     {{/options}}
 </select>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
 {{/multioption}}
-{{/optional_fields}}
+{{/fields}}
+</div>
+{{/optional_rowgroups}}
 </div>
 {{/showOptional}}
 

@@ -1,0 +1,46 @@
+{
+"id": "images",
+"command": "tilelist",
+"type": "table_display",
+"display": "tiles",
+
+"title": "{{{i18n.ImagesTitle}}}",
+
+"i18n": {
+"en": {
+    "ImagesTitle": "Images",
+    "ImagesEmptyTitle": "No images yet",
+    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
+},
+"hi": {
+    "ImagesTitle": "Images",
+    "ImagesEmptyTitle": "No images yet",
+    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
+},
+"ja": {
+    "ImagesTitle": "Images",
+    "ImagesEmptyTitle": "No images yet",
+    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
+},
+"zh": {
+    "ImagesTitle": "Images",
+    "ImagesEmptyTitle": "No images yet",
+    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
+}
+},
+
+"tabledef": {
+    "tiledef": {
+        "titlekey": "name",
+        "subtitlekey": "description"
+    },
+
+    "emptystate": {"title": "{{{i18n.ImagesEmptyTitle}}}", "message": "{{{i18n.ImagesEmptyMessage}}}"},
+
+    "load_javascript": [
+        "const imagesResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', ",
+        "   {cmd: 'listVMImages', project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+        "return {table: imagesResult?.resources||[]};"
+    ]
+}
+}

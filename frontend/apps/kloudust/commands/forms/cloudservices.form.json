@@ -1,111 +1,153 @@
 {
-"id": "vms",
-"command": "tablelist",
-"type": "table_display",
-
-"i18n": {
-"en": {
-    "VMS_name_raw": "Name",
-    "VMS_description": "Description",
-    "VMS_vmtype": "Type",
-    "VMS_disk": "Disk (GB)",
-    "VMS_cpus": "Cores",
-    "VMS_memory": "Memory (MB)",
-    "VMS_datetime": "Date created",
-    "VMS_state": "State",
-
-    "VMSFirewall": "Firewall",
-    "VMSPowerOpVM": "Power",
-    "VMSDelete": "Delete",
-    "VMSResize": "Resize"
-},
-
-"hi": {
-    "VMS_name_raw": "Name",
-    "VMS_description": "Description",
-    "VMS_vmtype": "Type",
-    "VMS_disk": "Disk (GB)",
-    "VMS_cpus": "Cores",
-    "VMS_memory": "Memory (MB)",
-    "VMS_datetime": "Date created",
-    "VMS_state": "State",
-
-    "VMSFirewall": "Firewall",
-    "VMSPowerOpVM": "Power",
-    "VMSDelete": "Delete",
-    "VMSResize": "Resize"
-},
-
-"ja": {
-    "VMS_name_raw": "Name",
-    "VMS_description": "Description",
-    "VMS_vmtype": "Type",
-    "VMS_disk": "Disk (GB)",
-    "VMS_cpus": "Cores",
-    "VMS_memory": "Memory (MB)",
-    "VMS_datetime": "Date created",
-    "VMS_state": "State",
-
-    "VMSFirewall": "Firewall",
-    "VMSPowerOpVM": "Power",
-    "VMSDelete": "Delete",
-    "VMSResize": "Resize"
-},
-
-"zh": {
-    "VMS_name_raw": "Name",
-    "VMS_description": "Description",
-    "VMS_vmtype": "Type",
-    "VMS_disk": "Disk (GB)",
-    "VMS_cpus": "Cores",
-    "VMS_memory": "Memory (MB)",
-    "VMS_datetime": "Date created",
-    "VMS_state": "State",
-
-    "VMSFirewall": "Firewall",
-    "VMSPowerOpVM": "Power",
-    "VMSDelete": "Delete",
-    "VMSResize": "Resize"
-}
-},
-
-"tabledef": {
-    "popupform": {
-    "rolelist": {
-        "*":[
-            {"id": "firewallvm", "label": "{{{i18n.VMSFirewall}}}", "logo": "img/firewall.svg"},
-            {"id": "poweropvm", "label": "{{{i18n.VMSPowerOpVM}}}", "logo": "img/poweropvm.svg"},
-            {"id": "deletevm", "label": "{{{i18n.VMSDelete}}}", "logo": "img/deletevm.svg"},
-            {"id": "resizevm", "label": "{{{i18n.VMSResize}}}", "logo": "img/resizevm.svg"} 
-        ]
-    }
-    },
-
-    "style": "div#tablebottombar{display: none;}",
-
-    "i18nPrefix": "VMS",
-
-    "onclickrow_html": [
-        "<style>div#onclick_html{background-color: #F8F8F8; width: auto;} div#close{display: none !important}</style>",
-        "<style>div#onclickrow_html{height: 3.5em;} div#body{background-color: #F8F8F8 !important}</style>",
-        "<style>div#buttons{margin: 0 !important; justify-content: space-between !important; height: 100% !important; gap: 3em !important;}</style>",
-        "<style>div#button{height: 100% !important; max-height: 100% !important; margin: 0 !important; color: #BC5205 !important; width: 5em !important; font-size: 0.8em !important;}</style>",
-        "<style>div#button img {width: 3em !important; height: 3em !important;}</style>"
-    ],
-
-    "clickrow_javascript": [
-        "const data = arguments[0]; APP_CONSTANTS.ENV._vms_form_data = data;"
-    ],
-
-    "load_javascript": [
-        "const vms = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
-            "cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPES_SERVICES.join(',')}\"`, ",
-            "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
-        "for (const vm of vms.vms||[]) vm.datetime = new Date(vm.timestamp).toLocaleDateString();",
-        "const modIconList = await import(`${APP_CONSTANTS.FORM_MODULES_PATH}/iconlist.mjs`), tabledef = arguments[0];",
-        "const html = await modIconList.iconlist.getHTML(tabledef.popupform, monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager);",
-        "tabledef.onclickrow_html.push(html);",
-        "return {keys: ['name_raw','description','vmtype','disk','cpus','memory','datetime'], table: vms.vms||[]};"
+ "id": "vms",
+ "command": "tablelist",
+ "type": "table_display",
+ "i18n": {
+  "en": {
+   "VMS_name_raw": "Name",
+   "VMS_description": "Description",
+   "VMS_vmtype": "Type",
+   "VMS_disk": "Disk (GB)",
+   "VMS_cpus": "Cores",
+   "VMS_memory": "Memory (MB)",
+   "VMS_datetime": "Date created",
+   "VMS_state": "State",
+   "VMSFirewall": "Firewall",
+   "VMSPowerOpVM": "Power",
+   "VMSDelete": "Delete",
+   "VMSResize": "Resize",
+   "CloudServicesTitle": "Cloud services",
+   "CloudServicesEmptyTitle": "No cloud services yet",
+   "CloudServicesEmptyMessage": "Create a database, VDI or storage service to see it here."
+  },
+  "hi": {
+   "VMS_name_raw": "Name",
+   "VMS_description": "Description",
+   "VMS_vmtype": "Type",
+   "VMS_disk": "Disk (GB)",
+   "VMS_cpus": "Cores",
+   "VMS_memory": "Memory (MB)",
+   "VMS_datetime": "Date created",
+   "VMS_state": "State",
+   "VMSFirewall": "Firewall",
+   "VMSPowerOpVM": "Power",
+   "VMSDelete": "Delete",
+   "VMSResize": "Resize",
+   "CloudServicesTitle": "Cloud services",
+   "CloudServicesEmptyTitle": "No cloud services yet",
+   "CloudServicesEmptyMessage": "Create a database, VDI or storage service to see it here."
+  },
+  "ja": {
+   "VMS_name_raw": "Name",
+   "VMS_description": "Description",
+   "VMS_vmtype": "Type",
+   "VMS_disk": "Disk (GB)",
+   "VMS_cpus": "Cores",
+   "VMS_memory": "Memory (MB)",
+   "VMS_datetime": "Date created",
+   "VMS_state": "State",
+   "VMSFirewall": "Firewall",
+   "VMSPowerOpVM": "Power",
+   "VMSDelete": "Delete",
+   "VMSResize": "Resize",
+   "CloudServicesTitle": "Cloud services",
+   "CloudServicesEmptyTitle": "No cloud services yet",
+   "CloudServicesEmptyMessage": "Create a database, VDI or storage service to see it here."
+  },
+  "zh": {
+   "VMS_name_raw": "Name",
+   "VMS_description": "Description",
+   "VMS_vmtype": "Type",
+   "VMS_disk": "Disk (GB)",
+   "VMS_cpus": "Cores",
+   "VMS_memory": "Memory (MB)",
+   "VMS_datetime": "Date created",
+   "VMS_state": "State",
+   "VMSFirewall": "Firewall",
+   "VMSPowerOpVM": "Power",
+   "VMSDelete": "Delete",
+   "VMSResize": "Resize",
+   "CloudServicesTitle": "Cloud services",
+   "CloudServicesEmptyTitle": "No cloud services yet",
+   "CloudServicesEmptyMessage": "Create a database, VDI or storage service to see it here."
+  }
+ },
+ "tabledef": {
+  "popupform": {
+   "rolelist": {
+    "*": [
+     {
+      "id": "firewallvm",
+      "label": "{{{i18n.VMSFirewall}}}",
+      "logo": "img/firewall.svg"
+     },
+     {
+      "id": "poweropvm",
+      "label": "{{{i18n.VMSPowerOpVM}}}",
+      "logo": "img/poweropvm.svg"
+     },
+     {
+      "id": "deletevm",
+      "label": "{{{i18n.VMSDelete}}}",
+      "logo": "img/deletevm.svg"
+     },
+     {
+      "id": "resizevm",
+      "label": "{{{i18n.VMSResize}}}",
+      "logo": "img/resizevm.svg"
+     }
     ]
-}
+   }
+  },
+  "i18nPrefix": "VMS",
+  "clickrow_javascript": [
+   "const data = arguments[0]; APP_CONSTANTS.ENV._vms_form_data = data;"
+  ],
+  "load_javascript": [
+   "const vms = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
+   "cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPES_SERVICES.join(',')}\"`, ",
+   "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "for (const vm of vms.vms||[]) vm.datetime = new Date(vm.timestamp).toLocaleDateString();",
+   "return {keys: ['name_raw','description','vmtype','disk','cpus','memory','datetime'], table: vms.vms||[]};"
+  ],
+  "searchbar": true,
+  "columns": [
+   {
+    "key": "name_raw",
+    "type": "main"
+   },
+   {
+    "key": "description"
+   },
+   {
+    "key": "vmtype",
+    "type": "badge",
+    "badgemap": {
+     "*": "info"
+    }
+   },
+   {
+    "key": "disk",
+    "priority": 2
+   },
+   {
+    "key": "cpus",
+    "priority": 2
+   },
+   {
+    "key": "memory",
+    "priority": 2
+   },
+   {
+    "key": "datetime",
+    "type": "muted",
+    "priority": 2
+   }
+  ],
+  "emptystate": {
+   "title": "{{{i18n.CloudServicesEmptyTitle}}}",
+   "message": "{{{i18n.CloudServicesEmptyMessage}}}"
+  }
+ },
+ "title": "{{{i18n.CloudServicesTitle}}}"
 }

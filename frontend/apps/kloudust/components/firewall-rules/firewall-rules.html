@@ -1,56 +1,65 @@
 <!--
-/* 
+/*
+ * Firewall rules editor — Kloudust redesign skin. Design tokens inherit from
+ * the document through the shadow boundary; no style passthrough.
  * (C) 2018 TekMonks. All rights reserved.
  * License: See enclosed license file.
  */
  -->
 
 <style>
-body{
-    margin: 0; padding: 0;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-}
+:host { display: block; margin-bottom: var(--sp-4); }
 
 select, input {
-    background-color: inherit;
-    color: inherit;
-    border: none;
-    border-bottom: 1px solid;
-    padding: 0.2em 0em 0.2em 0.5em;
+    font: 400 var(--fs-sm) var(--font-sans);
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r-sm);
+    padding: 6px 10px;
+    min-height: 32px;
+    min-width: 0;
     outline: none;
+    transition: border-color var(--transition);
 }
-
-select option {
-    background-color: white;
-    color: black;
-}
+select:hover, input:hover { border-color: var(--n-400); }
+select:focus, input:focus { border-color: var(--focus-ring); box-shadow: 0 0 0 3px var(--primary-soft); }
+input::placeholder { color: var(--text-3); }
+select option { background-color: var(--surface); color: var(--text); }
+input { flex: 1; }
+select { flex: none; cursor: pointer; }
 
 span#rulesrow {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 2em;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
 }
 
 span#buttonspan {
     display: flex;
     min-width: 4em;
     justify-content: space-between;
-    margin-left: 0.5em 
+    gap: var(--sp-1);
+    margin-left: var(--sp-1);
 }
 span.roundbutton {
-    border: 1px solid black;
-    width: 1.4em;
-    height: 1.4em;
-    border-radius: 1.4em;
-    text-align: center;
-    font-size: 1em;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border-2);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--text-2);
+    font-size: var(--fs-md);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--surface);
 }
-
-{{#style}}{{{.}}}{{/style}}
+span.roundbutton:hover { border-color: var(--primary); color: var(--primary); }
 </style>
 
 <div id="rulecontainer">
@@ -105,7 +114,7 @@ span.roundbutton {
     <input id="port" type="text" placeholder="Ports or *">
 
     <span id="buttonspan">
-        <span class="roundbutton" onclick="monkshu_env.components['firewall-rules'].addRow(this.parentNode.parentNode)">+</span> 
+        <span class="roundbutton" onclick="monkshu_env.components['firewall-rules'].addRow(this.parentNode.parentNode)">+</span>
         <span class="roundbutton" onclick="monkshu_env.components['firewall-rules'].removeRow(this.parentNode.parentNode)">-</span>
     </span>
 </span>

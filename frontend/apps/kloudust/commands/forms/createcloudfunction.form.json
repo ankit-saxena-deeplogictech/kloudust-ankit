@@ -1,66 +1,97 @@
 {
-"id": "createcloudfunction",
-"command": "createCloudFunction",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["name", "description", "language", "code"],
-
-"title": "{{{i18n.CreateCloudFunction}}}",
-
-"i18n": {
-    "en": {
-        "CloudFunctionName": "Function endpoint name",
-        "Description": "Description",
-        "Language": "Function language",
-        "Code": "Type code",
-        "SubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
-    },
-    "hi": {
-        "CloudFunctionName": "Function endpoint name",
-        "Description": "Description",
-        "Language": "Function language",
-        "Code": "Type code",
-        "SubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
-    },
-    "ja": {
-        "CloudFunctionName": "Function endpoint name",
-        "Description": "Description",
-        "Language": "Function language",
-        "Code": "Type code",
-        "SubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
-    },
-    "zh": {
-        "CloudFunctionName": "Function endpoint name",
-        "Description": "Description",
-        "Language": "Function language",
-        "Code": "Type code",
-        "SubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
-    }
-},
-
-"form": {
-    "description": "{{{i18n.CloudFunctionDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "name", "type": "text", "placeholder": "{{{i18n.CloudFunctionName}}}", "required": true, 
-        "pattern":"\\s*\\w+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "description", "type": "text", "placeholder": "{{{i18n.Description}}}", "required": true},
-    {"id": "language", "multioption": true, "type": "select", "label": "{{{i18n.Language}}}", 
-        "options":[{"value":"js", "label":"Javascript"}, {"value":"py", "label":"Python"}]},
-    {"id": "command", "inputtype": "textarea", "type": "text", "placeholder": "{{{i18n.CloudCommandType}}}", 
-        "required": true, "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}", 
-        "style":"height: 50vh; font-family: monospace; font-size: larger; background-color: #212121;"}
-    ],
-
-    "submitlabel": "{{{i18n.SubmitLabel}}}"
-}
-
+ "id": "createcloudfunction",
+ "command": "createCloudFunction",
+ "type": "kloudust_cmdline",
+ "kloudust_cmdline_params": [
+  "name",
+  "description",
+  "language",
+  "code"
+ ],
+ "title": "{{{i18n.CreateCloudFunction}}}",
+ "i18n": {
+  "en": {
+   "CloudFunctionName": "Function endpoint name",
+   "Description": "Description",
+   "Language": "Function language",
+   "Code": "Type code",
+   "SubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
+  },
+  "hi": {
+   "CloudFunctionName": "Function endpoint name",
+   "Description": "Description",
+   "Language": "Function language",
+   "Code": "Type code",
+   "SubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
+  },
+  "ja": {
+   "CloudFunctionName": "Function endpoint name",
+   "Description": "Description",
+   "Language": "Function language",
+   "Code": "Type code",
+   "SubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
+  },
+  "zh": {
+   "CloudFunctionName": "Function endpoint name",
+   "Description": "Description",
+   "Language": "Function language",
+   "Code": "Type code",
+   "SubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "CloudFunctionDescription": "Create a new cloud function. Type the code below. For help on cloud functions refer to the product documentation."
+  }
+ },
+ "form": {
+  "description": "{{{i18n.CloudFunctionDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "name",
+    "type": "text",
+    "placeholder": "{{{i18n.CloudFunctionName}}}",
+    "required": true,
+    "pattern": "\\s*\\w+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "description",
+    "type": "text",
+    "placeholder": "{{{i18n.Description}}}",
+    "required": true
+   },
+   {
+    "id": "language",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.Language}}}",
+    "options": [
+     {
+      "value": "js",
+      "label": "Javascript"
+     },
+     {
+      "value": "py",
+      "label": "Python"
+     }
+    ]
+   },
+   {
+    "id": "command",
+    "inputtype": "textarea",
+    "type": "text",
+    "placeholder": "{{{i18n.CloudCommandType}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "variant": "console",
+    "rows": 20
+   }
+  ],
+  "submitlabel": "{{{i18n.SubmitLabel}}}"
+ }
 }

@@ -1,0 +1,202 @@
+<!--
+/**
+ * Form wizard HTML — multi-step form per the Kloudust redesign (create-vm
+ * wireframe). Same styling contract as form-runner: tokens inherit from the
+ * document, shared classes via components.css, generated controls styled by
+ * element selectors, no style passthrough of any kind.
+ *
+ * (C) 2026 TekMonks. All rights reserved.
+ * License: See enclosed license file.
+ */
+ -->
+
+<style>
+@import url('./css/components.css');
+
+:host {
+    display: block;
+    height: 100%;
+    overflow-y: auto;
+}
+
+div#body { color: var(--text); }
+
+div#main { max-width: var(--form-max); }
+
+span#description {
+    display: block;
+    color: var(--text-3);
+    font-size: var(--fs-md);
+    margin: var(--sp-1) 0 0;
+    max-width: 65ch;
+}
+
+/* --- Generated controls (element selectors; custom components untouched) -- */
+label {
+    display: block;
+    font: 500 var(--fs-md) var(--font-sans);
+    color: var(--text);
+    margin: 0 0 var(--sp-1) 1px;
+}
+
+input:not([type="hidden"]), select, textarea {
+    display: block;
+    width: 100%;
+    font: 400 var(--fs-md) var(--font-sans);
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r-sm);
+    padding: 8px var(--sp-3);
+    min-height: 36px;
+    margin-bottom: var(--sp-4);
+    outline: none;
+    transition: border-color var(--transition);
+}
+input:hover, select:hover, textarea:hover { border-color: var(--n-400); }
+input:focus, select:focus, textarea:focus {
+    border-color: var(--focus-ring);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+}
+::placeholder { color: var(--text-3); }
+input[readonly] { background-color: var(--surface-2); color: var(--text-3); }
+input:disabled, select:disabled, textarea:disabled {
+    background-color: var(--surface-2); color: var(--text-3); cursor: not-allowed;
+}
+
+input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+    -webkit-text-fill-color: var(--text);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+textarea {
+    min-height: 96px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 34px;
+    cursor: pointer;
+}
+select option { background-color: var(--surface); color: var(--text); }
+
+input.error { color: var(--danger-600); border-color: var(--danger-600); }
+
+span.hint {
+    display: block;
+    font-size: var(--fs-sm);
+    color: var(--text-3);
+    margin-top: calc(var(--sp-1) - var(--sp-4));
+    margin-bottom: var(--sp-4);
+}
+
+.variant-console {
+    background-color: var(--n-900) !important;
+    color: var(--n-200) !important;
+    font-family: var(--font-mono) !important;
+    font-size: var(--fs-sm) !important;
+    border-color: var(--n-700) !important;
+    line-height: 1.7;
+}
+.variant-console::placeholder { color: var(--n-500); }
+
+/* Wizard actions: back on the left, forward on the right */
+div#wizactions { justify-content: space-between; }
+div#wizactions .spacer { flex: 1; }
+</style>
+
+<div id="body">
+<div class="page-head">
+    <div>
+        {{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}
+        {{#description}}<span id="description">{{.}}</span>{{/description}}
+    </div>
+    <div id="close" class="iconbtn" role="button" tabindex="0" aria-label="Close"
+        onclick='event.stopPropagation(); monkshu_env.components["form-wizard"].close(this)'>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </div>
+</div>
+
+<ol class="stepper" aria-label="Progress">
+{{#steps}}
+    <li class="step {{#first}}active{{/first}}" data-step="{{stepindex}}">{{label}}</li>
+{{/steps}}
+</ol>
+
+<div id="main">
+{{#steps}}
+<section class="wizard-panel" data-step="{{stepindex}}" {{^first}}hidden{{/first}}>
+
+{{#review}}
+<div class="card">
+    <div class="card-head"><h3>{{label}}</h3></div>
+    <div class="card-body review"><dl id="reviewlist"></dl></div>
+</div>
+{{/review}}
+
+{{#rowgroups}}
+<div {{#isrow}}class="field-row"{{/isrow}}>
+{{#fields}}
+{{^multioption}}
+{{#label}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/label}}
+{{^label}}{{#placeholder}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/placeholder}}{{/label}}
+<{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}} id="{{id}}"
+    {{#optional}}data-optional="true"{{/optional}}
+    {{#type}}type="{{.}}"{{/type}}
+    {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
+    {{#required}}required{{/required}}
+    {{#value}}value="{{.}}"{{/value}}
+    {{#pattern}}pattern="{{.}}"{{/pattern}}
+    {{#min}}min="{{.}}"{{/min}}
+    {{#max}}max="{{.}}"{{/max}}
+    {{#rows}}rows="{{.}}"{{/rows}}
+    {{#title}}title="{{.}}"{{/title}}
+    {{#variant}}class="variant-{{.}}"{{/variant}}
+    {{#validation_error}}oninvalid="this.setCustomValidity('{{.}}')"{{/validation_error}}
+    {{#validation_error}}oninput="setCustomValidity('')"{{/validation_error}}
+    {{#readonly}}readonly{{/readonly}}
+    {{#list}}list="{{.}}"{{/list}}>
+</{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}}>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/multioption}}
+
+{{#multioption}}
+<label for="{{id}}">{{label}}</label>
+<select id="{{id}}" name="{{id}}" {{#optional}}data-optional="true"{{/optional}} {{#disabled}}disabled="{{.}}"{{/disabled}}>
+    {{#options}}
+    <option value="{{value}}">{{label}}</option>
+    {{/options}}
+</select>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/multioption}}
+{{/fields}}
+</div>
+{{/rowgroups}}
+
+</section>
+{{/steps}}
+
+<div id="wizactions" class="form-actions">
+    <span id="wizback" class="btn btn-secondary hide" role="button" tabindex="0"
+        onclick='event.stopPropagation(); monkshu_env.components["form-wizard"].back(this)'>
+        {{#backlabel}}{{.}}{{/backlabel}}{{^backlabel}}Back{{/backlabel}}
+    </span>
+    <span class="spacer"></span>
+    <span id="wiznext" class="btn btn-primary" role="button" tabindex="0"
+        onclick='event.stopPropagation(); monkshu_env.components["form-wizard"].next(this)'>
+        {{#nextlabel}}{{.}}{{/nextlabel}}{{^nextlabel}}Next{{/nextlabel}}
+    </span>
+    <span id="wizsubmit" class="btn btn-primary hide" role="button" tabindex="0"
+        onclick='event.stopPropagation(); monkshu_env.components["form-wizard"].formSubmitted(this)'>
+        {{#submitlabel}}{{.}}{{/submitlabel}}{{^submitlabel}}Create{{/submitlabel}}
+    </span>
+</div>
+</div>
+
+</div>

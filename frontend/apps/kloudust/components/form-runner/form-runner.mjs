@@ -15,10 +15,24 @@ const COMPONENT_PATH = util.getModulePath(import.meta), INPUT_ELEMENTS = ["input
 async function elementConnected(host) {
     const formData = util.base64ToString(host.dataset.form);
     const expandedData = await router.expandPageData(formData);
-    let formObject = JSON.parse(expandedData); 
+    let formObject = JSON.parse(expandedData);
     if (formObject.optional_fields) formObject.showOptional = true;
     formObject = await _runOnLoadJavascript(formObject);
+    formObject.required_rowgroups = _groupFieldsIntoRows(formObject.required_fields);
+    formObject.optional_rowgroups = _groupFieldsIntoRows(formObject.optional_fields);
     form_runner.setDataByHost(host, formObject);
+}
+
+/** Consecutive fields sharing the same "fieldrow" value render side by side (.field-row). */
+function _groupFieldsIntoRows(fields) {
+    if (!fields) return null;
+    const groups = []; for (const field of fields) {
+        const lastGroup = groups[groups.length-1];
+        if (field.fieldrow && lastGroup && lastGroup.fieldrow == field.fieldrow) lastGroup.fields.push(field);
+        else groups.push({fieldrow: field.fieldrow, fields: [field]});
+    }
+    for (const group of groups) group.isrow = group.fields.length > 1;
+    return groups;
 }
 
 async function elementRendered(host) {
