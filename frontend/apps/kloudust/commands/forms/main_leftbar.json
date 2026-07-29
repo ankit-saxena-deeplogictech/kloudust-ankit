@@ -108,8 +108,8 @@
     "group": "governance"
    },
    {
-    "id": "cloudcommand",
-    "label": "{{{i18n.CloudCommand}}}",
+    "id": "cloudshell",
+    "label": "{{{i18n.CloudShell}}}",
     "logo": "img/cloudcommand.svg",
     "group": "automation"
    },
@@ -133,7 +133,6 @@
    "VirtualNetworks": "Virtual networks",
    "FirewallRulesets": "Firewall Rulesets",
    "CloudServices": "Cloud services",
-   "CloudCommand": "Run cloud command",
    "Alerts": "Alerts",
    "Containers": "Containers",
    "CloudFunctions": "Cloud functions",
@@ -145,7 +144,8 @@
    "GroupNetworking": "Networking",
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
-   "GroupAdministration": "Administration"
+   "GroupAdministration": "Administration",
+   "CloudShell": "Cloud shell"
   },
   "hi": {
    "Create": "Create",
@@ -158,7 +158,6 @@
    "VirtualNetworks": "Virtual networks",
    "FirewallRulesets": "Firewall Rulesets",
    "CloudServices": "Cloud services",
-   "CloudCommand": "Run cloud command",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
    "Images": "Images",
@@ -167,7 +166,8 @@
    "GroupNetworking": "Networking",
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
-   "GroupAdministration": "Administration"
+   "GroupAdministration": "Administration",
+   "CloudShell": "Cloud shell"
   },
   "ja": {
    "Create": "Create",
@@ -180,7 +180,6 @@
    "VirtualNetworks": "Virtual networks",
    "FirewallRulesets": "Firewall Rulesets",
    "CloudServices": "Cloud services",
-   "CloudCommand": "Run cloud command",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
    "Images": "Images",
@@ -189,7 +188,8 @@
    "GroupNetworking": "Networking",
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
-   "GroupAdministration": "Administration"
+   "GroupAdministration": "Administration",
+   "CloudShell": "Cloud shell"
   },
   "zh": {
    "Create": "Create",
@@ -202,7 +202,6 @@
    "VirtualNetworks": "Virtual networks",
    "FirewallRulesets": "Firewall Rulesets",
    "CloudServices": "Cloud services",
-   "CloudCommand": "Run cloud command",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
    "Images": "Images",
@@ -211,7 +210,8 @@
    "GroupNetworking": "Networking",
    "GroupAutomation": "Automation",
    "GroupGovernance": "Governance",
-   "GroupAdministration": "Administration"
+   "GroupAdministration": "Administration",
+   "CloudShell": "Cloud shell"
   }
  }
 }
