@@ -24,9 +24,9 @@
     "httpdHeaders": {
         "Cache-Control": "max-age=604800, must-revalidate, private"
     },
-    "ssl": true,
+    "ssl": false,
     "sslKeyFile": "/Users/rvkapoor/Documents/Programs/source/etc/dnsip_privkey.pem",
     "sslCertFile": "/Users/rvkapoor/Documents/Programs/source/etc/dnsip_fullchain.pem",
-    "port": 443,
+    "port": 8443,
     "host": "{{{hostname}}}"
 }

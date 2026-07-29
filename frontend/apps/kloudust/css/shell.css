@@ -1,0 +1,238 @@
+/* ============================================================================
+   KLOUDUST CONSOLE — Application shell (main.html only)
+   Sidebar, topbar, content area, welcome screen.
+   Ported from KD-Frontend-Review/redesign/css/style.css §2, §3 and the
+   shell-responsive rules of §5, adapted to the Monkshu main.html structure.
+
+   Loaded at document level together with tokens.css and components.css.
+   Not used inside shadow roots.
+
+   (C) 2026 TekMonks. All rights reserved.
+   ========================================================================== */
+
+html { height: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ----------------------------------------------------------------------------
+   LAYOUT SHELL
+---------------------------------------------------------------------------- */
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+  transition: grid-template-columns var(--transition);
+}
+.app.nav-collapsed { grid-template-columns: var(--sidebar-w-collapsed) 1fr; }
+
+/* --- Sidebar ------------------------------------------------------------- */
+.sidebar {
+  background: var(--sb-bg);
+  color: var(--sb-text);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; overflow-x: hidden;
+  z-index: 40;
+}
+.sb-brand {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-4);
+  color: var(--n-0); font-weight: 600; font-size: var(--fs-lg);
+  border-bottom: 1px solid var(--sb-border);
+  white-space: nowrap;
+}
+.sb-brand .logo {
+  width: 32px; height: 32px; flex: none;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+  border-radius: var(--r-sm); color: #fff;
+  font-size: var(--fs-md); font-weight: 700;
+}
+.sb-nav { flex: 1; padding: var(--sp-3) var(--sp-2); }
+.sb-group { margin-bottom: var(--sp-4); }
+.sb-group-label {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--sb-text-2);
+  padding: var(--sp-2) var(--sp-3); white-space: nowrap;
+}
+.sb-item {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3); margin: 1px 0;
+  border-radius: var(--r-sm);
+  color: var(--sb-text); text-decoration: none;
+  font-size: var(--fs-md); white-space: nowrap;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+.sb-item:hover { background: var(--sb-bg-2); color: var(--n-0); text-decoration: none; }
+.sb-item.active, .sb-item[aria-current="page"] {
+  background: var(--sb-bg-2); color: var(--sb-active);
+  border-left-color: var(--sb-active); font-weight: 500;
+}
+/* Legacy command icons are dark-on-light SVG files; force them light for the
+   dark sidebar (both themes) without touching the assets. */
+.sb-item img {
+  width: 18px; height: 18px; flex: none;
+  filter: brightness(0) invert(0.72);
+}
+.sb-item:hover img { filter: brightness(0) invert(1); }
+
+.sb-foot {
+  padding: var(--sp-3); border-top: 1px solid var(--sb-border);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2);
+}
+.sb-collapse {
+  background: none; border: 1px solid var(--sb-border); color: var(--sb-text);
+  border-radius: var(--r-sm); padding: var(--sp-2); cursor: pointer;
+  display: grid; place-items: center;
+}
+.sb-collapse:hover { background: var(--sb-bg-2); color: var(--n-0); }
+.sb-version { font-size: var(--fs-xs); color: var(--sb-text-2); white-space: nowrap; }
+
+/* Collapsed rail: icons only, labels hidden */
+.nav-collapsed .sb-brand > span:not(.logo),
+.nav-collapsed .sb-group-label,
+.nav-collapsed .sb-item span,
+.nav-collapsed .sb-version { display: none; }
+.nav-collapsed .sb-item { justify-content: center; padding: var(--sp-3); }
+.nav-collapsed .sb-brand { justify-content: center; }
+.nav-collapsed .sb-foot { justify-content: center; }
+
+/* Mobile nav scrim — participates in layout only when off-canvas nav is open */
+.scrim { display: none; }
+
+/* --- Topbar --------------------------------------------------------------- */
+.main { display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: 0 var(--sp-5);
+  position: sticky; top: 0; z-index: 30;
+}
+.tb-iconbtn {
+  position: relative;
+  width: 36px; height: 36px; display: grid; place-items: center;
+  background: none; border: none; border-radius: var(--r-sm);
+  color: var(--text-2); cursor: pointer;
+}
+.tb-iconbtn:hover { background: var(--surface-2); color: var(--text); }
+.tb-iconbtn .badge-dot {
+  position: absolute; top: 4px; right: 4px;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 8px; background: var(--danger-600); color: #fff;
+  font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+}
+.tb-iconbtn.tb-hamburger { display: none; }
+.tb-spacer { flex: 1; }
+
+/* Project switcher — tenant scope must always be visible */
+.tb-project {
+  display: flex; align-items: center; gap: var(--sp-2);
+  border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--r-sm); padding: 4px var(--sp-3);
+}
+.tb-project:hover { background: var(--surface-2); }
+.tb-project label {
+  color: var(--text-3); font-size: var(--fs-xs); white-space: nowrap;
+  cursor: pointer;
+}
+.tb-project select {
+  border: none; background: transparent; color: var(--text);
+  font: 600 var(--fs-md) var(--font-sans);
+  outline: none; cursor: pointer;
+  text-transform: capitalize; max-width: 220px;
+}
+.tb-project select option {
+  background: var(--surface); color: var(--text);
+  text-transform: capitalize; font-weight: 400;
+}
+
+/* --- Content -------------------------------------------------------------- */
+.content {
+  flex: 1;
+  padding: var(--sp-5);
+  width: 100%; max-width: var(--content-max);
+  margin: 0 auto;
+}
+/* Open/close animation hook used by main.mjs showContent() */
+#maincontent { transition: opacity 400ms ease; }
+#maincontent.close { opacity: 0; }
+/* Hosted components (form-runner, table-list) fill the content area */
+#maincontent > div { min-height: 100%; }
+
+/* ----------------------------------------------------------------------------
+   WELCOME SCREEN (initial content template)
+---------------------------------------------------------------------------- */
+#welcomediv {
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--sp-2); text-align: center;
+  margin: 10vh 0 var(--sp-7);
+}
+img#mainlogo { width: min(280px, 60vw); margin-bottom: var(--sp-4); }
+[data-theme="dark"] img#mainlogo { filter: brightness(0) invert(0.9); }
+#welcome { font-size: var(--fs-2xl); font-weight: 600; }
+#welcome_subheading { color: var(--text-3); }
+
+#buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+  gap: var(--sp-4);
+  justify-content: center;
+}
+.quickaction {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); box-shadow: var(--shadow-sm);
+  padding: var(--sp-5) var(--sp-4);
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-3);
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.quickaction:hover { border-color: var(--primary); box-shadow: var(--shadow-md); }
+.quickaction img { width: 44px; height: 44px; }
+[data-theme="dark"] .quickaction img { filter: brightness(0) invert(0.85); }
+.quickaction span { font-size: var(--fs-md); font-weight: 500; text-align: center; }
+
+/* ----------------------------------------------------------------------------
+   RESPONSIVE SHELL
+---------------------------------------------------------------------------- */
+/* Tablet & below: off-canvas sidebar */
+@media (max-width: 1023px) {
+  .app, .app.nav-collapsed { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: var(--sidebar-w);
+    transform: translateX(-100%); transition: transform 200ms ease;
+  }
+  .app.nav-open .sidebar { transform: translateX(0); box-shadow: var(--shadow-lg); }
+  /* collapsed-rail label hiding does not apply off-canvas */
+  .nav-collapsed .sb-brand > span:not(.logo), .nav-collapsed .sb-group-label,
+  .nav-collapsed .sb-item span, .nav-collapsed .sb-version { display: initial; }
+  .nav-collapsed .sb-item { justify-content: flex-start; }
+  .tb-iconbtn.tb-hamburger { display: grid; }
+  .scrim {
+    position: fixed; inset: 0; background: rgba(15,23,42,0.4); z-index: 35; display: none;
+  }
+  .app.nav-open .scrim { display: block; }
+}
+
+@media (max-width: 767px) {
+  .content { padding: var(--sp-4); }
+  .tb-project label { display: none; }
+}
+
+@media print {
+  .sidebar, .topbar { display: none; }
+  .app { grid-template-columns: 1fr; }
+}

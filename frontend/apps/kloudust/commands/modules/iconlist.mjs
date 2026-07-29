@@ -8,70 +8,64 @@
 
 const HTML_TEMPLATE = `
 <style>
-::-webkit-scrollbar {
-    width: 0.5em !important;
-    height: 0.5em !important;
-    scroll-behavior: smooth !important;
-}
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
-    margin: 5em;
-    border-radius: 1em !important;
-}
-::-webkit-scrollbar-thumb {
-    background-color: darkgrey !important;
-    border-radius: 1em !important;
-    background-clip: padding-box;
-}
-
-body {height: 100%; margin: 0;}
-
+/* Redesign skin — colors/spacing come from css/tokens.css (document level).
+   Ids div#body, div#buttons, div#button are targeted by legacy style
+   overrides inside form.jsons (row-click popups) — do not rename. */
 div#body {
-    overflow: hidden;
-    max-height: 100%;
     box-sizing: border-box;
-    color: #4C4C4C;
-    background-color: #EBECEE;
-    height: 100%;
+    color: var(--text);
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
 
 div#close {
-    padding: 0.2em 0.6em;
-    background-color: #BC5205;
-    border-radius: 0.2em;
-    margin: 1em;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--r-sm);
+    color: var(--text-3);
     cursor: pointer;
-    color: #EBECEE;
+    font: 500 var(--fs-md) var(--font-sans);
 }
+div#close:hover { background-color: var(--surface-2); color: var(--text); }
 
 div#buttons {
-	display: flex;
+    display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
     width: 100%;
     justify-content: left;
-    margin-top: 2em;
+    margin-top: var(--sp-4);
     flex-wrap: wrap;
+    gap: var(--sp-4);
 }
 div#button {
-	display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    width: 10em;
-    cursor: pointer;
     justify-content: center;
-    height: 7em;
-    max-height: 7em;
+    gap: var(--sp-3);
+    width: 11em;
+    height: 8em;
+    max-height: 8em;
     overflow: hidden;
     font-size: 0.9em;
-    margin: 1.5em;
+    padding: var(--sp-4);
+    box-sizing: border-box;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
 }
-div#button img {width: 5em; height: 5em;}
-div#button span {text-align: center;}
+div#button:hover { border-color: var(--primary); box-shadow: var(--shadow-md); }
+div#button img {width: 40px; height: 40px;}
+[data-theme="dark"] div#button img {filter: brightness(0) invert(0.85);}
+div#button span {text-align: center; color: var(--text);}
 </style>
 {{#style}}<style>{{{.}}}</style>{{/style}}
 

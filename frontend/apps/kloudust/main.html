@@ -1,150 +1,93 @@
-<!-- 
+<!--
 (C) 2020 TekMonks. All rights reserved.
+Redesigned shell — tokens/shell/components stylesheets drive all styling.
 -->
 <style>
-@import url('./fonts/appfonts.css');
-
-body {
-	margin: 0;
-	padding: 0;
-	font-family: 'Red Hat Text';
-	background-color: #E5E5E5;
-	color: #4C4C4C;
-	user-select: none;
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	font-size: medium;
-	height: 100%;
-	justify-content: space-between;
-}
-
-div#leftbar {
-	width: 16em;
-    background-color: #D9D9D9;
-    display: flex;
-    flex-direction: column;
-    padding: 2.5em 1.5em;
-    justify-content: space-between;
-    box-sizing: border-box;
-	min-width: 16em;
-}
-div#leftbar span.leftbaritem {
-	display: flex;
-    flex-direction: row;
-    gap: 1em;
-    align-items: center;
-	cursor: pointer;
-	height: 2em;
-}
-span.leftbaritem img {height: 80%;}
-div#topleftbaritems, div#bottomleftbaritems {
-	display: flex;
-    flex-direction: column;
-    gap: 1em;
-}
-div#topleftbaritems {
-	margin-bottom: 2rem;
-    max-height: 75%;
-	overflow-y: auto;
-}
-
-div#maincontent {
-	flex-grow: 1;
-    height: 100%;
-	transition: all 500ms;
-	width: 100%;
-	overflow: hidden;
-}
-div#maincontent.close {
-	height: 0;
-	width: 100%;
-}
-div#welcomediv {
-	display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1em;
-    margin-top: 20vh;
-    margin-bottom: 20vh
-}
-img#mainlogo {width: 20vw;}
-
-div#buttons {
-	display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    justify-content: space-around;
-}
-div#button {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 10em;
-	cursor: pointer;
-}
-div#button img {width: 5em; height: 5em;}
-
-select#projects {
-	padding: 0.5em;
-    border-radius: 0.5em;
-    width: 100%;
-    outline: none;
-    border-color: transparent;
-    margin-bottom: 2em;
-    text-transform: capitalize;
-    background-color: #F2FAFF;
-    color: #4C4C4C;
-}
-option.projects {text-transform: capitalize;}
-label#projects {
-	font-size: 0.9em;
-    margin-left: 0.2em;
-    color: #4c4c4c;
-}
+@import url('./css/tokens.css');
+@import url('./css/shell.css');
+@import url('./css/components.css');
 </style>
 
 <!doctype html>
 <html>
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link href="./img/favicon.png" rel="icon" type="image/x-icon">
 
 	<script type="module">
-	import {main} from "./js/main.mjs"; window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main = main; 
+	import {main} from "./js/main.mjs"; window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main = main;
 	import {loginmanager} from "./js/loginmanager.mjs"; window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].loginmanager = loginmanager;
-	main.registerHostingDivAndInitialContentTemplate(document.querySelector("div#maincontent"), 
-		document.querySelector("template#initialContent"), "close", 500);
+	if (localStorage.getItem("kd-theme") === "dark") document.documentElement.dataset.theme = "dark";
+	if (localStorage.getItem("kd-nav") === "collapsed") document.querySelector(".app")?.classList.add("nav-collapsed");
+	main.registerHostingDivAndInitialContentTemplate(document.querySelector("div#maincontent"),
+		document.querySelector("template#initialContent"), "close", 400);
 	main.showContent();
 	</script>
-		
+
 	<title>{{i18n.Title}}</title>
 </head>
 
 <body>
-<div id="leftbar">
-<div id="topleftbaritems">
-	{{#mainPageData.leftbarCommands}}
-	<span class="leftbaritem" id="leftbarcmd_{{id}}" 
-			onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.cmdClicked(this, '{{id}}')">
-		<img src="{{{logo}}}"><span>{{label}}</span>
-	</span>
-	{{/mainPageData.leftbarCommands}}
-</div>
+<div class="app" id="app">
 
-<div id="bottomleftbaritems">
-	<label for="projects" id="projects">{{i18n.ActiveProject}}</label>
-	<span class="leftbaritem"><select id="projects" onchange="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.activeProjectChanged(this.value)">
-		{{#mainPageData.userprojects}}<option class="projects" name="{{{name}}}" value="{{{name}}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/mainPageData.userprojects}}
-	</select></span>
-	<span class="leftbaritem" onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].loginmanager.logout()"><img src="img/door.svg"><span>Logout</span></span>
-</div>
-</div>
+<aside class="sidebar">
+	<div class="sb-brand"><span class="logo">K</span><span>Kloudust</span></div>
 
-<div id="maincontent">
+	<nav class="sb-nav" aria-label="Primary">
+		<div class="sb-group" id="topleftbaritems">
+			{{#mainPageData.leftbarCommands}}
+			<a class="sb-item leftbaritem" id="leftbarcmd_{{id}}"
+					onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.cmdClicked(this, '{{id}}')">
+				<img src="{{{logo}}}" alt=""><span>{{label}}</span>
+			</a>
+			{{/mainPageData.leftbarCommands}}
+		</div>
+	</nav>
+
+	<div class="sb-foot">
+		<span class="sb-version">Kloudust Console</span>
+		<button class="sb-collapse" aria-label="Collapse sidebar"
+			onclick="const app=document.getElementById('app'); app.classList.toggle('nav-collapsed'); localStorage.setItem('kd-nav', app.classList.contains('nav-collapsed')?'collapsed':'open');">
+			<svg class="icon" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>
+		</button>
+	</div>
+</aside>
+<div class="scrim" onclick="document.getElementById('app').classList.remove('nav-open')"></div>
+
+<div class="main">
+<header class="topbar">
+	<button class="tb-iconbtn tb-hamburger" aria-label="Open navigation"
+		onclick="document.getElementById('app').classList.toggle('nav-open')">
+		<svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+	</button>
+
+	<div class="tb-project">
+		<label for="projects">{{i18n.ActiveProject}}</label>
+		<select id="projects" onchange="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.activeProjectChanged(this.value)">
+			{{#mainPageData.userprojects}}<option class="projects" name="{{{name}}}" value="{{{name}}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/mainPageData.userprojects}}
+		</select>
+	</div>
+
+	<div class="tb-spacer"></div>
+
+	<button class="tb-iconbtn" aria-label="Toggle dark mode" title="Toggle dark mode"
+		onclick="const h=document.documentElement; const dark=h.dataset.theme==='dark'; if (dark) delete h.dataset.theme; else h.dataset.theme='dark'; localStorage.setItem('kd-theme', dark?'light':'dark');">
+		<svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9"/></svg>
+	</button>
+
+	<button class="tb-iconbtn" aria-label="Logout" title="Logout"
+		onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].loginmanager.logout()">
+		<svg class="icon" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M7 6a8 8 0 1 0 10 0"/></svg>
+	</button>
+</header>
+
+<div id="maincontent" class="content">
 	<!-- Whatever is open goes here -->
+</div>
+</div>
+
 </div>
 
 <template id="initialContent">
@@ -156,8 +99,8 @@ label#projects {
 
 <div id="buttons">
 	{{#mainPageData.mainCommands}}
-	<div id="button" onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.cmdClicked(this, '{{id}}')">
-		<img src="{{{logo}}}"><span>{{label}}</span>
+	<div class="quickaction" onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.cmdClicked(this, '{{id}}')">
+		<img src="{{{logo}}}" alt=""><span>{{label}}</span>
 	</div>
 	{{/mainPageData.mainCommands}}
 </div>

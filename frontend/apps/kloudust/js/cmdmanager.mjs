@@ -110,7 +110,8 @@ async function _getFormHTML(formJSON) {
     let html = "";
 
     if (formJSON.type.toLowerCase() == KLOUDUST_CMDLINE || formJSON.type.toLowerCase() == AUTOMATION_CMDLINE) {
-        const base64FormJSON = $$.libutil.stringToBase64(JSON.stringify(formJSON.form)), id = formJSON.id;
+        // formtitle lets the component render a page heading; dropped by JSON.stringify if the form has no title
+        const base64FormJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.form, formtitle: formJSON.title})), id = formJSON.id;
         if (formJSON.i18n) for (const [lang, i18nObject] of Object.entries(formJSON.i18n)) await $$.libi18n.setI18NObject(lang, i18nObject);
 
         html = `<form-runner id="${id}" data-form='${base64FormJSON}'
@@ -119,7 +120,7 @@ async function _getFormHTML(formJSON) {
     }
 
     if (formJSON.type.toLowerCase() == TABLE_DISPLAY) {
-        const base64TabledefJSON = $$.libutil.stringToBase64(JSON.stringify(formJSON.tabledef)), id = formJSON.id;
+        const base64TabledefJSON = $$.libutil.stringToBase64(JSON.stringify({...formJSON.tabledef, formtitle: formJSON.title})), id = formJSON.id;
         if (formJSON.i18n) for (const [lang, i18nObject] of Object.entries(formJSON.i18n)) await $$.libi18n.setI18NObject(lang, i18nObject);
 
         html = `<table-list id="${id}" data-tabledef='${base64TabledefJSON}'

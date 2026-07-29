@@ -1,130 +1,100 @@
 <!--
-/** 
- * Form runner HTML
+/**
+ * Table list HTML — Kloudust redesign skin.
+ *
+ * Styling contract:
+ *  - Design tokens inherit from the document (css/tokens.css) through the
+ *    shadow boundary; shared classes come from css/components.css.
+ *  - The {{style}} tabledef passthrough renders AFTER the base styles so
+ *    legacy form.json overrides (e.g. div#tablebottombar{display:none}) keep
+ *    winning. Deprecated — replaced by declarative keys in a later phase.
+ *
+ * Backward compatibility notes (do not break):
+ *  - Ids div#onclick_html, div#hider are queried by table-list.mjs; ids
+ *    div#tablebody, div#tablemain, div#tableclose, div#tablebottombar are
+ *    targeted by legacy style strings inside form.jsons.
+ *  - The enable_copy blocks and row onclick handlers are behavior — copied
+ *    verbatim from the original template.
+ *
  * (C) 2023 TekMonks. All rights reserved.
  * License: See enclosed license file.
  */
  -->
 
 <style>
-::-webkit-scrollbar {
-    width: 0.5em !important;
-    height: 0.5em !important;
-    scroll-behavior: smooth !important;
-}
+@import url('./css/components.css');
 
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
-    margin: 5em;
-    border-radius: 1em !important;
+:host {
+    display: block;
+    height: 100%;
+    overflow-y: auto;
 }
-
-::-webkit-scrollbar-thumb {
-    background-color: darkgrey !important;
-    border-radius: 1em !important;
-    background-clip: padding-box;
-}
-
-body {height: 100%; margin: 0;}
 
 div#tablebody {
-    overflow: hidden;
-    max-height: 100%;
-    box-sizing: border-box;
-    color: #DCDCDC;
-    background-color: #818181;
-    height: 100%;
+    color: var(--text);
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+div#tabletop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-4);
+    min-height: 32px;
 }
 
 div#tablemain {
-    display: flex;
-    flex-direction: column;
     width: 100%;
-    box-sizing: border-box;
-    height: 100%;
-    overflow-y: auto;
-    max-height: 100%;
-    background-color: #EBECEE;
 }
 
+/* --- Row-click popup (legacy iconlist actions) ---------------------------- */
 div#hider {
     color: transparent;
     background-color: transparent;
     position: absolute;
-    top: 0; 
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     display: none;
 }
-div#hider.visible {z-index: 99; display: block;}
+div#hider.visible { z-index: 99; display: block; }
+
 div#onclick_html {
     position: absolute;
     z-index: 100;
-    color: #BC5205;
-    background-color: white;
-    width: calc(100% - 18em);
+    color: var(--text);
+    background-color: var(--surface);
+    width: calc(100% - var(--sidebar-w) - 48px);
     display: none;
-    border: 1px solid #BC5205;
-    padding: 1em;
+    border: 1px solid var(--border);
+    padding: var(--sp-4);
     box-sizing: border-box;
-    border-radius: 0.3em;
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
 }
 div#onclick_html.visible {
-    display: block; 
-    left: 17em;
-    margin-right: 1em;
-}
-
-div#tableclose {
-    padding: 0.2em 0.6em;
-    background-color: #BC5205;
-    border-radius: 0.2em;
-    margin: 0.5em 1em;
-    cursor: pointer;
+    display: block;
+    left: calc(var(--sidebar-w) + 24px);
+    margin-right: 24px;
 }
 
 div#tablebottombar {
-    width: 100%;
-    height: 3em;
-    background-color: #818181;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: right;
+    justify-content: flex-end;
+    gap: var(--sp-2);
+    width: 100%;
+    padding: var(--sp-3) 0;
 }
+div#tablebottombar:empty { display: none; }
 
-table {border-collapse: collapse;}
-thead {
-    background-color: #4C4C4C;
-    color: #DCDCDC;
-}
-th {padding: 0.8em 0.5em;}
-td {padding: 0.5em;}
-th,td {
-    font-size: smaller;
-    font-weight: normal;
-    text-align: left;
-    box-sizing: border-box;
-}
-tbody tr {
-    border-bottom: 1px solid #dddddd;
-    cursor: pointer;
-}
-tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-tbody tr:last-of-type {
-    border-bottom: 2px solid #BC5205;
-}
-tbody tr:hover {
-    background-color: #BC5205;
-    color: #f3f3f3;
-}
+/* --- Shift+click copy affordance ------------------------------------------ */
 {{#enable_copy}}tbody td {position: relative; cursor: copy;}{{/enable_copy}}
 
 tbody.copy-enabled td:hover::after {
@@ -132,14 +102,15 @@ tbody.copy-enabled td:hover::after {
     position: absolute;
     top: -1.8em;
     left: 0;
-    background: #333;
-    color: #fff;
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
     font-size: 0.75em;
     padding: 2px 6px;
-    border-radius: 3px;
+    border-radius: 4px;
     white-space: nowrap;
     pointer-events: none;
     z-index: 5;
+    box-shadow: var(--shadow-sm);
 }
 
 td[data-copied="true"]::after {
@@ -147,23 +118,34 @@ td[data-copied="true"]::after {
     position: absolute;
     left: 0;
     top: -1.8em;
-    background: #333;
-    color: #fff;
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
     padding: 2px 6px;
     font-size: 0.75em;
-    border-radius: 3px;
+    border-radius: 4px;
     white-space: nowrap;
     z-index: 5;
     pointer-events: none;
-} 
+    box-shadow: var(--shadow-sm);
+}
+
+.dt tbody tr { cursor: pointer; }
 </style>
 {{#style}}<style>{{{.}}}</style>{{/style}}
 
 <div id="tablebody">
-<div id="tableclose" onclick='event.stopPropagation(); monkshu_env.components["form-runner"].close(this)'>X</div>
 
-<div id="tablemain">
-<table>
+<div id="tabletop">
+    <div>{{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}</div>
+    <div id="tableclose" class="iconbtn" role="button" tabindex="0" aria-label="Close"
+        onclick='event.stopPropagation(); monkshu_env.components["form-runner"].close(this)'>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </div>
+</div>
+
+<div id="tablemain" class="card table-card">
+<div class="table-scroll">
+<table class="dt">
     <thead>
     <tr>
     {{#headers}}<th>{{.}}</th>{{/headers}}
@@ -171,7 +153,7 @@ td[data-copied="true"]::after {
     </thead>
 
     <tbody {{#enable_copy}} class="copy-enabled" onclick="
-        if (!event.shiftKey) return; 
+        if (!event.shiftKey) return;
         const el = (event.target && event.target.nodeType == Node.TEXT_NODE) ? event.target.parentElement : event.target;
         const td = (el && el.closest) ? el.closest('td') : undefined, tbody = (el && el.closest) ? el.closest('tbody') : undefined;
         const textToCopy = (td && tbody) ? (td.textContent||'').trim() : undefined;
@@ -188,11 +170,10 @@ td[data-copied="true"]::after {
     </tbody>
 </table>
 </div>
+</div>
 
 <div id="hider" onclick="monkshu_env.components['table-list'].hidePopup(event)"></div>
 <div id="onclick_html"></div>
 
-<div id="tablebottombar">
-    {{{bottom_bar_html}}}
-</div>
+<div id="tablebottombar">{{{bottom_bar_html}}}</div>
 </div>
