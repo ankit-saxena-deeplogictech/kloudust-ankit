@@ -140,6 +140,21 @@ div#wizactions .spacer { flex: 1; }
 </div>
 {{/review}}
 
+{{#presets}}
+<label id="presetlabel{{stepindex}}">{{label}}</label>
+<div class="preset-grid" role="group" aria-labelledby="presetlabel{{stepindex}}">
+{{#options}}
+    <button type="button" class="preset" data-preset="{{{valuesbase64}}}"
+        aria-pressed="{{#selected}}true{{/selected}}{{^selected}}false{{/selected}}"
+        onclick='event.stopPropagation(); monkshu_env.components["form-wizard"].applyPreset(this)'>
+        <span class="p-name">{{label}}</span>
+        {{#spec}}<span class="p-spec">{{.}}</span>{{/spec}}
+    </button>
+{{/options}}
+</div>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/presets}}
+
 {{#rowgroups}}
 <div {{#isrow}}class="field-row"{{/isrow}}>
 {{#fields}}

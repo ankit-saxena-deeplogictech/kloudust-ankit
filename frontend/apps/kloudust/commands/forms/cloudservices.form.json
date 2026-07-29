@@ -114,40 +114,50 @@
   "columns": [
    {
     "key": "name_raw",
-    "type": "main"
-   },
-   {
-    "key": "description"
+    "type": "main",
+    "sub": "description",
+    "sortable": true
    },
    {
     "key": "vmtype",
     "type": "badge",
     "badgemap": {
      "*": "info"
-    }
-   },
-   {
-    "key": "disk",
-    "priority": 2
+    },
+    "sortable": true
    },
    {
     "key": "cpus",
+    "sortable": true,
+    "sorttype": "num",
     "priority": 2
    },
    {
     "key": "memory",
+    "sortable": true,
+    "sorttype": "num",
+    "priority": 2
+   },
+   {
+    "key": "disk",
+    "sortable": true,
+    "sorttype": "num",
     "priority": 2
    },
    {
     "key": "datetime",
     "type": "muted",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "timestamp",
     "priority": 2
    }
   ],
   "emptystate": {
    "title": "{{{i18n.CloudServicesEmptyTitle}}}",
    "message": "{{{i18n.CloudServicesEmptyMessage}}}"
-  }
+  },
+  "rowactions": true
  },
  "title": "{{{i18n.CloudServicesTitle}}}"
 }

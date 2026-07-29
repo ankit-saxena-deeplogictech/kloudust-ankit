@@ -5,8 +5,8 @@
  * Styling contract: design tokens inherit from the document (css/tokens.css)
  * through the shadow boundary; shared classes come from css/components.css.
  * Tabledefs are purely declarative — there is deliberately NO style
- * passthrough; use columns/badgemap/searchbar/filterkey/pagesize/selectable/
- * bulkactions/emptystate keys instead.
+ * passthrough; use columns (type/badgemap/priority/sub/sortable)/searchbar/
+ * filterkey/pagesize/selectable/bulkactions/rowactions/emptystate instead.
  *
  * Backward compatibility: ids div#onclick_html and div#hider are queried by
  * table-list.mjs; div#tablebody, div#tablemain and div#tableclose are kept as
@@ -115,6 +115,7 @@ td[data-copied="true"]::after {
 
 .dt tbody tr { cursor: pointer; }
 .dt td.col-check, .dt th.col-check { cursor: default; }
+.dt td.col-actions, .dt th.col-actions { cursor: default; }
 </style>
 
 <div id="tablebody">
@@ -170,7 +171,14 @@ td[data-copied="true"]::after {
             onclick="monkshu_env.components['table-list'].selectAll(this)">
     </th>
     {{/selectable}}
-    {{#headers}}<th {{#priority}}data-priority="{{.}}"{{/priority}}>{{label}}</th>{{/headers}}
+    {{#headers}}
+    <th {{#priority}}data-priority="{{.}}"{{/priority}}
+        {{#sortable}}class="sortable" role="button" tabindex="0" aria-sort="none"
+        onclick="monkshu_env.components['table-list'].sortTable(this, {{index}})"
+        onkeydown="if (event.key == 'Enter' || event.key == ' ') {event.preventDefault(); monkshu_env.components['table-list'].sortTable(this, {{index}});}"{{/sortable}}
+        >{{label}}{{#sortable}} <span class="sort-ind">&#8597;</span>{{/sortable}}</th>
+    {{/headers}}
+    {{#rowactions}}<th class="col-actions"><span class="sr-only">{{i18nlabels.rowactions}}</span></th>{{/rowactions}}
     </tr>
     </thead>
 
@@ -178,13 +186,15 @@ td[data-copied="true"]::after {
         if (!event.shiftKey) return;
         const el = (event.target && event.target.nodeType == Node.TEXT_NODE) ? event.target.parentElement : event.target;
         const td = (el && el.closest) ? el.closest('td') : undefined, tbody = (el && el.closest) ? el.closest('tbody') : undefined;
-        const textToCopy = (td && tbody) ? (td.textContent||'').trim() : undefined;
+        const sub = (el && el.closest) ? el.closest('.cell-sub') : undefined;
+        const source = sub || (td ? (td.querySelector('[data-cellmain]') || td) : undefined);
+        const textToCopy = (td && tbody && source) ? (source.textContent||'').trim() : undefined;
         if (textToCopy) { $$.copyTextToClipboard(textToCopy); tbody.classList.remove('copy-enabled'); td.dataset.copied='true';
             clearTimeout(td.__t); td.__t = setTimeout(_=>{delete td.dataset.copied; tbody.classList.add('copy-enabled');}, 1200); }
     " {{/enable_copy}}>
 
     {{#rows}}
-    <tr data-rowdata="{{{rowdata_json_base64}}}" data-filter="{{filtervalue}}"
+    <tr data-rowdata="{{{rowdata_json_base64}}}" data-filter="{{filtervalue}}" data-roworder="{{roworder}}"
         {{#enable_copy}}onclick="if (!event.shiftKey) {monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')}"{{/enable_copy}}
         {{^enable_copy}}onclick="monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')"{{/enable_copy}}>
     {{#selectable}}
@@ -195,9 +205,19 @@ td[data-copied="true"]::after {
     {{/selectable}}
     {{#cells}}
     <td {{#priority}}data-priority="{{.}}"{{/priority}} {{#tdclass}}class="{{.}}"{{/tdclass}}>
-        {{#isbadge}}<span class="badge {{badgeclass}}"><span class="dot"></span>{{value}}</span>{{/isbadge}}{{^isbadge}}{{value}}{{/isbadge}}
+        <span data-cellmain>{{#isbadge}}<span class="badge {{badgeclass}}"><span class="dot"></span>{{value}}</span>{{/isbadge}}{{^isbadge}}{{value}}{{/isbadge}}</span>
+        {{#hassub}}<div class="cell-sub {{subclass}}">{{sub}}</div>{{/hassub}}
     </td>
     {{/cells}}
+    {{#rowactions}}
+    <td class="col-actions">
+        <span class="iconbtn" role="button" tabindex="0" data-rowactions-btn aria-haspopup="true" aria-label="{{i18nlabels.rowactions}}"
+            onclick="monkshu_env.components['table-list'].rowActions(event, '{{{rowdata_json_base64}}}')"
+            onkeydown="if (event.key == 'Enter' || event.key == ' ') {event.preventDefault(); monkshu_env.components['table-list'].rowActions(event, '{{{rowdata_json_base64}}}');}">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v.01M12 12v.01M12 19v.01"/></svg>
+        </span>
+    </td>
+    {{/rowactions}}
     </tr>
     {{/rows}}
     </tbody>

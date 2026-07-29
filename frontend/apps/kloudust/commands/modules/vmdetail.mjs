@@ -1,14 +1,17 @@
 /**
  * VM detail frontend module — object detail page per the Kloudust redesign
- * (vm-detail wireframe): size KPIs, tabbed Overview / Networking / Disks,
- * and role-filtered actions.
+ * (vm-detail wireframe): size KPIs, tabbed Overview / Networking / Disks /
+ * Snapshots, and role-filtered actions.
  *
  * The VMs table pins the clicked row into APP_CONSTANTS.ENV._vms_form_data
  * (unchanged legacy contract). This module then calls getVMInfo for the
  * authoritative record — that command returns every vms column except the
  * creation command, with disksjson already parsed into vm.disks — and falls
- * back to the pinned row if the lookup fails. Every action button opens its
- * registered command, which reads the same pinned row.
+ * back to the pinned row if the lookup fails. getVMVnets and listSnapshots
+ * (which accepts an optional VM name) fill the networking and snapshot
+ * sections. Every action button opens its registered command, which reads the
+ * same pinned row; the snapshot row actions pin _snapshots_form_data instead,
+ * which is the contract restoresnapshot and deletesnapshot already read.
  *
  * Live state (running/stopped) is deliberately not shown: the vms table has
  * no state column, so there is nothing truthful to display.
@@ -58,6 +61,8 @@ const HTML_TEMPLATE = `
         onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].vmdetail.selectTab('networking')">{{i18n.VMDetailNetworking}}</button>
     <button class="tab" role="tab" data-tab="disks" aria-selected="false"
         onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].vmdetail.selectTab('disks')">{{i18n.VMDetailDisks}}</button>
+    <button class="tab" role="tab" data-tab="snapshots" aria-selected="false"
+        onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].vmdetail.selectTab('snapshots')">{{i18n.VMDetailSnapshots}}</button>
 </div>
 
 <div class="tab-panel" role="tabpanel" data-panel="overview">
@@ -75,7 +80,7 @@ const HTML_TEMPLATE = `
 
 <div class="tab-panel" role="tabpanel" data-panel="networking" hidden>
     <div class="card">
-        <div class="card-head"><h3>{{i18n.VMDetailNetworking}}</h3></div>
+        <div class="card-head"><h3>{{i18n.VMDetailIPAddresses}}</h3></div>
         <div class="card-body">
             <dl class="props">
             {{#networkprops}}
@@ -83,6 +88,23 @@ const HTML_TEMPLATE = `
             {{/networkprops}}
             </dl>
         </div>
+    </div>
+
+    <div class="card">
+        <div class="card-head"><h3>{{i18n.VMDetailVnets}}</h3></div>
+        <div class="card-body">
+        {{#vnetlist.length}}<div class="cluster">{{#vnetlist}}<span class="badge badge-info">{{.}}</span>{{/vnetlist}}</div>{{/vnetlist.length}}
+        {{^vnetlist}}<p class="muted">{{i18n.VMDetailNoVnets}}</p>{{/vnetlist}}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-head"><h3>{{i18n.VMDetailRulesets}}</h3></div>
+        <div class="card-body">
+        {{#rulesetlist.length}}<div class="cluster">{{#rulesetlist}}<span class="badge badge-neutral">{{.}}</span>{{/rulesetlist}}</div>{{/rulesetlist.length}}
+        {{^rulesetlist}}<p class="muted">{{i18n.VMDetailNoRulesets}}</p>{{/rulesetlist}}
+        </div>
+        <div class="card-foot">{{i18n.VMDetailRulesetsFoot}}</div>
     </div>
 </div>
 
@@ -107,6 +129,45 @@ const HTML_TEMPLATE = `
             <p>{{i18n.VMDetailNoDisksMessage}}</p>
         </div>
     {{/disks}}
+    </div>
+</div>
+
+<div class="tab-panel" role="tabpanel" data-panel="snapshots" hidden>
+    <div class="card table-card">
+    {{#snapshots.length}}
+        <div class="table-scroll">
+        <table class="dt">
+            <thead><tr>
+                <th>{{i18n.VMDetailSnapshotName}}</th>
+                <th>{{i18n.VMDetailSnapshotCreated}}</th>
+                <th><span class="sr-only">{{i18n.VMDetailSnapshotActions}}</span></th>
+            </tr></thead>
+            <tbody>
+            {{#snapshots}}
+                <tr>
+                    <td class="cell-main">{{name}}</td>
+                    <td class="muted">{{created}}</td>
+                    <td>
+                        <div class="cluster">
+                            <span class="btn btn-sm btn-secondary" role="button" tabindex="0"
+                                onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].vmdetail.openSnapshotCommand('restoresnapshot', '{{{payload}}}')">{{i18n.VMDetailSnapshotRestore}}</span>
+                            <span class="btn btn-sm btn-danger-outline" role="button" tabindex="0"
+                                onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].vmdetail.openSnapshotCommand('deletesnapshot', '{{{payload}}}')">{{i18n.VMDetailSnapshotDelete}}</span>
+                        </div>
+                    </td>
+                </tr>
+            {{/snapshots}}
+            </tbody>
+        </table>
+        </div>
+    {{/snapshots.length}}
+    {{^snapshots}}
+        <div class="empty">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M12 7v5l3 2"/></svg>
+            <h3>{{i18n.VMDetailNoSnapshotsTitle}}</h3>
+            <p>{{i18n.VMDetailNoSnapshotsMessage}}</p>
+        </div>
+    {{/snapshots}}
     </div>
 </div>
 
@@ -153,6 +214,9 @@ async function getHTML(formObject, cmdmanager) {
     if (info) vm = {...pinned, ...info, name_raw: info.name_raw || vmName};
 
     const vnets = await _command(`getVMVnets "${vmName}"`, project, "vnets");
+    // listSnapshots takes an optional VM name, so this is the same command the
+    // snapshots page uses, scoped to one machine.
+    const snapshotRecords = await _command(`listSnapshots "${vmName}"`, project, "snapshots");
 
     const kpis = [
         {label: i18nL.VMDetailCores||"vCPU cores", value: vm.cpus ?? "—"},
@@ -173,12 +237,23 @@ async function getHTML(formObject, cmdmanager) {
         [i18nL.VMDetailCreated||"Created", vm.timestamp ? new Date(parseInt(vm.timestamp)).toLocaleString() : pinned.datetime]
     ]);
 
+    // Vnets and rulesets moved to their own cards below, so they are not
+    // repeated here.
     const networkprops = _properties([
         [i18nL.VMDetailPublicIP||"Public IP", vm.ips || pinned.ips, true],
-        [i18nL.VMDetailPrivateIPs||"Private IPs", pinned.privateips, true],
-        [i18nL.VMDetailVnets||"Virtual networks", (vnets && vnets.length) ? vnets.join(", ") : pinned.vnets],
-        [i18nL.VMDetailRulesets||"Firewall rulesets", pinned.rulesets]
+        [i18nL.VMDetailPrivateIPs||"Private IPs", pinned.privateips, true]
     ]);
+
+    // The table joins these into display strings, so prefer the raw arrays it
+    // now also pins; split the string only as a fallback for an older pin.
+    const vnetlist = _list(vnets, pinned.vnets_list, pinned.vnets);
+    const rulesetlist = _list(undefined, pinned.rulesets_list, pinned.rulesets);
+
+    const snapshots = (snapshotRecords||[]).map(snapshot => ({
+        name: snapshot.name,
+        created: snapshot.timestamp ? new Date(parseInt(snapshot.timestamp)).toLocaleString() : "",
+        payload: $$.libutil.stringToBase64(JSON.stringify({vm: vmName, name: snapshot.name}))
+    }));
 
     const disks = (vm.disks||[]).map(disk => typeof disk == "string"
         ? {name: disk, size: ""}
@@ -190,7 +265,10 @@ async function getHTML(formObject, cmdmanager) {
     for (const action of actions) {cmdmanager.registerCommand(action); action.isdanger = action.id.includes("delete");}
 
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined,
-        {i18n: i18nL, vm, kpis, props, networkprops, actions, disks: disks.length ? disks : undefined});
+        {i18n: i18nL, vm, kpis, props, networkprops, actions,
+         disks: disks.length ? disks : undefined, snapshots: snapshots.length ? snapshots : undefined,
+         vnetlist: vnetlist.length ? vnetlist : undefined,
+         rulesetlist: rulesetlist.length ? rulesetlist : undefined});
 }
 
 function selectTab(name) {
@@ -198,6 +276,31 @@ function selectTab(name) {
         tab.setAttribute("aria-selected", String(tab.dataset.tab == name));
     for (const panel of document.querySelectorAll("#vmdetail .tab-panel"))
         panel.hidden = panel.dataset.panel != name;
+}
+
+/** Snapshot row actions. restoresnapshot and deletesnapshot both prefill from
+ *  APP_CONSTANTS.ENV._snapshots_form_data, so this pins the same shape the
+ *  snapshots table pins and then opens the command unchanged. */
+function openSnapshotCommand(commandID, payloadBase64) {
+    let payload; try {payload = JSON.parse($$.libutil.base64ToString(payloadBase64));}
+    catch (err) {LOG.error(`Bad snapshot payload: ${err}`); return;}
+    APP_CONSTANTS.ENV._snapshots_form_data = payload;
+    const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
+    cmdmanager.registerCommand({id: commandID});
+    cmdmanager.cmdClicked(commandID);
+}
+
+/** First real array wins; a joined display string is split as a last resort and
+ *  the table's "none" sentinels are dropped rather than shown as entries. */
+function _list(...candidates) {
+    for (const candidate of candidates) {
+        if (Array.isArray(candidate)) {if (candidate.length) return candidate; continue;}
+        if (typeof candidate != "string" || candidate.trim() == "") continue;
+        const parts = candidate.split(",").map(part => part.trim())
+            .filter(part => part && !/^no\s|not assigned$/i.test(part));
+        if (parts.length) return parts;
+    }
+    return [];
 }
 
 const _properties = rows => rows
@@ -225,4 +328,4 @@ async function _command(cmd, project, resultKey) {
     } catch (err) {LOG.error(`VM detail lookup failed for ${cmd}: ${err}`); return undefined;}
 }
 
-export const vmdetail = {getHTML, selectTab};
+export const vmdetail = {getHTML, selectTab, openSnapshotCommand};

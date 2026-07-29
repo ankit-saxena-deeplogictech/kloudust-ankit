@@ -80,23 +80,27 @@
    "for (const project of projects.projects||[]) {project.datetime = new Date(project.timestamp).toLocaleDateString();}",
    "return {keys: ['name','description','datetime'], table: projects.projects||[]};"
   ],
+  "searchbar": true,
   "columns": [
    {
     "key": "name",
-    "type": "main"
-   },
-   {
-    "key": "description"
+    "type": "main",
+    "sub": "description",
+    "sortable": true
    },
    {
     "key": "datetime",
-    "type": "muted"
+    "type": "muted",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "timestamp"
    }
   ],
   "emptystate": {
    "title": "{{{i18n.ProjectsEmptyTitle}}}",
    "message": "{{{i18n.ProjectsEmptyMessage}}}"
-  }
+  },
+  "rowactions": true
  },
  "title": "{{{i18n.ProjectsTitle}}}"
 }

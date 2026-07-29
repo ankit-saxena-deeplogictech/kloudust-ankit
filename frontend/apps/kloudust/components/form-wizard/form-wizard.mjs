@@ -17,6 +17,16 @@
  * load/rendered/submit javascript contracts, so kloudust_cmdline submission
  * through cmdmanager is unchanged.
  *
+ * A step may also declare "presets" — shortcut cards that fill fields the step
+ * already has, so they are a faster path into those fields and never a
+ * substitute for them:
+ *   "presets": {"label": "...", "hint": "...", "options": [
+ *      {"label": "Small", "spec": "1 vCPU · 2 GB · 20 GB",
+ *       "values": {"<field id>": "<value>", …}, "selected": true}]}
+ * Clicking a card writes its values into those fields and fires an input event
+ * so any listener sees a normal edit; editing a field by hand deselects the
+ * card, since the values no longer describe what is in the form.
+ *
  * (C) 2026 TekMonks. All rights reserved.
  * License: See enclosed LICENSE file.
  */
@@ -34,6 +44,9 @@ async function elementConnected(host) {
     let stepindex = 0; for (const step of formObject.steps||[]) {
         step.stepindex = ++stepindex; step.first = step.stepindex == 1;
         step.rowgroups = _groupFieldsIntoRows(step.fields);
+        // Base64 keeps the values map out of the HTML attribute's quoting rules.
+        for (const option of step.presets?.options||[])
+            option.valuesbase64 = util.stringToBase64(JSON.stringify(option.values||{}));
     }
     formObject.totalsteps = stepindex;
     form_wizard.setDataByHost(host, formObject);
@@ -45,7 +58,63 @@ async function elementRendered(host) {
     formObject._form_shadowroot = form_wizard.getShadowRootByHost(host);
     host.dataset.currentstep = "1";
     _refreshWizardState(host);
+    _wirePresetDeselection(formObject._form_shadowroot);
+    _applySelectedPresets(formObject._form_shadowroot);
     await _runOnRenderedJavascript(formObject);
+}
+
+/** Writes a preset's values into the fields it names. The fields stay the
+ *  source of truth — this only types into them on the user's behalf. */
+function applyPreset(element) {
+    const shadowRoot = form_wizard.getShadowRootByContainedElement(element);
+    const grid = element.closest("div.preset-grid"); if (!grid) return;
+    for (const preset of grid.querySelectorAll("button.preset"))
+        preset.setAttribute("aria-pressed", String(preset == element));
+    _writePresetValues(shadowRoot, grid, element);
+}
+
+function _writePresetValues(shadowRoot, grid, preset) {
+    let values; try {values = JSON.parse(util.base64ToString(preset.dataset.preset||""));}
+    catch (err) {LOG.error(`Bad preset values on ${preset.textContent}: ${err}`); return;}
+
+    grid.dataset.applying = "true";     // our own writes must not deselect the card
+    for (const [id, value] of Object.entries(values)) {
+        const field = shadowRoot.querySelector(`#${CSS.escape(id)}`);
+        if (!field) {LOG.warn(`Preset references unknown field ${id}`); continue;}
+        field.value = value;
+        field.dispatchEvent(new Event("input", {bubbles: true}));
+        field.dispatchEvent(new Event("change", {bubbles: true}));
+    }
+    delete grid.dataset.applying;
+}
+
+/** A preset marked "selected" is a default, so the form opens already filled in. */
+function _applySelectedPresets(shadowRoot) {
+    if (!shadowRoot) return;
+    for (const grid of shadowRoot.querySelectorAll("div.preset-grid")) {
+        const selected = grid.querySelector('button.preset[aria-pressed="true"]');
+        if (selected) _writePresetValues(shadowRoot, grid, selected);
+    }
+}
+
+/** Editing any field a preset controls means the card no longer describes the
+ *  form, so it stops claiming it does. */
+function _wirePresetDeselection(shadowRoot) {
+    if (!shadowRoot) return;
+    for (const grid of shadowRoot.querySelectorAll("div.preset-grid")) {
+        const fieldIDs = new Set();
+        for (const preset of grid.querySelectorAll("button.preset")) {
+            try {for (const id of Object.keys(JSON.parse(util.base64ToString(preset.dataset.preset||"")))) fieldIDs.add(id);}
+            catch (err) {LOG.error(`Bad preset values: ${err}`);}
+        }
+        for (const id of fieldIDs) {
+            const field = shadowRoot.querySelector(`#${CSS.escape(id)}`); if (!field) continue;
+            field.addEventListener("input", _ => {
+                if (grid.dataset.applying == "true") return;
+                for (const preset of grid.querySelectorAll("button.preset")) preset.setAttribute("aria-pressed", "false");
+            });
+        }
+    }
 }
 
 async function close(element) {
@@ -173,5 +242,6 @@ function _getFromPropertyJSAsFunction(form, property) {
 const _escapeHTML = text => text.toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 
 const trueWebComponentMode = true;
-export const form_wizard = {trueWebComponentMode, elementConnected, elementRendered, close, next, back, formSubmitted};
+export const form_wizard = {trueWebComponentMode, elementConnected, elementRendered, close, next, back,
+    formSubmitted, applyPreset};
 monkshu_component.register("form-wizard", `${COMPONENT_PATH}/form-wizard.html`, form_wizard);

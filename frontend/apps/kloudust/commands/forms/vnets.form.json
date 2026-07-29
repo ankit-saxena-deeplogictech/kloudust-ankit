@@ -62,7 +62,8 @@
   "columns": [
    {
     "key": "raw_name",
-    "type": "main"
+    "type": "main",
+    "sortable": true
    },
    {
     "key": "description"
@@ -71,7 +72,8 @@
   "emptystate": {
    "title": "{{{i18n.VNETSEmptyTitle}}}",
    "message": "{{{i18n.VNETSEmptyMessage}}}"
-  }
+  },
+  "rowactions": true
  },
  "title": "{{{i18n.VNETSTitle}}}"
 }

@@ -345,7 +345,9 @@ table.dt { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
 .dt tbody tr.selected { background: var(--primary-soft); }
 .dt td.muted, .muted { color: var(--text-3); }
 .dt .cell-main { font-weight: 500; color: var(--text); font-size: var(--fs-md); }
-.dt .cell-sub { color: var(--text-3); font-size: var(--fs-xs); }
+/* Secondary line under a cell's main value (columns declaring "sub"). Resets the
+   weight so it stays quiet inside a .cell-main td. */
+.dt .cell-sub { color: var(--text-3); font-size: var(--fs-xs); font-weight: 400; margin-top: 2px; }
 .dt td .name-link { font-weight: 500; }
 /* Row-opening buttons (drawer targets) must read exactly like the link version */
 button.name-link {

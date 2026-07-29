@@ -100,7 +100,19 @@
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
    "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk"
+   "VMSRemoveDisk": "Detach disk",
+   "VMDetailIPAddresses": "IP addresses",
+   "VMDetailNoVnets": "This machine is not attached to any virtual network.",
+   "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
+   "VMDetailRulesetsFoot": "Rulesets are applied per machine. Use Firewall to change which ones apply.",
+   "VMDetailSnapshots": "Snapshots",
+   "VMDetailSnapshotName": "Snapshot",
+   "VMDetailSnapshotCreated": "Created",
+   "VMDetailSnapshotActions": "Snapshot actions",
+   "VMDetailSnapshotRestore": "Restore",
+   "VMDetailSnapshotDelete": "Delete",
+   "VMDetailNoSnapshotsTitle": "No snapshots",
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
   },
   "hi": {
    "VMSPowerOpVM": "Power",
@@ -140,7 +152,19 @@
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
    "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk"
+   "VMSRemoveDisk": "Detach disk",
+   "VMDetailIPAddresses": "IP addresses",
+   "VMDetailNoVnets": "This machine is not attached to any virtual network.",
+   "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
+   "VMDetailRulesetsFoot": "Rulesets are applied per machine. Use Firewall to change which ones apply.",
+   "VMDetailSnapshots": "Snapshots",
+   "VMDetailSnapshotName": "Snapshot",
+   "VMDetailSnapshotCreated": "Created",
+   "VMDetailSnapshotActions": "Snapshot actions",
+   "VMDetailSnapshotRestore": "Restore",
+   "VMDetailSnapshotDelete": "Delete",
+   "VMDetailNoSnapshotsTitle": "No snapshots",
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
   },
   "ja": {
    "VMSPowerOpVM": "Power",
@@ -180,7 +204,19 @@
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
    "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk"
+   "VMSRemoveDisk": "Detach disk",
+   "VMDetailIPAddresses": "IP addresses",
+   "VMDetailNoVnets": "This machine is not attached to any virtual network.",
+   "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
+   "VMDetailRulesetsFoot": "Rulesets are applied per machine. Use Firewall to change which ones apply.",
+   "VMDetailSnapshots": "Snapshots",
+   "VMDetailSnapshotName": "Snapshot",
+   "VMDetailSnapshotCreated": "Created",
+   "VMDetailSnapshotActions": "Snapshot actions",
+   "VMDetailSnapshotRestore": "Restore",
+   "VMDetailSnapshotDelete": "Delete",
+   "VMDetailNoSnapshotsTitle": "No snapshots",
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
   },
   "zh": {
    "VMSPowerOpVM": "Power",
@@ -220,7 +256,19 @@
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
    "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk"
+   "VMSRemoveDisk": "Detach disk",
+   "VMDetailIPAddresses": "IP addresses",
+   "VMDetailNoVnets": "This machine is not attached to any virtual network.",
+   "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
+   "VMDetailRulesetsFoot": "Rulesets are applied per machine. Use Firewall to change which ones apply.",
+   "VMDetailSnapshots": "Snapshots",
+   "VMDetailSnapshotName": "Snapshot",
+   "VMDetailSnapshotCreated": "Created",
+   "VMDetailSnapshotActions": "Snapshot actions",
+   "VMDetailSnapshotRestore": "Restore",
+   "VMDetailSnapshotDelete": "Delete",
+   "VMDetailNoSnapshotsTitle": "No snapshots",
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
   }
  }
 }

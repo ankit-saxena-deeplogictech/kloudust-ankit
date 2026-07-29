@@ -97,11 +97,10 @@
   "columns": [
    {
     "key": "hostname",
-    "type": "main"
-   },
-   {
-    "key": "hostaddress",
-    "type": "mono"
+    "type": "main",
+    "sub": "hostaddress",
+    "subtype": "mono",
+    "sortable": true
    },
    {
     "key": "type",
@@ -111,16 +110,26 @@
     }
    },
    {
-    "key": "vmcount"
+    "key": "vmcount",
+    "sortable": true,
+    "sorttype": "num"
    },
    {
-    "key": "cores"
+    "key": "cores",
+    "sortable": true,
+    "sorttype": "num"
    },
    {
-    "key": "memory_display"
+    "key": "memory_display",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "memory"
    },
    {
     "key": "disk_display",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "disk",
     "priority": 2
    },
    {
@@ -150,6 +159,7 @@
    "return {keys: ['hostname','hostaddress','type','vmcount','cores','memory_display','disk_display','processorarchitecture'], table: hosts};"
   ],
   "filterkey": "type",
-  "pagesize": 25
+  "pagesize": 25,
+  "rowactions": true
  }
 }

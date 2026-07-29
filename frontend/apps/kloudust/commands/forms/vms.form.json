@@ -31,7 +31,10 @@
    "VMSBulkStart": "Start",
    "VMSBulkStop": "Stop",
    "VMSBulkDelete": "Delete",
-   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
+   "VMS_size": "Size",
+   "VMS_hostname": "Host",
+   "VMS_disk_display": "Disk"
   },
   "hi": {
    "VMS_name_raw": "Name",
@@ -61,7 +64,10 @@
    "VMSBulkStart": "Start",
    "VMSBulkStop": "Stop",
    "VMSBulkDelete": "Delete",
-   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
+   "VMS_size": "Size",
+   "VMS_hostname": "Host",
+   "VMS_disk_display": "Disk"
   },
   "ja": {
    "VMS_name_raw": "Name",
@@ -91,7 +97,10 @@
    "VMSBulkStart": "Start",
    "VMSBulkStop": "Stop",
    "VMSBulkDelete": "Delete",
-   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
+   "VMS_size": "Size",
+   "VMS_hostname": "Host",
+   "VMS_disk_display": "Disk"
   },
   "zh": {
    "VMS_name_raw": "Name",
@@ -122,7 +131,10 @@
    "VMSBulkStart": "Start",
    "VMSBulkStop": "Stop",
    "VMSBulkDelete": "Delete",
-   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have."
+   "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
+   "VMS_size": "Size",
+   "VMS_hostname": "Host",
+   "VMS_disk_display": "Disk"
   }
  },
  "tabledef": {
@@ -136,10 +148,13 @@
    "cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPE_VM}\"`, ",
    "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
    "for (const vm of vms.vms||[]) {",
+   "   vm.vnets_list = vm.vnets; vm.rulesets_list = vm.rulesets;",
    "   vm.datetime = new Date(vm.timestamp).toLocaleDateString(); vm.disk = parseInt(vm.disk)/1073741824; vm.memory=parseInt(vm.memory)/1048576;",
    "   vm.ips = vm.ips.trim()===''?'Not Assigned':vm.ips; vm.vnets = vm.vnets.length === 0 ?'No Vnets Found':vm.vnets.join(',');",
    "   vm.privateips = vm.private_ips.length === 0 ? 'No IPs Assigned' : vm.private_ips.join(','); ",
    "   vm.rulesets = vm.rulesets.length === 0 ? 'No Rulesets Applied' : vm.rulesets.join(',');",
+   "   vm.size = `${vm.cpus} vCPU · ${vm.memory >= 1024 ? (vm.memory/1024)+' GB' : vm.memory+' MB'}`;",
+   "   vm.disk_display = `${vm.disk} GB disk`;",
    "}",
    "return {keys: ['name_raw','description','ips','privateips','vnets','rulesets','os','disk','cpus','memory','datetime'], table: vms.vms||[]};"
   ],
@@ -148,45 +163,46 @@
   "columns": [
    {
     "key": "name_raw",
-    "type": "main"
+    "type": "main",
+    "sub": "description",
+    "sortable": true
    },
    {
     "key": "ips",
-    "type": "mono"
-   },
-   {
-    "key": "privateips",
     "type": "mono",
-    "priority": 3
+    "sub": "privateips",
+    "subtype": "mono"
    },
    {
     "key": "vnets",
     "priority": 2
    },
    {
-    "key": "rulesets",
-    "priority": 3
+    "key": "size",
+    "sub": "disk_display",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "cpus",
+    "priority": 2
    },
    {
     "key": "os",
     "type": "muted",
+    "sortable": true,
     "priority": 3
    },
    {
-    "key": "disk",
+    "key": "hostname",
+    "type": "muted",
+    "sortable": true,
     "priority": 3
-   },
-   {
-    "key": "cpus",
-    "priority": 2
-   },
-   {
-    "key": "memory",
-    "priority": 2
    },
    {
     "key": "datetime",
     "type": "muted",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "timestamp",
     "priority": 2
    }
   ],
@@ -233,7 +249,44 @@
     "danger": true,
     "confirm": "{{{i18n.VMSBulkDeleteConfirm}}}"
    }
-  ]
+  ],
+  "popupform": {
+   "rolelist": {
+    "*": [
+     {
+      "id": "poweropvm",
+      "label": "{{{i18n.VMSPowerOpVM}}}",
+      "logo": "img/poweropvm.svg"
+     },
+     {
+      "id": "snapshotvm",
+      "label": "{{{i18n.VMSSnapshot}}}",
+      "logo": "img/snapshot.svg"
+     },
+     {
+      "id": "resizevm",
+      "label": "{{{i18n.VMSResize}}}",
+      "logo": "img/resizevm.svg"
+     },
+     {
+      "id": "clonevm",
+      "label": "{{{i18n.VMSClone}}}",
+      "logo": "img/clonevm.svg"
+     },
+     {
+      "id": "firewallvm",
+      "label": "{{{i18n.VMSFirewall}}}",
+      "logo": "img/firewall.svg"
+     },
+     {
+      "id": "deletevm",
+      "label": "{{{i18n.VMSDelete}}}",
+      "logo": "img/deletevm.svg"
+     }
+    ]
+   }
+  },
+  "rowactions": true
  },
  "title": "{{{i18n.VMSTitle}}}"
 }

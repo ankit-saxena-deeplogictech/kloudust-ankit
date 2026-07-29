@@ -89,10 +89,9 @@
   "columns": [
    {
     "key": "name_raw",
-    "type": "main"
-   },
-   {
-    "key": "description"
+    "type": "main",
+    "sub": "description",
+    "sortable": true
    },
    {
     "key": "vnets"
@@ -104,13 +103,17 @@
    {
     "key": "datetime",
     "type": "muted",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "timestamp",
     "priority": 2
    }
   ],
   "emptystate": {
    "title": "{{{i18n.RoutersEmptyTitle}}}",
    "message": "{{{i18n.RoutersEmptyMessage}}}"
-  }
+  },
+  "rowactions": true
  },
  "title": "{{{i18n.RoutersTitle}}}"
 }

@@ -55,7 +55,17 @@
    "VMMemoryHint": "In megabytes, e.g. 4096",
    "VMDiskHint": "In gigabytes. Grows online later; cannot shrink.",
    "VMVNetHint": "Created automatically if it does not exist yet.",
-   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login."
+   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login.",
+   "VMSizePreset": "Size preset",
+   "VMSizePresetHint": "Fills the cores, memory and disk fields below. Change any of them for a custom size.",
+   "VMPresetSmall": "Small",
+   "VMPresetSmallSpec": "1 vCPU · 2 GB · 20 GB",
+   "VMPresetMedium": "Medium",
+   "VMPresetMediumSpec": "2 vCPU · 4 GB · 40 GB",
+   "VMPresetLarge": "Large",
+   "VMPresetLargeSpec": "4 vCPU · 8 GB · 80 GB",
+   "VMPresetXLarge": "X-Large",
+   "VMPresetXLargeSpec": "8 vCPU · 16 GB · 160 GB"
   },
   "hi": {
    "VMCreateTitle": "Create Virtual Machine",
@@ -90,7 +100,17 @@
    "VMMemoryHint": "In megabytes, e.g. 4096",
    "VMDiskHint": "In gigabytes. Grows online later; cannot shrink.",
    "VMVNetHint": "Created automatically if it does not exist yet.",
-   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login."
+   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login.",
+   "VMSizePreset": "Size preset",
+   "VMSizePresetHint": "Fills the cores, memory and disk fields below. Change any of them for a custom size.",
+   "VMPresetSmall": "Small",
+   "VMPresetSmallSpec": "1 vCPU · 2 GB · 20 GB",
+   "VMPresetMedium": "Medium",
+   "VMPresetMediumSpec": "2 vCPU · 4 GB · 40 GB",
+   "VMPresetLarge": "Large",
+   "VMPresetLargeSpec": "4 vCPU · 8 GB · 80 GB",
+   "VMPresetXLarge": "X-Large",
+   "VMPresetXLargeSpec": "8 vCPU · 16 GB · 160 GB"
   },
   "ja": {
    "VMCreateTitle": "Create Virtual Machine",
@@ -125,7 +145,17 @@
    "VMMemoryHint": "In megabytes, e.g. 4096",
    "VMDiskHint": "In gigabytes. Grows online later; cannot shrink.",
    "VMVNetHint": "Created automatically if it does not exist yet.",
-   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login."
+   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login.",
+   "VMSizePreset": "Size preset",
+   "VMSizePresetHint": "Fills the cores, memory and disk fields below. Change any of them for a custom size.",
+   "VMPresetSmall": "Small",
+   "VMPresetSmallSpec": "1 vCPU · 2 GB · 20 GB",
+   "VMPresetMedium": "Medium",
+   "VMPresetMediumSpec": "2 vCPU · 4 GB · 40 GB",
+   "VMPresetLarge": "Large",
+   "VMPresetLargeSpec": "4 vCPU · 8 GB · 80 GB",
+   "VMPresetXLarge": "X-Large",
+   "VMPresetXLargeSpec": "8 vCPU · 16 GB · 160 GB"
   },
   "zh": {
    "VMCreateTitle": "Create Virtual Machine",
@@ -160,7 +190,17 @@
    "VMMemoryHint": "In megabytes, e.g. 4096",
    "VMDiskHint": "In gigabytes. Grows online later; cannot shrink.",
    "VMVNetHint": "Created automatically if it does not exist yet.",
-   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login."
+   "VMCloudInitHint": "Optional cloud-init YAML. Leave blank to auto-generate from the administrator login.",
+   "VMSizePreset": "Size preset",
+   "VMSizePresetHint": "Fills the cores, memory and disk fields below. Change any of them for a custom size.",
+   "VMPresetSmall": "Small",
+   "VMPresetSmallSpec": "1 vCPU · 2 GB · 20 GB",
+   "VMPresetMedium": "Medium",
+   "VMPresetMediumSpec": "2 vCPU · 4 GB · 40 GB",
+   "VMPresetLarge": "Large",
+   "VMPresetLargeSpec": "4 vCPU · 8 GB · 80 GB",
+   "VMPresetXLarge": "X-Large",
+   "VMPresetXLargeSpec": "8 vCPU · 16 GB · 160 GB"
   }
  },
  "form": {
@@ -207,6 +247,49 @@
    },
    {
     "label": "{{{i18n.VMStepSize}}}",
+    "presets": {
+     "label": "{{{i18n.VMSizePreset}}}",
+     "hint": "{{{i18n.VMSizePresetHint}}}",
+     "options": [
+      {
+       "label": "{{{i18n.VMPresetSmall}}}",
+       "spec": "{{{i18n.VMPresetSmallSpec}}}",
+       "values": {
+        "cores": "1",
+        "memory": "2048",
+        "disk": "20"
+       }
+      },
+      {
+       "label": "{{{i18n.VMPresetMedium}}}",
+       "spec": "{{{i18n.VMPresetMediumSpec}}}",
+       "values": {
+        "cores": "2",
+        "memory": "4096",
+        "disk": "40"
+       },
+       "selected": true
+      },
+      {
+       "label": "{{{i18n.VMPresetLarge}}}",
+       "spec": "{{{i18n.VMPresetLargeSpec}}}",
+       "values": {
+        "cores": "4",
+        "memory": "8192",
+        "disk": "80"
+       }
+      },
+      {
+       "label": "{{{i18n.VMPresetXLarge}}}",
+       "spec": "{{{i18n.VMPresetXLargeSpec}}}",
+       "values": {
+        "cores": "8",
+        "memory": "16384",
+        "disk": "160"
+       }
+      }
+     ]
+    },
     "fields": [
      {
       "id": "cores",

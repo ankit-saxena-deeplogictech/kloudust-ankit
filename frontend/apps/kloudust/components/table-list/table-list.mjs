@@ -14,7 +14,14 @@
  *
  * Declarative rendering keys (all optional, no CSS allowed in tabledefs):
  *  - columns: [{key, type: "main"|"mono"|"muted"|"badge", badgemap: {value: variant, "*": fallback},
- *              priority: 2|3}] — typed cells; priority feeds responsive hiding.
+ *              priority: 2|3, sub: "<key>", subtype: "mono", sortable: true,
+ *              sorttype: "num"|"date"|"text", sortkey: "<key>"}]
+ *              type/priority give the cell its look and responsive rank;
+ *              sub renders a second, quieter line inside the same cell
+ *              (.cell-sub) so two related fields share one column;
+ *              sortable makes the header a client-side sort toggle, sorting on
+ *              sortkey (default: key) with sorttype deciding the comparison —
+ *              use sortkey to sort a formatted column by its raw field.
  *  - searchbar: true — client-side text filter across the row.
  *  - filterkey: "<column>" — chips built from that column's distinct values.
  *  - pagesize: <n> — client-side pagination.
@@ -24,6 +31,10 @@
  *              Destructive ones require a typed acknowledgement first.
  *  - emptystate: {title, message}
  *  - popupform: {rolelist} — row actions as a native menu on row click.
+ *  - rowactions: true — moves that same menu onto a trailing kebab column
+ *              (.col-actions) instead of the row click, which frees the row
+ *              click for clickrow_command. Requires popupform. Without it the
+ *              legacy click-the-row-for-actions behaviour is unchanged.
  *  - clickrow_command: "<id>" — row click opens that command (detail pages).
  *  - embedded: true — skip the page heading (rendering inside a tab).
  *
@@ -42,22 +53,26 @@ const i18n = {
         TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
-        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."},
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
+        TLRowActions: "Row actions"},
     "hi": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
         TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
-        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."},
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
+        TLRowActions: "Row actions"},
     "ja": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
         TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
-        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."},
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
+        TLRowActions: "Row actions"},
     "zh": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
         TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
-        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters."}
+        TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
+        TLRowActions: "Row actions"}
 }
 
 async function elementConnected(host) {
@@ -75,9 +90,9 @@ async function elementConnected(host) {
         of: await $$.libi18n.get("TLOf"), prev: await $$.libi18n.get("TLPrev"), next: await $$.libi18n.get("TLNext"),
         confirmtitle: await $$.libi18n.get("TLConfirmTitle"), confirmack: await $$.libi18n.get("TLConfirmAck"),
         confirmgo: await $$.libi18n.get("TLConfirmGo"), cancel: await $$.libi18n.get("TLCancel"),
-        nomatch: await $$.libi18n.get("TLNoMatch")};
+        nomatch: await $$.libi18n.get("TLNoMatch"), rowactions: await $$.libi18n.get("TLRowActions")};
     if (tableObject.bulkactions) tableObject.bulkactions.forEach((action, index) => action.index = index);
-    tableObject._view = {search: "", filter: "*", page: 1};
+    tableObject._view = {search: "", filter: "*", page: 1, sort: null};
     table_list.setDataByHost(host, {...tableObject, ...tableData});
 }
 
@@ -117,12 +132,71 @@ function gotoPage(element, page) {
     data._view.page = page; _applyView(table_list.getShadowRootByHost(host));
 }
 
-/** Single source of truth for what is on screen: text search, then chip
- *  filter, then pagination over whatever survived. */
+/** Toggles the sort on a sortable header: first click ascending, next descending,
+ *  third clears it and restores the order the load javascript returned. */
+function sortTable(element, columnIndex) {
+    const host = table_list.getHostElement(element), shadowRoot = table_list.getShadowRootByHost(host);
+    const data = table_list.getDataByHost(host);
+    const header = (data.headers||[])[columnIndex]; if (!header?.sortable) return;
+
+    const current = data._view.sort;
+    if (!current || current.index != columnIndex) data._view.sort =
+        {index: columnIndex, key: header.sortkey, type: header.sorttype, descending: false};
+    else if (!current.descending) current.descending = true;
+    else data._view.sort = null;
+    data._view.page = 1;
+
+    for (const th of shadowRoot.querySelectorAll("thead th.sortable")) th.setAttribute("aria-sort", "none");
+    if (data._view.sort) element.setAttribute("aria-sort", data._view.sort.descending ? "descending" : "ascending");
+    _applyView(shadowRoot);
+}
+
+/** Reorders the actual row elements, so selection state and every other view
+ *  stage keep working on the same nodes. */
+function _sortRows(shadowRoot, data) {
+    const tbody = shadowRoot.querySelector("tbody"); if (!tbody) return;
+    const current = [...tbody.querySelectorAll("tr")], rows = [...current], sort = data._view.sort;
+
+    if (!sort) rows.sort((rowA, rowB) => parseInt(rowA.dataset.roworder) - parseInt(rowB.dataset.roworder));
+    else {
+        const valueOf = row => {
+            try {return JSON.parse($$.libutil.base64ToString(row.dataset.rowdata))[sort.key];} catch (err) {return undefined;}
+        };
+        const direction = sort.descending ? -1 : 1;
+        rows.sort((rowA, rowB) => _compareValues(valueOf(rowA), valueOf(rowB), sort.type, direction)
+            || parseInt(rowA.dataset.roworder) - parseInt(rowB.dataset.roworder));
+    }
+    // _applyView runs on every keystroke; only touch the DOM if the order moved.
+    if (rows.every((row, index) => row == current[index])) return;
+    for (const row of rows) tbody.appendChild(row);
+}
+
+/** Returns the already-signed comparison. Direction is applied here rather than
+ *  by the caller so blanks sink to the bottom whichever way the column is
+ *  sorted — an empty cell is missing data, not the smallest value. */
+function _compareValues(valueA, valueB, type, direction) {
+    const isBlank = value => value === undefined || value === null || String(value).trim() == "";
+    if (isBlank(valueA)) return isBlank(valueB) ? 0 : 1;
+    if (isBlank(valueB)) return -1;
+
+    if (type == "num") {
+        const numberA = parseFloat(valueA), numberB = parseFloat(valueB);
+        if (!isNaN(numberA) && !isNaN(numberB)) return (numberA - numberB) * direction;
+    }
+    if (type == "date") {
+        const dateA = Date.parse(valueA), dateB = Date.parse(valueB);
+        if (!isNaN(dateA) && !isNaN(dateB)) return (dateA - dateB) * direction;
+    }
+    return String(valueA).localeCompare(String(valueB), undefined, {numeric: true, sensitivity: "base"}) * direction;
+}
+
+/** Single source of truth for what is on screen: sort, then text search, then
+ *  chip filter, then pagination over whatever survived. */
 function _applyView(shadowRoot) {
     if (!shadowRoot) return;
     const host = shadowRoot.host, data = table_list.getDataByHost(host); if (!data?._view) return;
     const {search, filter} = data._view, pagesize = parseInt(data.pagesize)||0;
+    _sortRows(shadowRoot, data);
     const allRows = [...shadowRoot.querySelectorAll("tbody tr")];
 
     const matching = allRows.filter(row => {
@@ -270,7 +344,8 @@ async function _executeBulk(shadowRoot, action, selected) {
 /* --------------------------------------------------------------- row clicking */
 
 async function rowClicked(event, rowdataJSON) {
-    if (event.target.closest("td.col-check")) return;   // selecting is not opening
+    // Neither selecting a row nor reaching for its kebab counts as opening it.
+    if (event.target.closest("td.col-check") || event.target.closest("td.col-actions")) return;
     const rowDataJSON = rowdataJSON?$$.libutil.base64ToString(rowdataJSON):undefined, rowData = JSON.parse(rowDataJSON||"{}");
     const data = table_list.getDataByContainedElement(event.target);
     await _runRowOnClickJavascript(event, rowData);
@@ -281,10 +356,21 @@ async function rowClicked(event, rowdataJSON) {
         cmdmanager.cmdClicked(data.clickrow_command); return;
     }
 
-    if (data.popupform) await _displayRowActionsMenu(event, data);    // native row actions menu
+    // Legacy mode only: with rowactions the menu lives on the kebab instead.
+    if (data.popupform && !data.rowactions) await _displayRowActionsMenu(event, data);
 }
 
-async function _displayRowActionsMenu(event, data) {
+/** Kebab column handler. Pins the row exactly as a row click would, then opens
+ *  the same popupform menu anchored under the button. */
+async function rowActions(event, rowdataJSON) {
+    event.stopPropagation();
+    const rowDataJSON = rowdataJSON?$$.libutil.base64ToString(rowdataJSON):undefined, rowData = JSON.parse(rowDataJSON||"{}");
+    const data = table_list.getDataByContainedElement(event.target);
+    await _runRowOnClickJavascript(event, rowData);
+    if (data.popupform) await _displayRowActionsMenu(event, data, event.target.closest("[data-rowactions-btn]"));
+}
+
+async function _displayRowActionsMenu(event, data, anchor) {
     const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
     const cmdlist = (await import(`${APP_CONSTANTS.LIB_PATH}/cmdlist.mjs`)).cmdlist;
     const commands = await cmdlist.getCommands(undefined, data.popupform);
@@ -300,8 +386,11 @@ async function _displayRowActionsMenu(event, data) {
     const divOnclick = shadowRoot.querySelector("div#onclick_html"), divHider = shadowRoot.querySelector("div#hider");
     divOnclick.innerHTML = menuHTML; divOnclick.classList.add("rowmenu-holder");
     const menuWidth = 240, menuHeight = commands.length*40 + 16;
-    divOnclick.style.left = Math.max(8, Math.min(event.clientX, window.innerWidth - menuWidth - 16)) + "px";
-    divOnclick.style.top = Math.max(8, Math.min(event.clientY + 8, window.innerHeight - menuHeight - 16)) + "px";
+    // Anchored under the kebab when there is one, at the pointer otherwise.
+    const rect = anchor?.getBoundingClientRect();
+    const left = rect ? rect.right - menuWidth : event.clientX, top = rect ? rect.bottom + 4 : event.clientY + 8;
+    divOnclick.style.left = Math.max(8, Math.min(left, window.innerWidth - menuWidth - 16)) + "px";
+    divOnclick.style.top = Math.max(8, Math.min(top, window.innerHeight - menuHeight - 16)) + "px";
     divHider.classList.add("visible"); divOnclick.classList.add("visible");
 }
 
@@ -330,8 +419,12 @@ async function _runOnLoadJavascript(tabledef) {
     const displayKeys = columns ? columns.map(col=>col.key) : (loadResult.keys||[]);
     const colByKey = {}; if (columns) for (const col of columns) colByKey[col.key] = col;
 
-    const headers = []; for (const key of displayKeys)
-        headers.push({label: await $$.libi18n.get(`${tabledef.i18nPrefix}_${key}`), priority: colByKey[key]?.priority});
+    const headers = []; for (const key of displayKeys) {
+        const col = colByKey[key]||{};
+        headers.push({label: await $$.libi18n.get(`${tabledef.i18nPrefix}_${key}`), priority: col.priority,
+            index: headers.length, key, sortable: col.sortable === true,
+            sortkey: col.sortkey || key, sorttype: col.sorttype || "text"});
+    }
 
     const rows = []; for (const row of loadResult.table||[]) {
         const cells = []; for (const key of displayKeys) {
@@ -342,9 +435,17 @@ async function _runOnLoadJavascript(tabledef) {
                 const variant = col.badgemap?.[String(value).toLowerCase()] || col.badgemap?.["*"] || "neutral";
                 cell.badgeclass = `badge-${variant}`;
             } else cell.tdclass = col.type == "main" ? "cell-main" : col.type == "mono" ? "mono" : col.type == "muted" ? "muted" : "";
+            // A "sub" column folds a second field into the same cell as a
+            // quieter line, instead of spending a whole column on it.
+            const subValue = col.sub !== undefined ? row[col.sub] : undefined;
+            if (subValue !== undefined && String(subValue).trim() != "") {
+                cell.hassub = true; cell.sub = subValue;
+                cell.subclass = col.subtype == "mono" ? "mono" : "";
+            }
             cells.push(cell);
         }
-        rows.push({cells, filtervalue: tabledef.filterkey ? String(row[tabledef.filterkey]||"") : "",
+        rows.push({cells, roworder: rows.length,
+            filtervalue: tabledef.filterkey ? String(row[tabledef.filterkey]||"") : "",
             rowdata_json_base64: $$.libutil.stringToBase64(JSON.stringify(row))});
     }
 
@@ -364,6 +465,6 @@ async function _runOnLoadJavascript(tabledef) {
 const _getArrayAsJoinedString = (array, skipEOLs) => array?(Array.isArray(array)?array:[array]).join(skipEOLs?"":"\n"):"";
 
 export const table_list = {trueWebComponentMode: true, elementConnected, elementRendered, close, rowClicked,
-    hidePopup, searchTable, filterTable, gotoPage, rowSelected, selectAll, clearSelection, bulkAction,
-    confirmAckChanged, closeBulkConfirm, confirmBulk};
+    hidePopup, searchTable, filterTable, gotoPage, sortTable, rowActions, rowSelected, selectAll, clearSelection,
+    bulkAction, confirmAckChanged, closeBulkConfirm, confirmBulk};
 $$.libmonkshu_component.register("table-list", `${COMPONENT_PATH}/table-list.html`, table_list);

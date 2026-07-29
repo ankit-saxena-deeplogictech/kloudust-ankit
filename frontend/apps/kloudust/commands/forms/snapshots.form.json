@@ -72,23 +72,30 @@
    "snapshots = (snapshots.snapshots||[]).map(snapshotObj => ({ ...snapshotObj, localtime: new Date(snapshotObj.timestamp).toLocaleString() }));",
    "return {keys: ['name','vm','localtime'], table: snapshots};"
   ],
+  "searchbar": true,
   "columns": [
    {
     "key": "name",
-    "type": "main"
+    "type": "main",
+    "sortable": true
    },
    {
-    "key": "vm"
+    "key": "vm",
+    "sortable": true
    },
    {
     "key": "localtime",
-    "type": "muted"
+    "type": "muted",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "timestamp"
    }
   ],
   "emptystate": {
    "title": "{{{i18n.SNAPSHOTSEmptyTitle}}}",
    "message": "{{{i18n.SNAPSHOTSEmptyMessage}}}"
-  }
+  },
+  "rowactions": true
  },
  "title": "{{{i18n.SNAPSHOTSTitle}}}"
 }
