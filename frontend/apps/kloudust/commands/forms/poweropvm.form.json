@@ -1,107 +1,142 @@
 {
-"id": "poweropvm",
-"command": "powerOpVM",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["vm_name", "command"],
-
-"title": "{{{i18n.VMPowerOPTitle}}}",
-
-"i18n": {
-    "en": {
-        "VMPowerOPTitle": "Power operate a virtual machine",
-        "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
-        "VMName": "Virtual machine name",
-        "VMPowerOpCommand": "Power command",
-        "FieldValidationErrorGeneric": "Validation error",
-        "PowerOPVMSubmitLabel": "Submit",
-        "VMStart": "Start",
-        "VMStop": "Stop",
-        "VMReboot": "Reboot",
-        "VMForceStop": "Forced stop",
-        "VMAutostart": "Auto start when host reboots",
-        "VMNoAutostart": "No auto start when host reboots",
-        "VMPause": "Pause",
-        "VMResume": "Resume",
-        "VMHardReboot": "Hard reboot"
-    },
-    "hi": {
-        "VMPowerOPTitle": "Power operate a virtual machine",
-        "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
-        "VMName": "वीएम नाम",
-        "VMPowerOpCommand": "Power command",
-        "FieldValidationErrorGeneric": "Validation error",
-        "PowerOPVMSubmitLabel": "Submit",
-        "VMStart": "Start",
-        "VMStop": "Stop",
-        "VMReboot": "Reboot",
-        "VMForceStop": "Forced stop",
-        "VMAutostart": "Auto start when host reboots",
-        "VMNoAutostart": "No auto start when host reboots",
-        "VMPause": "Pause",
-        "VMResume": "Resume",
-        "VMHardReboot": "Hard reboot"
-    },
-    "ja": {
-        "VMPowerOPTitle": "Power operate a virtual machine",
-        "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
-        "VMName": "VM名",
-        "VMPowerOpCommand": "Power command",
-        "FieldValidationErrorGeneric": "Validation error",
-        "PowerOPVMSubmitLabel": "Submit",
-        "VMStart": "Start",
-        "VMStop": "Stop",
-        "VMReboot": "Reboot",
-        "VMForceStop": "Forced stop",
-        "VMAutostart": "Auto start when host reboots",
-        "VMNoAutostart": "No auto start when host reboots",
-        "VMPause": "Pause",
-        "VMResume": "Resume",
-        "VMHardReboot": "Hard reboot"
-    },
-    "zh": {
-        "VMPowerOPTitle": "Power operate a virtual machine",
-        "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
-        "VMName": "虚拟机名称",
-        "VMPowerOpCommand": "Power command",
-        "FieldValidationErrorGeneric": "Validation error",
-        "PowerOPVMSubmitLabel": "Submit",
-        "VMStart": "Start",
-        "VMStop": "Stop",
-        "VMReboot": "Reboot",
-        "VMForceStop": "Forced stop",
-        "VMAutostart": "Auto start when host reboots",
-        "VMNoAutostart": "No auto start when host reboots",
-        "VMPause": "Pause",
-        "VMResume": "Resume",
-        "VMHardReboot": "Hard reboot"
-    }
-},
-
-"form": {
-    "description": "{{{i18n.VMPowerOPDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "vm_name", "type": "text", "placeholder": "{{{i18n.VMName}}}", "required": true, 
-        "pattern":"\\s[0-9a-zA-Z]+\\s", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
-        "value":"{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}", 
-        "readonly":"{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"},
-    {"id": "command", "multioption": true, "type": "select", "label": "{{{i18n.VMPowerOpCommand}}}", 
-        "options":[
-            {"value":"start", "label":"{{{i18n.VMStart}}}"}, 
-            {"value":"stop", "label":"{{{i18n.VMStop}}}"},
-            {"value":"reboot", "label":"{{{i18n.VMReboot}}}"},
-            {"value":"forcestop", "label":"{{{i18n.VMForceStop}}}"},
-            {"value":"autostart", "label":"{{{i18n.VMAutostart}}}"},
-            {"value":"noautostart", "label":"{{{i18n.VMNoAutostart}}}"},
-            {"value":"pause", "label":"{{{i18n.VMPause}}}"},
-            {"value":"resume", "label":"{{{i18n.VMResume}}}"},
-            {"value":"hardboot", "label":"{{{i18n.VMHardReboot}}}"}
-        ]
-    }
-    ],
-
-    "submitlabel": "{{{i18n.PowerOPVMSubmitLabel}}}"
-}
-
+ "id": "poweropvm",
+ "command": "powerOpVM",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "vm_name",
+  "command"
+ ],
+ "title": "{{{i18n.VMPowerOPTitle}}}",
+ "i18n": {
+  "en": {
+   "VMPowerOPTitle": "Power operate a virtual machine",
+   "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
+   "VMName": "Virtual machine name",
+   "VMPowerOpCommand": "Power command",
+   "FieldValidationErrorGeneric": "Validation error",
+   "PowerOPVMSubmitLabel": "Submit",
+   "VMStart": "Start",
+   "VMStop": "Stop",
+   "VMReboot": "Reboot",
+   "VMForceStop": "Forced stop",
+   "VMAutostart": "Auto start when host reboots",
+   "VMNoAutostart": "No auto start when host reboots",
+   "VMPause": "Pause",
+   "VMResume": "Resume",
+   "VMHardReboot": "Hard reboot"
+  },
+  "hi": {
+   "VMPowerOPTitle": "Power operate a virtual machine",
+   "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
+   "VMName": "वीएम नाम",
+   "VMPowerOpCommand": "Power command",
+   "FieldValidationErrorGeneric": "Validation error",
+   "PowerOPVMSubmitLabel": "Submit",
+   "VMStart": "Start",
+   "VMStop": "Stop",
+   "VMReboot": "Reboot",
+   "VMForceStop": "Forced stop",
+   "VMAutostart": "Auto start when host reboots",
+   "VMNoAutostart": "No auto start when host reboots",
+   "VMPause": "Pause",
+   "VMResume": "Resume",
+   "VMHardReboot": "Hard reboot"
+  },
+  "ja": {
+   "VMPowerOPTitle": "Power operate a virtual machine",
+   "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
+   "VMName": "VM名",
+   "VMPowerOpCommand": "Power command",
+   "FieldValidationErrorGeneric": "Validation error",
+   "PowerOPVMSubmitLabel": "Submit",
+   "VMStart": "Start",
+   "VMStop": "Stop",
+   "VMReboot": "Reboot",
+   "VMForceStop": "Forced stop",
+   "VMAutostart": "Auto start when host reboots",
+   "VMNoAutostart": "No auto start when host reboots",
+   "VMPause": "Pause",
+   "VMResume": "Resume",
+   "VMHardReboot": "Hard reboot"
+  },
+  "zh": {
+   "VMPowerOPTitle": "Power operate a virtual machine",
+   "VMPowerOPDescription": "Power operate a virtual machine on the cloud. Complete the required tab then submit.",
+   "VMName": "虚拟机名称",
+   "VMPowerOpCommand": "Power command",
+   "FieldValidationErrorGeneric": "Validation error",
+   "PowerOPVMSubmitLabel": "Submit",
+   "VMStart": "Start",
+   "VMStop": "Stop",
+   "VMReboot": "Reboot",
+   "VMForceStop": "Forced stop",
+   "VMAutostart": "Auto start when host reboots",
+   "VMNoAutostart": "No auto start when host reboots",
+   "VMPause": "Pause",
+   "VMResume": "Resume",
+   "VMHardReboot": "Hard reboot"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.VMPowerOPDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "vm_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VMName}}}",
+    "required": true,
+    "pattern": "\\s[0-9a-zA-Z]+\\s",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"
+   },
+   {
+    "id": "command",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.VMPowerOpCommand}}}",
+    "options": [
+     {
+      "value": "start",
+      "label": "{{{i18n.VMStart}}}"
+     },
+     {
+      "value": "stop",
+      "label": "{{{i18n.VMStop}}}"
+     },
+     {
+      "value": "reboot",
+      "label": "{{{i18n.VMReboot}}}"
+     },
+     {
+      "value": "forcestop",
+      "label": "{{{i18n.VMForceStop}}}"
+     },
+     {
+      "value": "autostart",
+      "label": "{{{i18n.VMAutostart}}}"
+     },
+     {
+      "value": "noautostart",
+      "label": "{{{i18n.VMNoAutostart}}}"
+     },
+     {
+      "value": "pause",
+      "label": "{{{i18n.VMPause}}}"
+     },
+     {
+      "value": "resume",
+      "label": "{{{i18n.VMResume}}}"
+     },
+     {
+      "value": "hardboot",
+      "label": "{{{i18n.VMHardReboot}}}"
+     }
+    ]
+   }
+  ],
+  "submitlabel": "{{{i18n.PowerOPVMSubmitLabel}}}"
+ }
 }

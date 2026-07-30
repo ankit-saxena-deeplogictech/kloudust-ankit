@@ -1,61 +1,76 @@
 {
-    "id": "vnetvm",
-    "command": "addVMVnet",
-    "type": "kloudust_cmdline",
-    "kloudust_cmdline_params": ["vm_name", "vnet_name", "create_vnet"],
-    
-    "title": "{{{i18n.VNetVMTitle}}}",
-    
-    "i18n": {
-        "en": {
-            "VNetVMTitle": "Change virtual machine network",
-            "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
-            "VMVnetName": "Virtual network name",
-            "VMName": "Virtual machine name",
-            "FieldValidationErrorGeneric": "Validation error",
-            "VNetVMSubmitLabel": "Submit"
-        },
-        "hi": {
-            "VNetVMTitle": "Change virtual machine network",
-            "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
-            "VMVnetName": "Virtual network नाम",
-            "VMName": "Virtual machine name",
-            "FieldValidationErrorGeneric": "Validation error",
-            "VNetVMSubmitLabel": "Submit"
-        },
-        "ja": {
-            "VNetVMTitle": "Change virtual machine network",
-            "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
-            "VMVnetName": "Virtual network名",
-            "VMName": "Virtual machine name",
-            "FieldValidationErrorGeneric": "Validation error",
-            "VNetVMSubmitLabel": "Submit"
-        },
-        "zh": {
-            "VNetVMTitle": "Change virtual machine network",
-            "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
-            "VMVnetName": "Virtual network姓名",
-            "VMName": "Virtual machine name",
-            "FieldValidationErrorGeneric": "Validation error",
-            "VNetVMSubmitLabel": "Submit"
-        }
-    },
-    
-    "form": {
-        "description": "{{{i18n.VMVnetDescription}}}",
-    
-        "required_label": "{{{i18n.Required}}}",
-        "required_fields": [
-        {"id": "vm_name", "type": "text", "placeholder": "{{{i18n.VMName}}}", "required": true, 
-            "pattern":"\\s[0-9a-zA-Z]+\\s", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
-            "value":"{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}", 
-            "readonly":"{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"},
-        {"id": "vnet_name", "type": "text", "placeholder": "{{{i18n.VMVnetName}}}", 
-            "required": true, "pattern":"[0-9a-zA-Z]+", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-        {"id": "create_vnet", "type": "hidden", "value": "true"}
-        ],
-    
-        "submitlabel": "{{{i18n.VNetVMSubmitLabel}}}"
-    }
-    
-    }
+ "id": "vnetvm",
+ "command": "addVMVnet",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "vm_name",
+  "vnet_name",
+  "create_vnet"
+ ],
+ "title": "{{{i18n.VNetVMTitle}}}",
+ "i18n": {
+  "en": {
+   "VNetVMTitle": "Change virtual machine network",
+   "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
+   "VMVnetName": "Virtual network name",
+   "VMName": "Virtual machine name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "VNetVMSubmitLabel": "Submit"
+  },
+  "hi": {
+   "VNetVMTitle": "Change virtual machine network",
+   "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
+   "VMVnetName": "Virtual network नाम",
+   "VMName": "Virtual machine name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "VNetVMSubmitLabel": "Submit"
+  },
+  "ja": {
+   "VNetVMTitle": "Change virtual machine network",
+   "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
+   "VMVnetName": "Virtual network名",
+   "VMName": "Virtual machine name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "VNetVMSubmitLabel": "Submit"
+  },
+  "zh": {
+   "VNetVMTitle": "Change virtual machine network",
+   "VMVnetDescription": "Change virtual machine network. Complete the required fields and then submit to change the virtual machine network.",
+   "VMVnetName": "Virtual network姓名",
+   "VMName": "Virtual machine name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "VNetVMSubmitLabel": "Submit"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.VMVnetDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "vm_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VMName}}}",
+    "required": true,
+    "pattern": "\\s[0-9a-zA-Z]+\\s",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"
+   },
+   {
+    "id": "vnet_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VMVnetName}}}",
+    "required": true,
+    "pattern": "[0-9a-zA-Z]+",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "create_vnet",
+    "type": "hidden",
+    "value": "true"
+   }
+  ],
+  "submitlabel": "{{{i18n.VNetVMSubmitLabel}}}"
+ }
+}

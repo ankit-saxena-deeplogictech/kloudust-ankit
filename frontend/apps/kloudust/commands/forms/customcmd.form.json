@@ -2,6 +2,7 @@
  "id": "customcmd",
  "command": "customCmd",
  "type": "kloudust_cmdline",
+ "presentation": "drawer",
  "kloudust_cmdline_params": [
   "sql",
   "hostname",

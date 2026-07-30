@@ -1,4 +1,8 @@
 export const i18n = {
+"RoleCloudadmin": "Cloud admin",
+"RoleOrgadmin": "Org admin",
+"RoleUser": "Project user",
+"SkipToContent": "Skip to main content",
 "Title" : "Kloudust 控制台",
 "logintagline": "混合云",
 "loginsubtag": "安全、私密且易于使用。体验下一代云并显着节省成本。",

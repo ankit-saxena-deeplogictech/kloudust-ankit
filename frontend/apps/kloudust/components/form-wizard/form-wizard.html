@@ -27,7 +27,7 @@ span#description {
     display: block;
     color: var(--text-3);
     font-size: var(--fs-md);
-    margin: var(--sp-1) 0 0;
+    margin: var(--sp-1) 0 var(--sp-4);
     max-width: 65ch;
 }
 
@@ -86,7 +86,15 @@ select {
 }
 select option { background-color: var(--surface); color: var(--text); }
 
-input.error { color: var(--danger-600); border-color: var(--danger-600); }
+input.error, select.error, textarea.error { color: var(--danger-600); border-color: var(--danger-600); }
+
+/* components.css styles and hides .error-msg; when it shows is this component's
+   business (the shared .field.invalid hook needs a wrapper we deliberately
+   do not emit). */
+span.error-msg.visible { display: flex; margin-top: calc(var(--sp-1) - var(--sp-4)); margin-bottom: var(--sp-4); }
+span.error-msg .icon { flex: none; }
+
+label.switch { margin-bottom: var(--sp-4); }
 
 span.hint {
     display: block;
@@ -112,6 +120,7 @@ div#wizactions .spacer { flex: 1; }
 </style>
 
 <div id="body">
+{{^embedded}}
 <div class="page-head">
     <div>
         {{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}
@@ -122,6 +131,10 @@ div#wizactions .spacer { flex: 1; }
         <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </div>
 </div>
+{{/embedded}}
+{{! Embedded: the host (drawer head, tab strip) already shows the title and
+    supplies the close, so only the description carries over as content. }}
+{{#embedded}}{{#description}}<span id="description">{{.}}</span>{{/description}}{{/embedded}}
 
 <ol class="stepper" aria-label="Progress">
 {{#steps}}
@@ -159,6 +172,15 @@ div#wizactions .spacer { flex: 1; }
 <div {{#isrow}}class="field-row"{{/isrow}}>
 {{#fields}}
 {{^multioption}}
+{{#switchfield}}
+<label class="switch" for="{{id}}">
+    <input id="{{id}}" type="checkbox" data-optional="true" {{#checked}}checked{{/checked}}>
+    <span class="track"></span>
+    <span>{{#label}}{{.}}{{/label}}{{^label}}{{placeholder}}{{/label}}</span>
+</label>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/switchfield}}
+{{^switchfield}}
 {{#label}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/label}}
 {{^label}}{{#placeholder}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/placeholder}}{{/label}}
 <{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}} id="{{id}}"
@@ -174,11 +196,14 @@ div#wizactions .spacer { flex: 1; }
     {{#title}}title="{{.}}"{{/title}}
     {{#variant}}class="variant-{{.}}"{{/variant}}
     {{#validation_error}}oninvalid="this.setCustomValidity('{{.}}')"{{/validation_error}}
-    {{#validation_error}}oninput="setCustomValidity('')"{{/validation_error}}
+    {{#validation_error}}oninput="setCustomValidity(''); monkshu_env.components['form-wizard'].clearFieldError(this)"{{/validation_error}}
     {{#readonly}}readonly{{/readonly}}
     {{#list}}list="{{.}}"{{/list}}>
 </{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}}>
+{{#validation_error}}<span class="error-msg" data-errorfor="{{id}}" role="alert">
+    <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 3v.01"/></svg>{{.}}</span>{{/validation_error}}
 {{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/switchfield}}
 {{/multioption}}
 
 {{#multioption}}

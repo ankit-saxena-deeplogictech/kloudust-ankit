@@ -1,5 +1,21 @@
 {
-"id": "alerts",
-"command": "alerts",
-"type": "frontend_module"
+ "id": "alerts",
+ "command": "alerts",
+ "type": "frontend_module",
+ "presentation": "drawer",
+ "title": "{{{i18n.AlertsTitle}}}",
+ "i18n": {
+  "en": {
+   "AlertsTitle": "Alerts"
+  },
+  "hi": {
+   "AlertsTitle": "Alerts"
+  },
+  "ja": {
+   "AlertsTitle": "Alerts"
+  },
+  "zh": {
+   "AlertsTitle": "Alerts"
+  }
+ }
 }

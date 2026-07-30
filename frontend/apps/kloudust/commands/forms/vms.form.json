@@ -165,7 +165,8 @@
     "key": "name_raw",
     "type": "main",
     "sub": "description",
-    "sortable": true
+    "sortable": true,
+    "link": true
    },
    {
     "key": "ips",

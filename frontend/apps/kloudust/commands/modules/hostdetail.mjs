@@ -7,6 +7,11 @@
  * this module reads it for the physical specs (the hosts table stores cores as
  * a count and memory/disk in bytes) and calls listVMsForHost for placement.
  *
+ * Scope note: listVMsForHost resolves to "select * from vms where hostname = ?"
+ * with no project filter, so the VM list and the meters here cover every
+ * project on the host — which is the honest answer for physical capacity, but
+ * is a wider scope than the project-scoped VM count on the Hosts list.
+ *
  * As on the dashboard, capacity here is reserved, not measured — the schema
  * records declared sizes, not live utilization. Host reachability is likewise
  * not shown: the hosts table has no status column.

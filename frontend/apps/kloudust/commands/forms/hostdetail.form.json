@@ -20,14 +20,14 @@
    "HostDetailCores": "vCPU",
    "HostDetailMemory": "Memory",
    "HostDetailDisk": "Storage",
-   "HostDetailCapacityFoot": "Allocation is the sum of VM reservations placed on this host. It is reserved capacity, not live utilization.",
+   "HostDetailCapacityFoot": "Allocation is the sum of every VM reserved on this host, across all projects. It is reserved capacity, not live utilization.",
    "HostDetailMeterNear": "approaching limit",
    "HostDetailMeterOver": "over-committed",
    "HostDetailVMName": "Name",
    "HostDetailVMCores": "Cores",
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
-   "HostDetailNoVMsMessage": "Nothing in this project is placed on this host."
+   "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host."
   },
   "hi": {
    "HostDetailBack": "Hosts",
@@ -46,14 +46,14 @@
    "HostDetailCores": "vCPU",
    "HostDetailMemory": "Memory",
    "HostDetailDisk": "Storage",
-   "HostDetailCapacityFoot": "Allocation is the sum of VM reservations placed on this host. It is reserved capacity, not live utilization.",
+   "HostDetailCapacityFoot": "Allocation is the sum of every VM reserved on this host, across all projects. It is reserved capacity, not live utilization.",
    "HostDetailMeterNear": "approaching limit",
    "HostDetailMeterOver": "over-committed",
    "HostDetailVMName": "Name",
    "HostDetailVMCores": "Cores",
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
-   "HostDetailNoVMsMessage": "Nothing in this project is placed on this host."
+   "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host."
   },
   "ja": {
    "HostDetailBack": "Hosts",
@@ -72,14 +72,14 @@
    "HostDetailCores": "vCPU",
    "HostDetailMemory": "Memory",
    "HostDetailDisk": "Storage",
-   "HostDetailCapacityFoot": "Allocation is the sum of VM reservations placed on this host. It is reserved capacity, not live utilization.",
+   "HostDetailCapacityFoot": "Allocation is the sum of every VM reserved on this host, across all projects. It is reserved capacity, not live utilization.",
    "HostDetailMeterNear": "approaching limit",
    "HostDetailMeterOver": "over-committed",
    "HostDetailVMName": "Name",
    "HostDetailVMCores": "Cores",
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
-   "HostDetailNoVMsMessage": "Nothing in this project is placed on this host."
+   "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host."
   },
   "zh": {
    "HostDetailBack": "Hosts",
@@ -98,14 +98,14 @@
    "HostDetailCores": "vCPU",
    "HostDetailMemory": "Memory",
    "HostDetailDisk": "Storage",
-   "HostDetailCapacityFoot": "Allocation is the sum of VM reservations placed on this host. It is reserved capacity, not live utilization.",
+   "HostDetailCapacityFoot": "Allocation is the sum of every VM reserved on this host, across all projects. It is reserved capacity, not live utilization.",
    "HostDetailMeterNear": "approaching limit",
    "HostDetailMeterOver": "over-committed",
    "HostDetailVMName": "Name",
    "HostDetailVMCores": "Cores",
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
-   "HostDetailNoVMsMessage": "Nothing in this project is placed on this host."
+   "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host."
   }
  }
 }

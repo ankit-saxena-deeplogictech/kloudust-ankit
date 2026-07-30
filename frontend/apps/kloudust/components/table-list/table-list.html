@@ -116,6 +116,12 @@ td[data-copied="true"]::after {
 .dt tbody tr { cursor: pointer; }
 .dt td.col-check, .dt th.col-check { cursor: default; }
 .dt td.col-actions, .dt th.col-actions { cursor: default; }
+.dt tbody tr.norowclick { cursor: default; }
+.dt tbody tr.skeleton-row td { height: 41px; }
+
+/* --- Bulk confirm modal internals ----------------------------------------- */
+div#tableconfirmbanner { margin-bottom: var(--sp-4); }
+div#tableconfirmlist { margin-bottom: var(--sp-4); white-space: pre-wrap; }
 </style>
 
 <div id="tablebody">
@@ -160,6 +166,18 @@ td[data-copied="true"]::after {
 </div>
 {{/selectable}}
 
+{{#loading}}
+<div class="table-scroll">
+<table class="dt">
+    <tbody aria-hidden="true">
+    {{#skeletonrows}}
+    <tr class="skeleton-row">{{#cells}}<td><span class="skeleton"></span></td>{{/cells}}</tr>
+    {{/skeletonrows}}
+    </tbody>
+</table>
+</div>
+{{/loading}}
+
 {{#rows.length}}
 <div class="table-scroll">
 <table class="dt">
@@ -195,8 +213,11 @@ td[data-copied="true"]::after {
 
     {{#rows}}
     <tr data-rowdata="{{{rowdata_json_base64}}}" data-filter="{{filtervalue}}" data-roworder="{{roworder}}"
+        {{^rowclickable}}class="norowclick"{{/rowclickable}}
+        {{#rowclickable}}
         {{#enable_copy}}onclick="if (!event.shiftKey) {monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')}"{{/enable_copy}}
-        {{^enable_copy}}onclick="monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')"{{/enable_copy}}>
+        {{^enable_copy}}onclick="monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')"{{/enable_copy}}
+        {{/rowclickable}}>
     {{#selectable}}
     <td class="col-check">
         <input type="checkbox" data-select-row aria-label="Select row"
@@ -205,7 +226,7 @@ td[data-copied="true"]::after {
     {{/selectable}}
     {{#cells}}
     <td {{#priority}}data-priority="{{.}}"{{/priority}} {{#tdclass}}class="{{.}}"{{/tdclass}}>
-        <span data-cellmain>{{#isbadge}}<span class="badge {{badgeclass}}"><span class="dot"></span>{{value}}</span>{{/isbadge}}{{^isbadge}}{{value}}{{/isbadge}}</span>
+        <span data-cellmain>{{#islink}}<button class="name-link" onclick="event.stopPropagation(); monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')">{{value}}</button>{{/islink}}{{^islink}}{{#isbadge}}<span class="badge {{badgeclass}}"><span class="dot"></span>{{value}}</span>{{/isbadge}}{{^isbadge}}{{value}}{{/isbadge}}{{/islink}}</span>
         {{#hassub}}<div class="cell-sub {{subclass}}">{{sub}}</div>{{/hassub}}
     </td>
     {{/cells}}
@@ -235,6 +256,7 @@ td[data-copied="true"]::after {
 </div>
 {{/rows.length}}
 
+{{^loading}}
 {{^rows}}
 <div class="empty">
     <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>
@@ -242,6 +264,7 @@ td[data-copied="true"]::after {
     <p>{{emptystate.message}}</p>
 </div>
 {{/rows}}
+{{/loading}}
 
 </div>
 
@@ -259,11 +282,11 @@ td[data-copied="true"]::after {
             </span>
         </div>
         <div class="modal-body">
-            <div class="banner banner-danger" style="margin-bottom:var(--sp-4);">
+            <div class="banner banner-danger" id="tableconfirmbanner">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4m0 3v.01"/></svg>
                 <div id="tableconfirmwhat"></div>
             </div>
-            <div class="console" id="tableconfirmlist" style="margin-bottom:var(--sp-4); white-space:pre-wrap;"></div>
+            <div class="console" id="tableconfirmlist"></div>
             <label class="checkbox mb-0">
                 <input type="checkbox" id="tableconfirmack"
                     onchange="monkshu_env.components['table-list'].confirmAckChanged(this)">

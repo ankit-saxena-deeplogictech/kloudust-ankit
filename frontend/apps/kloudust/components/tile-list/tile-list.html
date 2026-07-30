@@ -37,6 +37,12 @@ div#tiletop {
 
 .tile .card-head { gap: var(--sp-3); justify-content: flex-start; }
 .tile .tile-sub { color: var(--text-3); font-size: var(--fs-sm); margin-top: 2px; }
+
+/* Skeleton tiles: staggered widths read as text rather than as three equal bars */
+div.skeleton-tile { display: flex; flex-direction: column; gap: var(--sp-3); }
+div.skeleton-tile span.skeleton:nth-child(1) { width: 40%; }
+div.skeleton-tile span.skeleton:nth-child(2) { width: 75%; }
+div.skeleton-tile span.skeleton:nth-child(3) { width: 55%; }
 </style>
 
 <div id="tilebody">
@@ -50,6 +56,18 @@ div#tiletop {
     </div>
 </div>
 {{/embedded}}
+
+{{#loading}}
+<div class="tile-grid" aria-hidden="true">
+{{#skeletontiles}}
+    <div class="card tile skeleton-tile">
+        <span class="skeleton"></span>
+        <span class="skeleton"></span>
+        <span class="skeleton"></span>
+    </div>
+{{/skeletontiles}}
+</div>
+{{/loading}}
 
 {{#tiles.length}}
 <div class="tile-grid">
@@ -76,6 +94,7 @@ div#tiletop {
 </div>
 {{/tiles.length}}
 
+{{^loading}}
 {{^tiles}}
 <div class="empty">
     <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
@@ -83,5 +102,6 @@ div#tiletop {
     <p>{{emptystate.message}}</p>
 </div>
 {{/tiles}}
+{{/loading}}
 
 </div>

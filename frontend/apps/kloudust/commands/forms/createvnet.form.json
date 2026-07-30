@@ -1,89 +1,98 @@
 {
-"id": "createvnet",
-"command": "createVnet",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["vnet_name", "vnet_description", "force_overwrite"],
-
-"title": "{{{i18n.VnetCreateTitle}}}",
-
-"i18n": {
-    "en": {
-        "VnetCreateTitle": "Create virtual network",
-        "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
-        "VnetName": "Name",
-        "VnetDescription": "Description",
-        "VnetStartingIP": "Starting IP",
-        "VnetMask": "Subnet size",
-        "CreateVnetSubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMask": "Value must be between 0 and 32",
-        "VnetYes": "Yes",
-        "VnetNo": "No",
-        "VnetAdvanced": "Advanced",
-        "VnetInternetRouting": "Add internet routing NAT gateway support",
-        "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
-    },
-    "hi": {
-        "VnetCreateTitle": "Create virtual network",
-        "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
-        "VnetName": "Name",
-        "VnetDescription": "Description",
-        "VnetStartingIP": "Starting IP",
-        "VnetMask": "Subnet size",
-        "CreateVnetSubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMask": "Value must be between 0 and 32",
-        "VnetYes": "Yes",
-        "VnetNo": "No",
-        "VnetAdvanced": "Advanced",
-        "VnetInternetRouting": "Add internet routing NAT gateway support",
-        "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
-    },
-    "ja": {
-        "VnetCreateTitle": "Create virtual network",
-        "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
-        "VnetName": "Name",
-        "VnetDescription": "Description",
-        "VnetStartingIP": "Starting IP",
-        "VnetMask": "Subnet size",
-        "CreateVnetSubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMask": "Value must be between 0 and 32",
-        "VnetYes": "Yes",
-        "VnetNo": "No",
-        "VnetAdvanced": "Advanced",
-        "VnetInternetRouting": "Add internet routing NAT gateway support",
-        "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
-    },
-    "zh": {
-        "VnetCreateTitle": "Create virtual network",
-        "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
-        "VnetName": "Name",
-        "VnetDescription": "Description",
-        "VnetStartingIP": "Starting IP",
-        "VnetMask": "Subnet size",
-        "CreateVnetSubmitLabel": "Create",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMask": "Value must be between 0 and 32",
-        "VnetYes": "Yes",
-        "VnetNo": "No",
-        "VnetAdvanced": "Advanced",
-        "VnetInternetRouting": "Add internet routing NAT gateway support",
-        "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
-    }
-},
-
-"form": {
-    "description": "{{{i18n.VnetCreateDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "vnet_name", "type": "text", "placeholder": "{{{i18n.VnetName}}}", "required": true, 
-        "pattern":"\\s*\\w+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "vnet_description", "type": "text", "placeholder": "{{{i18n.VnetDescription}}}"}
-    ],
-
-    "submitlabel": "{{{i18n.CreateVnetSubmitLabel}}}"
-}
-
+ "id": "createvnet",
+ "command": "createVnet",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "vnet_name",
+  "vnet_description",
+  "force_overwrite"
+ ],
+ "title": "{{{i18n.VnetCreateTitle}}}",
+ "i18n": {
+  "en": {
+   "VnetCreateTitle": "Create virtual network",
+   "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
+   "VnetName": "Name",
+   "VnetDescription": "Description",
+   "VnetStartingIP": "Starting IP",
+   "VnetMask": "Subnet size",
+   "CreateVnetSubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMask": "Value must be between 0 and 32",
+   "VnetYes": "Yes",
+   "VnetNo": "No",
+   "VnetAdvanced": "Advanced",
+   "VnetInternetRouting": "Add internet routing NAT gateway support",
+   "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
+  },
+  "hi": {
+   "VnetCreateTitle": "Create virtual network",
+   "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
+   "VnetName": "Name",
+   "VnetDescription": "Description",
+   "VnetStartingIP": "Starting IP",
+   "VnetMask": "Subnet size",
+   "CreateVnetSubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMask": "Value must be between 0 and 32",
+   "VnetYes": "Yes",
+   "VnetNo": "No",
+   "VnetAdvanced": "Advanced",
+   "VnetInternetRouting": "Add internet routing NAT gateway support",
+   "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
+  },
+  "ja": {
+   "VnetCreateTitle": "Create virtual network",
+   "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
+   "VnetName": "Name",
+   "VnetDescription": "Description",
+   "VnetStartingIP": "Starting IP",
+   "VnetMask": "Subnet size",
+   "CreateVnetSubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMask": "Value must be between 0 and 32",
+   "VnetYes": "Yes",
+   "VnetNo": "No",
+   "VnetAdvanced": "Advanced",
+   "VnetInternetRouting": "Add internet routing NAT gateway support",
+   "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
+  },
+  "zh": {
+   "VnetCreateTitle": "Create virtual network",
+   "VnetCreateDescription": "Create a virtual network. A virtual network is comparable to VLANs and includes virtual switching. Complete the required fields and then review + create to create a new virtual network.",
+   "VnetName": "Name",
+   "VnetDescription": "Description",
+   "VnetStartingIP": "Starting IP",
+   "VnetMask": "Subnet size",
+   "CreateVnetSubmitLabel": "Create",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMask": "Value must be between 0 and 32",
+   "VnetYes": "Yes",
+   "VnetNo": "No",
+   "VnetAdvanced": "Advanced",
+   "VnetInternetRouting": "Add internet routing NAT gateway support",
+   "VnetOverwriteForce": "Overwrite if a virtual network by the same name exists?"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.VnetCreateDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "vnet_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VnetName}}}",
+    "required": true,
+    "pattern": "\\s*\\w+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "vnet_description",
+    "type": "text",
+    "placeholder": "{{{i18n.VnetDescription}}}"
+   }
+  ],
+  "submitlabel": "{{{i18n.CreateVnetSubmitLabel}}}"
+ }
 }

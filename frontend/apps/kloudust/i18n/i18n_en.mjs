@@ -1,4 +1,8 @@
 export const i18n = {
+"RoleCloudadmin": "Cloud admin",
+"RoleOrgadmin": "Org admin",
+"RoleUser": "Project user",
+"SkipToContent": "Skip to main content",
 "Title" : "Kloudust Console",
 "logintagline": "Hybrid Cloud",
 "loginsubtag": "Secure, private, and easy to use. Experience the next generation cloud with signifacnt cost savings.",

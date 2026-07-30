@@ -1,87 +1,143 @@
 {
-"id": "addimage",
-"command": "addImage",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["name", "uri", "processorarch", "description", "extrainfo", "runasjob", "retryonfailure"],
-
-"title": "{{{i18n.AddImageTitle}}}",
-
-"i18n": {
-    "en": {
-        "AddImageTitle": "Add image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "AddImageSubmitLabel": "Add",
-        "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
-        "ImageDescription": "Image description",
-        "ImageURI": "URL for download",
-        "ProcessorArch": "Processor architecture example amd64",
-        "OSVariant": "Operating system variant",
-        "ImgType": "Image type",
-        "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
-    },
-    "hi": {
-        "AddImageTitle": "Add image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "AddImageSubmitLabel": "Add",
-        "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
-        "ImageDescription": "Image description",
-        "ImageURI": "URL for download",
-        "ProcessorArch": "Processor architecture",
-        "OSVariant": "Operating system variant",
-        "ImgType": "Image type",
-        "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
-    },
-    "ja": {
-        "AddImageTitle": "Add image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "AddImageSubmitLabel": "Add",
-        "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
-        "ImageDescription": "Image description",
-        "ImageURI": "URL for download",
-        "ProcessorArch": "Processor architecture",
-        "OSVariant": "Operating system variant",
-        "ImgType": "Image type",
-        "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
-    },
-    "zh": {
-        "AddImageTitle": "Add image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "AddImageSubmitLabel": "Add",
-        "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
-        "ImageDescription": "Image description",
-        "ImageURI": "URL for download",
-        "ProcessorArch": "Processor architecture",
-        "OSVariant": "Operating system variant",
-        "ImgType": "Image type",
-        "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
-    }
-},
-
-"form": {
-    "description": "{{{i18n.AddImageDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "name", "type": "text", "placeholder": "{{{i18n.ImageName}}}", "required": true, 
-        "pattern":"\\s*\\[w-_]+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "description", "type": "text", "placeholder": "{{{i18n.ImageDescription}}}", "required": true, 
-        "pattern":"\\s*[A-Za-z0-9 .]+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "uri", "type": "url", "placeholder": "{{{i18n.ImageURI}}}", "required": true,
-        "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "processorarch", "multioption": true, "type": "select", "label": "{{{i18n.ProcessorArch}}}", 
-        "options":[{"value":"amd64", "label":"x86_64"}]},
-    {"id": "os_variant", "type": "text", "placeholder": "{{{i18n.OSVariant}}}", "required": true,
-        "pattern":"\\s*[A-Za-z0-9.]+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "image_type", "multioption": true, "type": "select", "label": "{{{i18n.ImgType}}}", 
-        "options":[{"value":"img", "label":"IMG"}, {"value":"iso", "label":"ISO"}]},
-
-    {"id": "runasjob", "type": "hidden", "value": "true"},
-    {"id": "retryonfailure", "type": "hidden", "value": "true"}
-    ],
-
-    "submitlabel": "{{{i18n.AddImageSubmitLabel}}}",
-
-    "submit_javascript": "const retObject = arguments[0]||{};\r\n\r\nretObject.extrainfo = retObject.os_variant+':'+retObject.image_type;\r\nreturn true;"
-}
-
+ "id": "addimage",
+ "command": "addImage",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "name",
+  "uri",
+  "processorarch",
+  "description",
+  "extrainfo",
+  "runasjob",
+  "retryonfailure"
+ ],
+ "title": "{{{i18n.AddImageTitle}}}",
+ "i18n": {
+  "en": {
+   "AddImageTitle": "Add image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddImageSubmitLabel": "Add",
+   "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
+   "ImageDescription": "Image description",
+   "ImageURI": "URL for download",
+   "ProcessorArch": "Processor architecture example amd64",
+   "OSVariant": "Operating system variant",
+   "ImgType": "Image type",
+   "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
+  },
+  "hi": {
+   "AddImageTitle": "Add image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddImageSubmitLabel": "Add",
+   "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
+   "ImageDescription": "Image description",
+   "ImageURI": "URL for download",
+   "ProcessorArch": "Processor architecture",
+   "OSVariant": "Operating system variant",
+   "ImgType": "Image type",
+   "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
+  },
+  "ja": {
+   "AddImageTitle": "Add image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddImageSubmitLabel": "Add",
+   "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
+   "ImageDescription": "Image description",
+   "ImageURI": "URL for download",
+   "ProcessorArch": "Processor architecture",
+   "OSVariant": "Operating system variant",
+   "ImgType": "Image type",
+   "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
+  },
+  "zh": {
+   "AddImageTitle": "Add image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "AddImageSubmitLabel": "Add",
+   "ImageName": "Image name. It should use format osname_major_minor_architecture, for example ubuntu-server_22_04_amd64",
+   "ImageDescription": "Image description",
+   "ImageURI": "URL for download",
+   "ProcessorArch": "Processor architecture",
+   "OSVariant": "Operating system variant",
+   "ImgType": "Image type",
+   "AddImageDescription": "Add a new virtual machine image. Complete the required fields and then submit."
+  }
+ },
+ "form": {
+  "description": "{{{i18n.AddImageDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "name",
+    "type": "text",
+    "placeholder": "{{{i18n.ImageName}}}",
+    "required": true,
+    "pattern": "\\s*\\[w-_]+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "description",
+    "type": "text",
+    "placeholder": "{{{i18n.ImageDescription}}}",
+    "required": true,
+    "pattern": "\\s*[A-Za-z0-9 .]+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "uri",
+    "type": "url",
+    "placeholder": "{{{i18n.ImageURI}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "processorarch",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.ProcessorArch}}}",
+    "options": [
+     {
+      "value": "amd64",
+      "label": "x86_64"
+     }
+    ]
+   },
+   {
+    "id": "os_variant",
+    "type": "text",
+    "placeholder": "{{{i18n.OSVariant}}}",
+    "required": true,
+    "pattern": "\\s*[A-Za-z0-9.]+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "image_type",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.ImgType}}}",
+    "options": [
+     {
+      "value": "img",
+      "label": "IMG"
+     },
+     {
+      "value": "iso",
+      "label": "ISO"
+     }
+    ]
+   },
+   {
+    "id": "runasjob",
+    "type": "hidden",
+    "value": "true"
+   },
+   {
+    "id": "retryonfailure",
+    "type": "hidden",
+    "value": "true"
+   }
+  ],
+  "submitlabel": "{{{i18n.AddImageSubmitLabel}}}",
+  "submit_javascript": "const retObject = arguments[0]||{};\r\n\r\nretObject.extrainfo = retObject.os_variant+':'+retObject.image_type;\r\nreturn true;"
+ }
 }

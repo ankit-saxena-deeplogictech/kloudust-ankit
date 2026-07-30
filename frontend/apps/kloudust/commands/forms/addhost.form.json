@@ -1,133 +1,236 @@
 {
-"id": "addhost",
-"command": "addHost",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["hostname", "hostip", "ostype", "adminid", "adminpass", "hostsshkey", "sshport", "cores", 
-    "memory", "disk", "netspeed", "processor", "processorarch", "sockets", "nochangepassword"],
-
-"title": "{{{i18n.RegisterHost}}}",
-
-"i18n": {
-    "en": {
-        "Hostname": "Cloud name for this host",
-        "HostNetworkAddressOrIp": "Host IP or DNS",
-        "HostOSType": "Choose host OS",
-        "HostRootID": "Host administrator's login ID",
-        "HostRootPassword": "Host administrator's password",
-        "Hostkey": "SSH ED25519 MD5 Hostkey",
-        "HostChangeAdminPassword": "Change administrator password?",
-        "HostCores": "Number of cores",
-        "HostMemory": "Memory in bytes",
-        "HostDisk": "Local disk in bytes",
-        "HostNetspeed": "Network speed in bytes per second",
-        "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
-        "HostProcessorArchitecture": "Processor architecture",
-        "HostSockets": "Number of sockets",
-        "SSHPort": "SSH port",
-        "HostAddButtonLabel": "Add Host",
-        "Advanced": "Optional",
-        "Required": "Required",
-        "FieldValidationErrorGeneric": "Validation error"
-    },
-    "hi": {
-        "Hostname": "Cloud name for this host",
-        "HostNetworkAddressOrIp": "Host IP or DNS",
-        "HostOSType": "Choose host OS",
-        "HostRootID": "Host administrator's login ID",
-        "HostRootPassword": "Host administrator's password",
-        "Hostkey": "SSH ED25519 MD5 Hostkey",
-        "HostChangeAdminPassword": "Change administrator password?",
-        "HostCores": "Number of cores",
-        "HostMemory": "Memory in bytes",
-        "HostDisk": "Local disk in bytes",
-        "HostNetspeed": "Network speed in bytes per second",
-        "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
-        "HostProcessorArchitecture": "Processor architecture",
-        "HostSockets": "Number of sockets",
-        "SSHPort": "SSH port",
-        "HostAddButtonLabel": "Add Host",
-        "Advanced": "Optional",
-        "Required": "Required",
-        "FieldValidationErrorGeneric": "Validation error"
-    },
-    "ja": {
-        "Hostname": "Cloud name for this host",
-        "HostNetworkAddressOrIp": "Host IP or DNS",
-        "HostOSType": "Choose host OS",
-        "HostRootID": "Host administrator's login ID",
-        "HostRootPassword": "Host administrator's password",
-        "Hostkey": "SSH ED25519 MD5 Hostkey",
-        "HostChangeAdminPassword": "Change administrator password?",
-        "HostCores": "Number of cores",
-        "HostMemory": "Memory in bytes",
-        "HostDisk": "Local disk in bytes",
-        "HostNetspeed": "Network speed in bytes per second",
-        "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
-        "HostProcessorArchitecture": "Processor architecture",
-        "HostSockets": "Number of sockets",
-        "SSHPort": "SSH port",
-        "HostAddButtonLabel": "Add Host",
-        "Advanced": "Optional",
-        "Required": "Required",
-        "FieldValidationErrorGeneric": "Validation error"
-    },
-    "zh": {
-        "Hostname": "Cloud name for this host",
-        "HostNetworkAddressOrIp": "Host IP or DNS",
-        "HostOSType": "Choose host OS",
-        "HostRootID": "Host administrator's login ID",
-        "HostRootPassword": "Host administrator's password",
-        "Hostkey": "SSH ED25519 MD5 Hostkey",
-        "HostChangeAdminPassword": "Change administrator password?",
-        "HostCores": "Number of cores",
-        "HostMemory": "Memory in bytes",
-        "HostDisk": "Local disk in bytes",
-        "HostNetspeed": "Network speed in bytes per second",
-        "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
-        "HostProcessorArchitecture": "Processor architecture",
-        "HostSockets": "Number of sockets",
-        "SSHPort": "SSH port",
-        "HostAddButtonLabel": "Add Host",
-        "Advanced": "Optional",
-        "Required": "Required",
-        "FieldValidationErrorGeneric": "Validation error"
-    }
-},
-
-"form": {
-    "description": "Add a host machine to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "hostname", "type": "text", "placeholder": "{{{i18n.Hostname}}}", "required": true, 
-        "pattern":"\\s*[A-Za-z0-9]+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "hostip", "type": "text", "placeholder": "{{{i18n.HostNetworkAddressOrIp}}}", "required": true, 
-        "pattern":"\\s*[0-9\\.]+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "adminid", "type": "text", "placeholder": "{{{i18n.HostRootID}}}", "required": true, 
-        "pattern":"\\s*[A-Za-z0-9]+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "adminpass", "type": "password", "placeholder": "{{{i18n.HostRootPassword}}}", "required": true, 
-        "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "hostsshkey", "type": "text", "placeholder": "{{{i18n.Hostkey}}}", "required": true, 
-        "pattern":"\\s*[A-Fa-f0-9\\:]+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "sshport", "type": "number", "placeholder": "{{{i18n.SSHPort}}}", "pattern":"\\s*[0-9]+\\s*", "value": 22},
-    {"id": "ostype", "multioption":true, "type": "select", "label": "{{{i18n.HostOSType}}}", 
-        "options":[{"value":"rhel9_compatible", "label":"RHEL 9 or Compatible"}, {"value":"ubuntu22", "label":"Ubuntu 22 LTS"}]}
-    ],
-
-    "optional_label": "{{{i18n.Advanced}}}",
-    "optional_fields": [
-    {"id": "cores", "type": "number", "placeholder": "{{{i18n.HostCores}}}"},
-    {"id": "memory", "type": "number", "placeholder": "{{{i18n.HostMemory}}}"},
-    {"id": "disk", "type": "number", "placeholder": "{{{i18n.HostDisk}}}"},
-    {"id": "netspeed", "type": "number", "placeholder": "{{{i18n.HostNetspeed}}}"},
-    {"id": "processor", "type": "text", "placeholder": "{{{i18n.HostProcessor}}}", "pattern":"\\s*[A-Za-z0-9\\:]+\\s*"},
-    {"id": "processorarch", "type": "text", "placeholder": "{{{i18n.HostProcessorArchitecture}}}", "pattern":"\\s*[A-Za-z0-9]+\\s*"},
-    {"id": "sockets", "type": "number", "placeholder": "{{{i18n.HostSockets}}}", "pattern":"\\s*[0-9]+\\s*"},
-    {"id": "nochangepassword", "multioption": true, "type": "select", "label": "{{{i18n.HostChangeAdminPassword}}}", 
-        "options":[{"value":"change", "label":"Yes"}, {"value":"nochange", "label":"No"}]}
-    ],
-
-    "submitlabel": "{{{i18n.HostAddButtonLabel}}}"
-}
-
+ "id": "addhost",
+ "command": "addHost",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "hostname",
+  "hostip",
+  "ostype",
+  "adminid",
+  "adminpass",
+  "hostsshkey",
+  "sshport",
+  "cores",
+  "memory",
+  "disk",
+  "netspeed",
+  "processor",
+  "processorarch",
+  "sockets",
+  "nochangepassword"
+ ],
+ "title": "{{{i18n.RegisterHost}}}",
+ "i18n": {
+  "en": {
+   "Hostname": "Cloud name for this host",
+   "HostNetworkAddressOrIp": "Host IP or DNS",
+   "HostOSType": "Choose host OS",
+   "HostRootID": "Host administrator's login ID",
+   "HostRootPassword": "Host administrator's password",
+   "Hostkey": "SSH ED25519 MD5 Hostkey",
+   "HostChangeAdminPassword": "Change administrator password?",
+   "HostCores": "Number of cores",
+   "HostMemory": "Memory in bytes",
+   "HostDisk": "Local disk in bytes",
+   "HostNetspeed": "Network speed in bytes per second",
+   "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
+   "HostProcessorArchitecture": "Processor architecture",
+   "HostSockets": "Number of sockets",
+   "SSHPort": "SSH port",
+   "HostAddButtonLabel": "Add Host",
+   "Advanced": "Optional",
+   "Required": "Required",
+   "FieldValidationErrorGeneric": "Validation error"
+  },
+  "hi": {
+   "Hostname": "Cloud name for this host",
+   "HostNetworkAddressOrIp": "Host IP or DNS",
+   "HostOSType": "Choose host OS",
+   "HostRootID": "Host administrator's login ID",
+   "HostRootPassword": "Host administrator's password",
+   "Hostkey": "SSH ED25519 MD5 Hostkey",
+   "HostChangeAdminPassword": "Change administrator password?",
+   "HostCores": "Number of cores",
+   "HostMemory": "Memory in bytes",
+   "HostDisk": "Local disk in bytes",
+   "HostNetspeed": "Network speed in bytes per second",
+   "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
+   "HostProcessorArchitecture": "Processor architecture",
+   "HostSockets": "Number of sockets",
+   "SSHPort": "SSH port",
+   "HostAddButtonLabel": "Add Host",
+   "Advanced": "Optional",
+   "Required": "Required",
+   "FieldValidationErrorGeneric": "Validation error"
+  },
+  "ja": {
+   "Hostname": "Cloud name for this host",
+   "HostNetworkAddressOrIp": "Host IP or DNS",
+   "HostOSType": "Choose host OS",
+   "HostRootID": "Host administrator's login ID",
+   "HostRootPassword": "Host administrator's password",
+   "Hostkey": "SSH ED25519 MD5 Hostkey",
+   "HostChangeAdminPassword": "Change administrator password?",
+   "HostCores": "Number of cores",
+   "HostMemory": "Memory in bytes",
+   "HostDisk": "Local disk in bytes",
+   "HostNetspeed": "Network speed in bytes per second",
+   "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
+   "HostProcessorArchitecture": "Processor architecture",
+   "HostSockets": "Number of sockets",
+   "SSHPort": "SSH port",
+   "HostAddButtonLabel": "Add Host",
+   "Advanced": "Optional",
+   "Required": "Required",
+   "FieldValidationErrorGeneric": "Validation error"
+  },
+  "zh": {
+   "Hostname": "Cloud name for this host",
+   "HostNetworkAddressOrIp": "Host IP or DNS",
+   "HostOSType": "Choose host OS",
+   "HostRootID": "Host administrator's login ID",
+   "HostRootPassword": "Host administrator's password",
+   "Hostkey": "SSH ED25519 MD5 Hostkey",
+   "HostChangeAdminPassword": "Change administrator password?",
+   "HostCores": "Number of cores",
+   "HostMemory": "Memory in bytes",
+   "HostDisk": "Local disk in bytes",
+   "HostNetspeed": "Network speed in bytes per second",
+   "HostProcessor": "Processor in Vendor:Name:Model:Speed in Mhz format",
+   "HostProcessorArchitecture": "Processor architecture",
+   "HostSockets": "Number of sockets",
+   "SSHPort": "SSH port",
+   "HostAddButtonLabel": "Add Host",
+   "Advanced": "Optional",
+   "Required": "Required",
+   "FieldValidationErrorGeneric": "Validation error"
+  }
+ },
+ "form": {
+  "description": "Add a host machine to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "hostname",
+    "type": "text",
+    "placeholder": "{{{i18n.Hostname}}}",
+    "required": true,
+    "pattern": "\\s*[A-Za-z0-9]+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "hostip",
+    "type": "text",
+    "placeholder": "{{{i18n.HostNetworkAddressOrIp}}}",
+    "required": true,
+    "pattern": "\\s*[0-9\\.]+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "adminid",
+    "type": "text",
+    "placeholder": "{{{i18n.HostRootID}}}",
+    "required": true,
+    "pattern": "\\s*[A-Za-z0-9]+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "adminpass",
+    "type": "password",
+    "placeholder": "{{{i18n.HostRootPassword}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "hostsshkey",
+    "type": "text",
+    "placeholder": "{{{i18n.Hostkey}}}",
+    "required": true,
+    "pattern": "\\s*[A-Fa-f0-9\\:]+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "sshport",
+    "type": "number",
+    "placeholder": "{{{i18n.SSHPort}}}",
+    "pattern": "\\s*[0-9]+\\s*",
+    "value": 22
+   },
+   {
+    "id": "ostype",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.HostOSType}}}",
+    "options": [
+     {
+      "value": "rhel9_compatible",
+      "label": "RHEL 9 or Compatible"
+     },
+     {
+      "value": "ubuntu22",
+      "label": "Ubuntu 22 LTS"
+     }
+    ]
+   }
+  ],
+  "optional_label": "{{{i18n.Advanced}}}",
+  "optional_fields": [
+   {
+    "id": "cores",
+    "type": "number",
+    "placeholder": "{{{i18n.HostCores}}}"
+   },
+   {
+    "id": "memory",
+    "type": "number",
+    "placeholder": "{{{i18n.HostMemory}}}"
+   },
+   {
+    "id": "disk",
+    "type": "number",
+    "placeholder": "{{{i18n.HostDisk}}}"
+   },
+   {
+    "id": "netspeed",
+    "type": "number",
+    "placeholder": "{{{i18n.HostNetspeed}}}"
+   },
+   {
+    "id": "processor",
+    "type": "text",
+    "placeholder": "{{{i18n.HostProcessor}}}",
+    "pattern": "\\s*[A-Za-z0-9\\:]+\\s*"
+   },
+   {
+    "id": "processorarch",
+    "type": "text",
+    "placeholder": "{{{i18n.HostProcessorArchitecture}}}",
+    "pattern": "\\s*[A-Za-z0-9]+\\s*"
+   },
+   {
+    "id": "sockets",
+    "type": "number",
+    "placeholder": "{{{i18n.HostSockets}}}",
+    "pattern": "\\s*[0-9]+\\s*"
+   },
+   {
+    "id": "nochangepassword",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.HostChangeAdminPassword}}}",
+    "options": [
+     {
+      "value": "change",
+      "label": "Yes"
+     },
+     {
+      "value": "nochange",
+      "label": "No"
+     }
+    ]
+   }
+  ],
+  "submitlabel": "{{{i18n.HostAddButtonLabel}}}"
+ }
 }

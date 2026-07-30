@@ -1,57 +1,59 @@
 {
-"id": "deleteimage",
-"command": "deleteImage",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["name"],
-
-"title": "{{{i18n.DeleteImageTitle}}}",
-
-"i18n": {
-    "en": {
-        "DeleteImageTitle": "Delete image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteImageSubmitLabel": "Delete",
-        "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
-    },
-    "hi": {
-        "DeleteImageTitle": "Delete image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteImageSubmitLabel": "Delete",
-        "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
-    },
-    "ja": {
-        "DeleteImageTitle": "Delete image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteImageSubmitLabel": "Delete",
-        "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
-    },
-    "zh": {
-        "DeleteImageTitle": "Delete image",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteImageSubmitLabel": "Delete",
-        "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
-    }
-},
-
-"form": {
-    "description": "{{{i18n.DeleteImageDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "name", "multioption": true, "type": "select", "label": "{{{i18n.VMImage}}}", "options":[]}
-    ],
-
-    "load_javascript": [
-        "const form = arguments[0]||{};",
-        "const vmResult = await window.monkshu_env.frameworklibs.apimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, ",
-        "   'POST', {cmd: 'listVMImages'}, true);",
-        "if (vmResult.result) for (const vm of vmResult.resources) { ",
-        "   const imageNameFormField = form.required_fields[form.required_fields.length-1];",
-        "   imageNameFormField.options.push({value: vm.name, label: vm.description}); }",
-        "return form;"
-    ],
-
-    "submitlabel": "{{{i18n.DeleteImageSubmitLabel}}}"
-}
-
+ "id": "deleteimage",
+ "command": "deleteImage",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "name"
+ ],
+ "title": "{{{i18n.DeleteImageTitle}}}",
+ "i18n": {
+  "en": {
+   "DeleteImageTitle": "Delete image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteImageSubmitLabel": "Delete",
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+  },
+  "hi": {
+   "DeleteImageTitle": "Delete image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteImageSubmitLabel": "Delete",
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+  },
+  "ja": {
+   "DeleteImageTitle": "Delete image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteImageSubmitLabel": "Delete",
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+  },
+  "zh": {
+   "DeleteImageTitle": "Delete image",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteImageSubmitLabel": "Delete",
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+  }
+ },
+ "form": {
+  "description": "{{{i18n.DeleteImageDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "name",
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.VMImage}}}",
+    "options": []
+   }
+  ],
+  "load_javascript": [
+   "const form = arguments[0]||{};",
+   "const vmResult = await window.monkshu_env.frameworklibs.apimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, ",
+   "   'POST', {cmd: 'listVMImages'}, true);",
+   "if (vmResult.result) for (const vm of vmResult.resources) { ",
+   "   const imageNameFormField = form.required_fields[form.required_fields.length-1];",
+   "   imageNameFormField.options.push({value: vm.name, label: vm.description}); }",
+   "return form;"
+  ],
+  "submitlabel": "{{{i18n.DeleteImageSubmitLabel}}}"
+ }
 }

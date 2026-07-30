@@ -43,7 +43,11 @@ async function elementConnected(host) {
     formObject = await _runOnLoadJavascript(formObject);
     let stepindex = 0; for (const step of formObject.steps||[]) {
         step.stepindex = ++stepindex; step.first = step.stepindex == 1;
-        for (const field of step.fields||[]) field.label = field.label||"";
+        for (const field of step.fields||[]) {
+            field.label = field.label||"";
+            // type: "switch" is ours, not an HTML input type — translate it here
+            if (field.type == "switch") {field.switchfield = true; field.checked = String(field.value) == "true";}
+        }
         step.rowgroups = _groupFieldsIntoRows(step.fields);
         // Base64 keeps the values map out of the HTML attribute's quoting rules.
         for (const option of step.presets?.options||[])
@@ -142,15 +146,16 @@ function back(element) {
 async function formSubmitted(element) {
     const host = form_wizard.getHostElement(element), shadowRoot = form_wizard.getShadowRootByHost(host);
     const allFormElements = []; for (const inputElement of INPUT_ELEMENTS) allFormElements.push(...shadowRoot.querySelectorAll(inputElement));
+    _clearFieldErrors(shadowRoot);
     for (const input of allFormElements) if ((input.dataset.optional?.toLowerCase() != "true") && (!input.checkValidity())) {
         const panel = input.closest("section.wizard-panel");    // jump to the step holding the invalid field
         if (panel) {host.dataset.currentstep = panel.dataset.step; _refreshWizardState(host);}
         LOG.error(`Submit failed due to failed validation of ${input.id}`);
-        input.reportValidity(); return false;
+        _showFieldError(shadowRoot, input); return false;
     }
 
     const retObject = {}; for (const formElement of allFormElements)
-        retObject[formElement.id] = (formElement.type != "password" ? formElement.value.trim() : formElement.value);
+        retObject[formElement.id] = _valueOf(formElement);
     const onsubmit = await form_wizard.getAttrValue(host, "onsubmit");
     if (onsubmit && onsubmit.trim() != "") {
         const form = form_wizard.getDataByHost(host);
@@ -179,9 +184,36 @@ function _refreshWizardState(host) {
 function _validateStep(shadowRoot, stepindex) {
     const panel = shadowRoot.querySelector(`section.wizard-panel[data-step="${stepindex}"]`);
     if (!panel) return true;
+    _clearFieldErrors(panel);
     for (const input of panel.querySelectorAll(INPUT_ELEMENTS.join(",")))
-        if ((input.dataset.optional?.toLowerCase() != "true") && (!input.checkValidity())) {input.reportValidity(); return false;}
+        if ((input.dataset.optional?.toLowerCase() != "true") && (!input.checkValidity())) {
+            _showFieldError(shadowRoot, input); return false;}
     return true;
+}
+
+/** A checkbox answers with .checked, not .value — mapped to the same
+ *  "true"/"false" strings the Yes/No selects produce, so the command line is
+ *  identical either way. Everything else keeps the legacy behaviour. */
+function _valueOf(formElement) {
+    if (formElement.type == "checkbox") return String(formElement.checked);
+    return formElement.type != "password" ? formElement.value.trim() : formElement.value;
+}
+
+/** Shows the field's declared validation_error inline; native bubble if none. */
+function _showFieldError(shadowRoot, input) {
+    const message = shadowRoot.querySelector(`span.error-msg[data-errorfor="${input.id}"]`);
+    if (!message) {input.reportValidity(); return;}
+    message.classList.add("visible"); input.classList.add("error"); input.focus();
+}
+
+function clearFieldError(input) {
+    input.getRootNode().querySelector(`span.error-msg[data-errorfor="${input.id}"]`)?.classList.remove("visible");
+    input.classList.remove("error");
+}
+
+const _clearFieldErrors = scope => {
+    for (const message of scope.querySelectorAll("span.error-msg.visible")) message.classList.remove("visible");
+    for (const input of scope.querySelectorAll(".error")) input.classList.remove("error");
 }
 
 function _buildReview(shadowRoot, data) {
@@ -244,5 +276,5 @@ const _escapeHTML = text => text.toString().replace(/&/g,"&amp;").replace(/</g,"
 
 const trueWebComponentMode = true;
 export const form_wizard = {trueWebComponentMode, elementConnected, elementRendered, close, next, back,
-    formSubmitted, applyPreset};
+    formSubmitted, applyPreset, clearFieldError};
 monkshu_component.register("form-wizard", `${COMPONENT_PATH}/form-wizard.html`, form_wizard);

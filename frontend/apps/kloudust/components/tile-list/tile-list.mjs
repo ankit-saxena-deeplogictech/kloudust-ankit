@@ -26,6 +26,8 @@ const i18n = {
     "zh": {TLNoTilesTitle: "Nothing here yet", TLNoTilesMessage: "No items were found for this view."}
 }
 
+const SKELETON_TILES = 6;
+
 const OS_MATCHERS = [["ubuntu","ubuntu"], ["rhel","rhel"], ["redhat","rhel"], ["debian","debian"],
     ["windows","windows"], ["win1","windows"], ["rocky","rocky"]];
 
@@ -34,11 +36,22 @@ async function elementConnected(host) {
     const tableDefinition = $$.libutil.base64ToString(host.dataset.tabledef);
     const expandedData = await $$.librouter.expandPageData(tableDefinition, undefined, {mustache_start: "{{{", mustache_end: "}}}"});
     const tableObject = JSON.parse(expandedData);
-    const tiles = await _buildTiles(tableObject);
     tableObject.emptystate = {
         title: tableObject.emptystate?.title || await $$.libi18n.get("TLNoTilesTitle"),
         message: tableObject.emptystate?.message || await $$.libi18n.get("TLNoTilesMessage")};
-    tile_list.setDataByHost(host, {...tableObject, tiles});
+
+    // Skeleton first, real tiles diffed in from elementRendered — same pattern
+    // as table-list, so a slow catalogue lookup never shows a blank card grid.
+    tableObject.loading = true;
+    tableObject.skeletontiles = Array.from({length: SKELETON_TILES}, _ => ({}));
+    tile_list.setDataByHost(host, tableObject);
+}
+
+async function elementRendered(host) {
+    const data = tile_list.getDataByHost(host); if (!data.loading) return;
+    const tiles = await _buildTiles(data);
+    tile_list.setDataByHost(host, {...data, loading: false, skeletontiles: undefined, tiles});
+    await host.render(false);
 }
 
 async function close(element) {
@@ -70,5 +83,5 @@ async function _buildTiles(tabledef) {
     return tiles;
 }
 
-export const tile_list = {trueWebComponentMode: true, elementConnected, close};
+export const tile_list = {trueWebComponentMode: true, elementConnected, elementRendered, close};
 $$.libmonkshu_component.register("tile-list", `${COMPONENT_PATH}/tile-list.html`, tile_list);

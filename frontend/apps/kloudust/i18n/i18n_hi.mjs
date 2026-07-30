@@ -1,4 +1,8 @@
 export const i18n = {
+"RoleCloudadmin": "Cloud admin",
+"RoleOrgadmin": "Org admin",
+"RoleUser": "Project user",
+"SkipToContent": "Skip to main content",
 "Title" : "कलॉडस्ट कंसोल",
 "logintagline": "कलॉडस्ट क्लाउड कंप्यूटिंग",
 "loginsubtag": "सुरक्षित, निजी और उपयोग में आसान। महत्वपूर्ण लागत बचत के साथ अगली पीढ़ी के क्लाउड का अनुभव करें।",

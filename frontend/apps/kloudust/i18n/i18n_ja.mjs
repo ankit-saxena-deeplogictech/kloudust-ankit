@@ -1,4 +1,8 @@
 export const i18n = {
+"RoleCloudadmin": "Cloud admin",
+"RoleOrgadmin": "Org admin",
+"RoleUser": "Project user",
+"SkipToContent": "Skip to main content",
 "Title" : "Kloudust管理コンソール",
 "logintagline": "kloudustクラウドコンピューティング",
 "loginsubtag": "安全、プライベート、そして使いやすい。 大幅なコスト削減を実現する次世代クラウドを体験してください。",

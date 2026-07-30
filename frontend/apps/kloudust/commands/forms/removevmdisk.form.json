@@ -2,6 +2,7 @@
  "id": "removevmdisk",
  "command": "removeVMDisk",
  "type": "kloudust_cmdline",
+ "presentation": "drawer",
  "kloudust_cmdline_params": [
   "vm_name",
   "disk_name",
@@ -80,35 +81,15 @@
    },
    {
     "id": "delete_disk",
-    "multioption": true,
-    "type": "select",
+    "type": "switch",
     "label": "{{{i18n.DeleteDisk}}}",
-    "options": [
-     {
-      "value": "false",
-      "label": "{{{i18n.No}}}"
-     },
-     {
-      "value": "true",
-      "label": "{{{i18n.Yes}}}"
-     }
-    ]
+    "value": "false"
    },
    {
     "id": "restart",
-    "multioption": true,
-    "type": "select",
+    "type": "switch",
     "label": "{{{i18n.Restart}}}",
-    "options": [
-     {
-      "value": "false",
-      "label": "{{{i18n.No}}}"
-     },
-     {
-      "value": "true",
-      "label": "{{{i18n.Yes}}}"
-     }
-    ]
+    "value": "false"
    }
   ],
   "submitlabel": "{{{i18n.RemoveDiskSubmit}}}"

@@ -1,5 +1,9 @@
 /**
- * Returns HTML for the cloud alerts
+ * Returns HTML for the cloud alerts.
+ *
+ * Presented in the shared drawer (alerts.form.json declares
+ * "presentation": "drawer"), so when embedded is set the drawer chrome already
+ * supplies the heading and the close button and this drops its own.
  * 
  * (C) 2023 TekMonks. All rights reserved.
  * License: See enclosed license.txt file.
@@ -107,7 +111,7 @@ span#alerticon img {height: 100%;}
 <div id="clear" onclick='event.stopPropagation(); 
     monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.clearAlerts(this);
     monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.reloadForm(this)'><img src='{{{clear_icon}}}'></div>
-<div id="close" onclick='event.stopPropagation(); monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm(this)'>X</div>
+{{^embedded}}<div id="close" onclick='event.stopPropagation(); monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm(this)'>X</div>{{/embedded}}
 </span>
 
 <div id="main">
@@ -132,7 +136,7 @@ span#alerticon img {height: 100%;}
 </div>
 `;
 
-async function getHTML(_formJSON, cmdmanager) {
+async function getHTML(_formJSON, cmdmanager, embedded) {
     const alertsObject = cmdmanager.getAlerts();
     const alertIDsSorted = Object.keys(alertsObject).sort((a, b) => a - b);
     let alertStackObjects; for (const alertID of alertIDsSorted) {
@@ -145,7 +149,7 @@ async function getHTML(_formJSON, cmdmanager) {
         }
         if (!alertStackObjects) alertStackObjects = []; alertStackObjects.push(alertStackObject);
     }
-    const html = await $$.librouter.expandPageData(HTML_TEMPLATE, undefined, {alert_stacks: alertStackObjects, 
+    const html = await $$.librouter.expandPageData(HTML_TEMPLATE, undefined, {alert_stacks: alertStackObjects, embedded,
         clear_icon: `${RESOURCES_PATH}/alerts_clear.svg`, info_icon: `${RESOURCES_PATH}/alerts_info.svg`});
     return html;
 }

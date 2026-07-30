@@ -2,6 +2,7 @@
  "id": "deletehost",
  "command": "deleteHost",
  "type": "kloudust_cmdline",
+ "presentation": "drawer",
  "kloudust_cmdline_params": [
   "hostname",
   "cleanhost"

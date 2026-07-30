@@ -46,7 +46,8 @@
  * License: See enclosed LICENSE file.
  */
 
-const COMPONENT_PATH = $$.libutil.getModulePath(import.meta), PAGER_MAX_BUTTONS = 7;
+const COMPONENT_PATH = $$.libutil.getModulePath(import.meta), PAGER_MAX_BUTTONS = 7,
+    SKELETON_ROWS = 5, SKELETON_DEFAULT_COLUMNS = 5;
 
 const i18n = {
     "en": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
@@ -80,7 +81,6 @@ async function elementConnected(host) {
     const tableDefinition = $$.libutil.base64ToString(host.dataset.tabledef);
     const expandedData = await $$.librouter.expandPageData(tableDefinition, undefined, {mustache_start: "{{{", mustache_end: "}}}"});
     let tableObject = JSON.parse(expandedData);
-    const tableData = await _runOnLoadJavascript(tableObject);
     tableObject.emptystate = {
         title: tableObject.emptystate?.title || await $$.libi18n.get("TLNoDataTitle"),
         message: tableObject.emptystate?.message || await $$.libi18n.get("TLNoDataMessage")};
@@ -93,10 +93,36 @@ async function elementConnected(host) {
         nomatch: await $$.libi18n.get("TLNoMatch"), rowactions: await $$.libi18n.get("TLRowActions")};
     if (tableObject.bulkactions) tableObject.bulkactions.forEach((action, index) => action.index = index);
     tableObject._view = {search: "", filter: "*", page: 1, sort: null};
-    table_list.setDataByHost(host, {...tableObject, ...tableData});
+
+    // First paint is a skeleton. load_javascript then runs from elementRendered
+    // and the real rows are diff-patched in, so a slow lookup shows the shape of
+    // the table instead of an empty screen.
+    tableObject.loading = true;
+    tableObject.skeletonrows = _skeletonRows(tableObject);
+    table_list.setDataByHost(host, tableObject);
 }
 
-async function elementRendered(host) {_applyView(table_list.getShadowRootByHost(host));}
+async function elementRendered(host) {
+    const data = table_list.getDataByHost(host);
+
+    if (data.loading) {
+        const tableData = await _runOnLoadJavascript(data);
+        table_list.setDataByHost(host, {...data, loading: false, skeletonrows: undefined, ...tableData});
+        await host.render(false);   // non-initial render diffs against the skeleton
+        return;                     // elementRendered fires again, with data
+    }
+
+    _applyView(table_list.getShadowRootByHost(host));
+}
+
+/** Placeholder rows matching the declared column count, so the skeleton has the
+ *  same shape as the table that replaces it. */
+function _skeletonRows(tabledef) {
+    const columnCount = (tabledef.columns?.length || SKELETON_DEFAULT_COLUMNS)
+        + (tabledef.selectable ? 1 : 0) + (tabledef.rowactions ? 1 : 0);
+    return Array.from({length: SKELETON_ROWS},
+        _ => ({cells: Array.from({length: columnCount}, _ => ({}))}));
+}
 
 async function close(element) {
     const onclose = await table_list.getAttrValue(table_list.getHostElement(element), "onclose");
@@ -435,6 +461,9 @@ async function _runOnLoadJavascript(tabledef) {
                 const variant = col.badgemap?.[String(value).toLowerCase()] || col.badgemap?.["*"] || "neutral";
                 cell.badgeclass = `badge-${variant}`;
             } else cell.tdclass = col.type == "main" ? "cell-main" : col.type == "mono" ? "mono" : col.type == "muted" ? "muted" : "";
+            // link: true renders the value as a real button, so it is a keyboard
+            // stop with a visible affordance instead of a click anywhere on the row
+            if (col.link) cell.islink = true;
             // A "sub" column folds a second field into the same cell as a
             // quieter line, instead of spending a whole column on it.
             const subValue = col.sub !== undefined ? row[col.sub] : undefined;
@@ -459,7 +488,12 @@ async function _runOnLoadJavascript(tabledef) {
             ...values.map(value => ({value, label: value}))];
     }
 
-    return {headers, rows, filterchips};
+    // A table with a link column hands the click to that button, so the row
+    // itself stops being a click target (the wireframes' behaviour). Tables
+    // without one keep the legacy whole-row click.
+    const rowclickable = !(columns||[]).some(col => col.link);
+
+    return {headers, rows, filterchips, rowclickable};
 }
 
 const _getArrayAsJoinedString = (array, skipEOLs) => array?(Array.isArray(array)?array:[array]).join(skipEOLs?"":"\n"):"";

@@ -2,6 +2,7 @@
  "id": "editfirewallruleset",
  "command": "createFirewallRuleset",
  "type": "kloudust_cmdline",
+ "presentation": "drawer",
  "kloudust_cmdline_params": [
   "firewall_name",
   "firewall_description",

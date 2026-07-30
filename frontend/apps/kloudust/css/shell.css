@@ -25,6 +25,27 @@ body {
 }
 
 /* ----------------------------------------------------------------------------
+   SKIP LINK — first tab stop, jumps past the sidebar and topbar to the content
+---------------------------------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  left: var(--sp-3);
+  top: calc(-1 * var(--sp-8));
+  z-index: 200;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-sm);
+  background: var(--primary);
+  color: var(--btn-primary-text);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: top var(--transition);
+}
+.skip-link:focus { top: var(--sp-3); }
+
+#maincontent:focus { outline: none; }
+
+/* ----------------------------------------------------------------------------
    LAYOUT SHELL
 ---------------------------------------------------------------------------- */
 .app {

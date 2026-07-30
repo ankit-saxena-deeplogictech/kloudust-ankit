@@ -1,54 +1,57 @@
 {
-"id": "deletevm",
-"command": "deleteVM",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["vm_name"],
-
-"title": "{{{i18n.VMDeleteTitle}}}",
-
-"i18n": {
-    "en": {
-        "VMDeleteTitle": "Delete Virtual Machine",
-        "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
-        "VMName": "Virtual machine name",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteVMSubmitLabel": "Delete"
-    },
-    "hi": {
-        "VMDeleteTitle": "Delete Virtual Machine",
-        "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
-        "VMName": "वीएम नाम",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteVMSubmitLabel": "Delete"
-    },
-    "ja": {
-        "VMDeleteTitle": "Delete Virtual Machine",
-        "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
-        "VMName": "VM名",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteVMSubmitLabel": "Delete"
-    },
-    "zh": {
-        "VMDeleteTitle": "Delete Virtual Machine",
-        "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
-        "VMName": "虚拟机名称",
-        "FieldValidationErrorGeneric": "Validation error",
-        "DeleteVMSubmitLabel": "Delete"
-    }
-},
-
-"form": {
-    "description": "{{{i18n.VMDeleteDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "vm_name", "type": "text", "placeholder": "{{{i18n.VMName}}}", "required": true, 
-        "pattern":"\\s[0-9a-zA-Z]+\\s", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
-        "value":"{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}", 
-        "readonly":"{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"}
-    ],
-
-    "submitlabel": "{{{i18n.DeleteVMSubmitLabel}}}"
-}
-
+ "id": "deletevm",
+ "command": "deleteVM",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "vm_name"
+ ],
+ "title": "{{{i18n.VMDeleteTitle}}}",
+ "i18n": {
+  "en": {
+   "VMDeleteTitle": "Delete Virtual Machine",
+   "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
+   "VMName": "Virtual machine name",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteVMSubmitLabel": "Delete"
+  },
+  "hi": {
+   "VMDeleteTitle": "Delete Virtual Machine",
+   "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
+   "VMName": "वीएम नाम",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteVMSubmitLabel": "Delete"
+  },
+  "ja": {
+   "VMDeleteTitle": "Delete Virtual Machine",
+   "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
+   "VMName": "VM名",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteVMSubmitLabel": "Delete"
+  },
+  "zh": {
+   "VMDeleteTitle": "Delete Virtual Machine",
+   "VMDeleteDescription": "Delete a virtual machine from the cloud. The virtual machine disk will also be deleted and lost forever. Complete the required tab then submit.",
+   "VMName": "虚拟机名称",
+   "FieldValidationErrorGeneric": "Validation error",
+   "DeleteVMSubmitLabel": "Delete"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.VMDeleteDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "vm_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VMName}}}",
+    "required": true,
+    "pattern": "\\s[0-9a-zA-Z]+\\s",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._vms_form_data.name_raw}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._vms_form_data.name_raw}}true{{/APP_CONSTANTS.ENV._vms_form_data.name_raw}}"
+   }
+  ],
+  "submitlabel": "{{{i18n.DeleteVMSubmitLabel}}}"
+ }
 }

@@ -2,6 +2,7 @@
  "id": "editrouter",
  "command": "createOrUpdateRouter",
  "type": "kloudust_cmdline",
+ "presentation": "drawer",
  "kloudust_cmdline_params": [
   "router_name",
   "router_description",

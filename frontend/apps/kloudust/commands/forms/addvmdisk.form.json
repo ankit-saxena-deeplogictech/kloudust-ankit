@@ -2,6 +2,7 @@
  "id": "addvmdisk",
  "command": "addVMDisk",
  "type": "kloudust_cmdline",
+ "presentation": "drawer",
  "kloudust_cmdline_params": [
   "vm_name",
   "disk_name",
@@ -75,19 +76,9 @@
    },
    {
     "id": "restart",
-    "multioption": true,
-    "type": "select",
+    "type": "switch",
     "label": "{{{i18n.Restart}}}",
-    "options": [
-     {
-      "value": "false",
-      "label": "{{{i18n.No}}}"
-     },
-     {
-      "value": "true",
-      "label": "{{{i18n.Yes}}}"
-     }
-    ]
+    "value": "false"
    }
   ],
   "submitlabel": "{{{i18n.AddDiskSubmit}}}"

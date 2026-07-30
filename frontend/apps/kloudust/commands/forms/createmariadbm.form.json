@@ -1,108 +1,150 @@
 {
-"id": "createmariadbm",
-"command": "createVM",
-"type": "kloudust_cmdline",
-"kloudust_cmdline_params": ["vm_name", "vm_description", "cores", "memory", "disk", "creation_image_name", 
-    "cloudinit_data", "force_overwrite"],
-
-"title": "{{{i18n.VMCreateTitle}}}",
-
-"i18n": {
-    "en": {
-        "VMCreateTitle": "Create Maria Database",
-        "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
-        "VMName": "Maria instance name",
-        "VMDescription": "Description",
-        "VMCores": "Cores",
-        "VMMemory": "Memory in megabytes",
-        "VMDisk": "Disk in gigabytes",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
-        "CreateVMSubmitLabel": "Create",
-        "VMYes": "Yes",
-        "VMNo": "No",
-        "VMAdvanced": "Advanced",
-        "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
-    },
-    "hi": {
-        "VMCreateTitle": "Create Maria Database",
-        "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
-        "VMName": "Maria instance name",
-        "VMDescription": "Description",
-        "VMCores": "Cores",
-        "VMMemory": "Memory in megabytes",
-        "VMDisk": "Disk in gigabytes",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
-        "CreateVMSubmitLabel": "Create",
-        "VMYes": "Yes",
-        "VMNo": "No",
-        "VMAdvanced": "Advanced",
-        "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
-    },
-    "ja": {
-        "VMCreateTitle": "Create Maria Database",
-        "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
-        "VMName": "Maria instance name",
-        "VMDescription": "Description",
-        "VMCores": "Cores",
-        "VMMemory": "Memory in megabytes",
-        "VMDisk": "Disk in gigabytes",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
-        "CreateVMSubmitLabel": "Create",
-        "VMYes": "Yes",
-        "VMNo": "No",
-        "VMAdvanced": "Advanced",
-        "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
-    },
-    "zh": {
-        "VMCreateTitle": "Create Maria Database",
-        "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
-        "VMName": "Maria instance name",
-        "VMDescription": "Description",
-        "VMCores": "Cores",
-        "VMMemory": "Memory in megabytes",
-        "VMDisk": "Disk in gigabytes",
-        "FieldValidationErrorGeneric": "Validation error",
-        "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
-        "CreateVMSubmitLabel": "Create",
-        "VMYes": "Yes",
-        "VMNo": "No",
-        "VMAdvanced": "Advanced",
-        "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
-    }
-},
-
-"form": {
-    "description": "{{{i18n.VMCreateDescription}}}",
-
-    "required_label": "{{{i18n.Required}}}",
-    "required_fields": [
-    {"id": "vm_name", "type": "text", "placeholder": "{{{i18n.VMName}}}", "required": true, 
-        "pattern":"\\s*\\w+\\s*", "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "vm_description", "type": "text", "placeholder": "{{{i18n.VMDescription}}}", "required": true},
-    {"id": "cores", "type": "number", "placeholder": "{{{i18n.VMCores}}}", "required": true, 
-        "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "memory", "type": "number", "placeholder": "{{{i18n.VMMemory}}}", "required": true, 
-        "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"},
-    {"id": "disk", "type": "number", "placeholder": "{{{i18n.VMDisk}}}", "required": true, "min": 40,
-        "validation_error": "{{{i18n.FieldValidationErrorMin40}}}"},
-
-    {"id": "adminid", "type": "hidden", "value": "mariaadm"},
-    {"id": "adminpass", "type": "hidden", "value": "mariaadm"},
-    {"id": "creation_image_name", "type": "hidden", "value": "ubuntulinux-db_22_04_amd64"}
-    ],
-
-    "optional_label": "{{{i18n.VMAdvanced}}}",
-    "optional_fields": [
-    {"id": "force_overwrite", "multioption": true, "type": "select", "label": "{{{i18n.VMOverwriteForce}}}", 
-        "options":[{"value":"false", "label":"{{{i18n.VMNo}}}"}, {"value":"true", "label":"{{{i18n.VMYes}}}"}]}
-    ],
-
-    "submitlabel": "{{{i18n.CreateVMSubmitLabel}}}",
-
-    "submit_javascript": "const retObject = arguments[0]||{};\r\n\r\nif (retObject.cloudinit_data && (retObject.cloudinit_data.trim() != \"\")) {\r\n    LOG.info(`Not overriding existing cloudinit which is: ${retObject.cloudinit_data}`); return true; }\r\n\r\nconst cloudinitTemplate = \"{system_info: {default_user: {name: \\u{007B}\\u{007B}\\u{007B}adminid\\u{007D}\\u{007D}\\u{007D}, home: /home/\\u{007B}\\u{007B}\\u{007B}adminid\\u{007D}\\u{007D}\\u{007D}, sudo: 'ALL=(ALL) NOPASSWD:ALL'}}, password: \\u{007B}\\u{007B}\\u{007B}adminpass\\u{007D}\\u{007D}\\u{007D}, chpasswd: {expire: false}, hostname: \\u{007B}\\u{007B}\\u{007B}vm_name\\u{007D}\\u{007D}\\u{007D}, ssh_pwauth: true, package_upgrade: true, packages: [net-tools], runcmd: null}\";\r\n\r\nconst router = (await import(\"/framework/js/router.mjs\")).router;\r\nconst mustache = await router.getMustache();\r\nconst cloudInit = mustache.render(cloudinitTemplate, retObject);\r\nLOG.info(`Generated cloudinit is: ${cloudInit}`);\r\n\r\nretObject.cloudinit_data = cloudInit;\r\nreturn true;"
-}
-
+ "id": "createmariadbm",
+ "command": "createVM",
+ "type": "kloudust_cmdline",
+ "kloudust_cmdline_params": [
+  "vm_name",
+  "vm_description",
+  "cores",
+  "memory",
+  "disk",
+  "creation_image_name",
+  "cloudinit_data",
+  "force_overwrite"
+ ],
+ "title": "{{{i18n.VMCreateTitle}}}",
+ "i18n": {
+  "en": {
+   "VMCreateTitle": "Create Maria Database",
+   "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
+   "VMName": "Maria instance name",
+   "VMDescription": "Description",
+   "VMCores": "Cores",
+   "VMMemory": "Memory in megabytes",
+   "VMDisk": "Disk in gigabytes",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
+   "CreateVMSubmitLabel": "Create",
+   "VMYes": "Yes",
+   "VMNo": "No",
+   "VMAdvanced": "Advanced",
+   "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
+  },
+  "hi": {
+   "VMCreateTitle": "Create Maria Database",
+   "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
+   "VMName": "Maria instance name",
+   "VMDescription": "Description",
+   "VMCores": "Cores",
+   "VMMemory": "Memory in megabytes",
+   "VMDisk": "Disk in gigabytes",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
+   "CreateVMSubmitLabel": "Create",
+   "VMYes": "Yes",
+   "VMNo": "No",
+   "VMAdvanced": "Advanced",
+   "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
+  },
+  "ja": {
+   "VMCreateTitle": "Create Maria Database",
+   "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
+   "VMName": "Maria instance name",
+   "VMDescription": "Description",
+   "VMCores": "Cores",
+   "VMMemory": "Memory in megabytes",
+   "VMDisk": "Disk in gigabytes",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
+   "CreateVMSubmitLabel": "Create",
+   "VMYes": "Yes",
+   "VMNo": "No",
+   "VMAdvanced": "Advanced",
+   "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
+  },
+  "zh": {
+   "VMCreateTitle": "Create Maria Database",
+   "VMCreateDescription": "Add a new Maria database instance to the cloud. Complete the required tab then submit or review advanced tab for full customization.",
+   "VMName": "Maria instance name",
+   "VMDescription": "Description",
+   "VMCores": "Cores",
+   "VMMemory": "Memory in megabytes",
+   "VMDisk": "Disk in gigabytes",
+   "FieldValidationErrorGeneric": "Validation error",
+   "FieldValidationErrorMin40": "Minimum disk size is 40 GB",
+   "CreateVMSubmitLabel": "Create",
+   "VMYes": "Yes",
+   "VMNo": "No",
+   "VMAdvanced": "Advanced",
+   "VMOverwriteForce": "Overwrite if a database instance by the same name exists?"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.VMCreateDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "vm_name",
+    "type": "text",
+    "placeholder": "{{{i18n.VMName}}}",
+    "required": true,
+    "pattern": "\\s*\\w+\\s*",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "vm_description",
+    "type": "text",
+    "placeholder": "{{{i18n.VMDescription}}}",
+    "required": true
+   },
+   {
+    "id": "cores",
+    "type": "number",
+    "placeholder": "{{{i18n.VMCores}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "memory",
+    "type": "number",
+    "placeholder": "{{{i18n.VMMemory}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+   },
+   {
+    "id": "disk",
+    "type": "number",
+    "placeholder": "{{{i18n.VMDisk}}}",
+    "required": true,
+    "min": 40,
+    "validation_error": "{{{i18n.FieldValidationErrorMin40}}}"
+   },
+   {
+    "id": "adminid",
+    "type": "hidden",
+    "value": "mariaadm"
+   },
+   {
+    "id": "adminpass",
+    "type": "hidden",
+    "value": "mariaadm"
+   },
+   {
+    "id": "creation_image_name",
+    "type": "hidden",
+    "value": "ubuntulinux-db_22_04_amd64"
+   }
+  ],
+  "optional_label": "{{{i18n.VMAdvanced}}}",
+  "optional_fields": [
+   {
+    "id": "force_overwrite",
+    "type": "switch",
+    "label": "{{{i18n.VMOverwriteForce}}}",
+    "value": "false"
+   }
+  ],
+  "submitlabel": "{{{i18n.CreateVMSubmitLabel}}}",
+  "submit_javascript": "const retObject = arguments[0]||{};\r\n\r\nif (retObject.cloudinit_data && (retObject.cloudinit_data.trim() != \"\")) {\r\n    LOG.info(`Not overriding existing cloudinit which is: ${retObject.cloudinit_data}`); return true; }\r\n\r\nconst cloudinitTemplate = \"{system_info: {default_user: {name: \\u{007B}\\u{007B}\\u{007B}adminid\\u{007D}\\u{007D}\\u{007D}, home: /home/\\u{007B}\\u{007B}\\u{007B}adminid\\u{007D}\\u{007D}\\u{007D}, sudo: 'ALL=(ALL) NOPASSWD:ALL'}}, password: \\u{007B}\\u{007B}\\u{007B}adminpass\\u{007D}\\u{007D}\\u{007D}, chpasswd: {expire: false}, hostname: \\u{007B}\\u{007B}\\u{007B}vm_name\\u{007D}\\u{007D}\\u{007D}, ssh_pwauth: true, package_upgrade: true, packages: [net-tools], runcmd: null}\";\r\n\r\nconst router = (await import(\"/framework/js/router.mjs\")).router;\r\nconst mustache = await router.getMustache();\r\nconst cloudInit = mustache.render(cloudinitTemplate, retObject);\r\nLOG.info(`Generated cloudinit is: ${cloudInit}`);\r\n\r\nretObject.cloudinit_data = cloudInit;\r\nreturn true;"
+ }
 }

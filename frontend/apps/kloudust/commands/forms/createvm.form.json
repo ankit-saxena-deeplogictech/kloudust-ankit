@@ -454,35 +454,15 @@
      },
      {
       "id": "no_qemu_agent",
-      "multioption": true,
-      "type": "select",
+      "type": "switch",
       "label": "{{{i18n.VMNoAgent}}}",
-      "options": [
-       {
-        "value": "false",
-        "label": "{{{i18n.VMNo}}}"
-       },
-       {
-        "value": "true",
-        "label": "{{{i18n.VMYes}}}"
-       }
-      ]
+      "value": "false"
      },
      {
       "id": "force_overwrite",
-      "multioption": true,
-      "type": "select",
+      "type": "switch",
       "label": "{{{i18n.VMOverwriteForce}}}",
-      "options": [
-       {
-        "value": "false",
-        "label": "{{{i18n.VMNo}}}"
-       },
-       {
-        "value": "true",
-        "label": "{{{i18n.VMYes}}}"
-       }
-      ]
+      "value": "false"
      }
     ]
    },

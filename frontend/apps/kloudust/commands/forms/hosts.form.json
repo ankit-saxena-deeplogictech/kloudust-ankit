@@ -100,7 +100,8 @@
     "type": "main",
     "sub": "hostaddress",
     "subtype": "mono",
-    "sortable": true
+    "sortable": true,
+    "link": true
    },
    {
     "key": "type",
@@ -145,6 +146,7 @@
   "clickrow_javascript": [
    "const data = arguments[0]; APP_CONSTANTS.ENV._hosts_form_data = data;"
   ],
+  "clickrow_command": "hostdetail",
   "load_javascript": [
    "const hostsResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {cmd: 'listHosts'}, true);",
    "const hosts = hostsResult?.resources||[];",

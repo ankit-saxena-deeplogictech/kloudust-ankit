@@ -4,6 +4,13 @@ Redesigned shell — tokens/shell/components stylesheets drive all styling.
 Sidebar groups come from main_leftbar.json's "groups" declaration; the topbar
 carries the command palette (⌘K), project switcher, alerts, theme, help and
 the user menu, per the redesign wireframes.
+
+Three shared shell surfaces live at the end of the body, per the wireframes:
+  div#drawer_overlay + aside#drawer  the slide-over that hosts short forms and
+                                    the alerts panel, so the list underneath
+                                    keeps its filter, sort and selection
+  div#toast_region                   transient command outcomes
+All three are driven from js/main.mjs; ids are a stable contract.
 -->
 <style>
 @import url('./css/tokens.css');
@@ -34,6 +41,7 @@ the user menu, per the redesign wireframes.
 </head>
 
 <body>
+<a class="skip-link" href="#maincontent">{{i18n.SkipToContent}}</a>
 <div class="app" id="app">
 
 <aside class="sidebar">
@@ -109,6 +117,7 @@ the user menu, per the redesign wireframes.
 		</button>
 		<div class="menu" role="menu">
 			<div class="menu-label">{{mainPageData.username}}</div>
+			{{#mainPageData.userrole}}<div class="menu-label"><span class="badge badge-info">{{.}}</span></div>{{/mainPageData.userrole}}
 			<hr>
 			<button onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].loginmanager.logout()">
 				<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M7 6a8 8 0 1 0 10 0"/></svg>
@@ -118,7 +127,7 @@ the user menu, per the redesign wireframes.
 	</div>
 </header>
 
-<div id="maincontent" class="content">
+<div id="maincontent" class="content" tabindex="-1">
 	<!-- Whatever is open goes here -->
 </div>
 </div>
@@ -141,6 +150,24 @@ the user menu, per the redesign wireframes.
 		</ul>
 	</div>
 </div>
+
+<!-- Slide-over drawer: forms declaring "presentation": "drawer" mount into
+     div#drawer_body, which lets the list behind them keep its state. -->
+<div class="drawer-overlay" id="drawer_overlay"
+	onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm()"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer_title" aria-hidden="true">
+	<div class="drawer-head">
+		<h2 id="drawer_title"></h2>
+		<button class="iconbtn" aria-label="{{i18n.Cancel}}"
+			onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm()">
+			<svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+		</button>
+	</div>
+	<div class="drawer-body" id="drawer_body"></div>
+</aside>
+
+<!-- Transient command outcomes. The alerts stack stays the durable log. -->
+<div class="toast-region" id="toast_region" aria-live="polite"></div>
 
 <template id="initialContent">
 <div id="welcomediv">

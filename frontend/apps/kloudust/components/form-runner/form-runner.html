@@ -43,7 +43,7 @@ span#description {
     display: block;
     color: var(--text-3);
     font-size: var(--fs-md);
-    margin: var(--sp-1) 0 0;
+    margin: var(--sp-1) 0 var(--sp-4);
     max-width: 65ch;
 }
 
@@ -102,7 +102,17 @@ select {
 }
 select option { background-color: var(--surface); color: var(--text); }
 
-input.error { color: var(--danger-600); border-color: var(--danger-600); }
+input.error, select.error, textarea.error { color: var(--danger-600); border-color: var(--danger-600); }
+
+/* components.css gives .error-msg its look and hides it by default; when the
+   message shows is this component's business, so the toggle lives here.
+   (The shared rule keys off .field.invalid, which we cannot use — generated
+   fields stay flat siblings with no wrapper.) */
+span.error-msg.visible { display: flex; margin-top: calc(var(--sp-1) - var(--sp-4)); margin-bottom: var(--sp-4); }
+span.error-msg .icon { flex: none; }
+
+/* A switch replaces the input's own block spacing with its own */
+label.switch { margin-bottom: var(--sp-4); }
 
 /* Hint sits tight under its input (inputs carry the block spacing) */
 span.hint {
@@ -142,6 +152,7 @@ div.collapsed { height: 0px; display: none; }
 </style>
 
 <div id="body">
+{{^embedded}}
 <div class="page-head">
     <div>
         {{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}
@@ -152,6 +163,10 @@ div.collapsed { height: 0px; display: none; }
         <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </div>
 </div>
+{{/embedded}}
+{{! Embedded: the host (drawer head, tab strip) already shows the title and
+    supplies the close, so only the description carries over as content. }}
+{{#embedded}}{{#description}}<span id="description">{{.}}</span>{{/description}}{{/embedded}}
 
 <div id="main">
 <div id="required">
@@ -159,6 +174,15 @@ div.collapsed { height: 0px; display: none; }
 <div {{#isrow}}class="field-row"{{/isrow}}>
 {{#fields}}
 {{^multioption}}
+{{#switchfield}}
+<label class="switch" for="{{id}}">
+    <input id="{{id}}" type="checkbox" data-optional="true" {{#checked}}checked{{/checked}}>
+    <span class="track"></span>
+    <span>{{#label}}{{.}}{{/label}}{{^label}}{{placeholder}}{{/label}}</span>
+</label>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/switchfield}}
+{{^switchfield}}
 {{#label}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/label}}
 {{^label}}{{#placeholder}}<label for="{{id}}">{{.}}{{#required}} <span class="req" aria-hidden="true">*</span>{{/required}}</label>{{/placeholder}}{{/label}}
 <{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}} id="{{id}}"
@@ -173,11 +197,14 @@ div.collapsed { height: 0px; display: none; }
     {{#title}}title="{{.}}"{{/title}}
     {{#variant}}class="variant-{{.}}"{{/variant}}
     {{#validation_error}}oninvalid="this.setCustomValidity('{{.}}')"{{/validation_error}}
-    {{#validation_error}}oninput="setCustomValidity('')"{{/validation_error}}
+    {{#validation_error}}oninput="setCustomValidity(''); monkshu_env.components['form-runner'].clearFieldError(this)"{{/validation_error}}
     {{#readonly}}readonly{{/readonly}}
     {{#list}}list="{{.}}"{{/list}}>
 </{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}}>
+{{#validation_error}}<span class="error-msg" data-errorfor="{{id}}" role="alert">
+    <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 3v.01"/></svg>{{.}}</span>{{/validation_error}}
 {{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/switchfield}}
 {{/multioption}}
 
 {{#multioption}}
@@ -206,6 +233,15 @@ div.collapsed { height: 0px; display: none; }
 <div {{#isrow}}class="field-row"{{/isrow}}>
 {{#fields}}
 {{^multioption}}
+{{#switchfield}}
+<label class="switch" for="{{id}}">
+    <input id="{{id}}" type="checkbox" data-optional="true" {{#checked}}checked{{/checked}}>
+    <span class="track"></span>
+    <span>{{#label}}{{.}}{{/label}}{{^label}}{{placeholder}}{{/label}}</span>
+</label>
+{{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/switchfield}}
+{{^switchfield}}
 {{#label}}<label for="{{id}}">{{.}}</label>{{/label}}
 {{^label}}{{#placeholder}}<label for="{{id}}">{{.}}</label>{{/placeholder}}{{/label}}
 <{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}} id="{{id}}"
@@ -221,11 +257,14 @@ div.collapsed { height: 0px; display: none; }
     {{#title}}title="{{.}}"{{/title}}
     {{#variant}}class="variant-{{.}}"{{/variant}}
     {{#validation_error}}oninvalid="this.setCustomValidity('{{.}}')"{{/validation_error}}
-    {{#validation_error}}oninput="setCustomValidity('')"{{/validation_error}}
+    {{#validation_error}}oninput="setCustomValidity(''); monkshu_env.components['form-runner'].clearFieldError(this)"{{/validation_error}}
     {{#readonly}}readonly{{/readonly}}
     {{#list}}list="{{.}}"{{/list}}>
 </{{^inputtype}}input{{/inputtype}}{{#inputtype}}{{.}}{{/inputtype}}>
+{{#validation_error}}<span class="error-msg" data-errorfor="{{id}}" role="alert">
+    <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 3v.01"/></svg>{{.}}</span>{{/validation_error}}
 {{#hint}}<span class="hint">{{.}}</span>{{/hint}}
+{{/switchfield}}
 {{/multioption}}
 
 {{#multioption}}
