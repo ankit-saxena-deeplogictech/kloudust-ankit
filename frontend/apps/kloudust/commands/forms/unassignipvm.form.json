@@ -1,0 +1,81 @@
+{
+ "id": "unassignipvm",
+ "command": "unassignIPToVM",
+ "type": "kloudust_cmdline",
+ "presentation": "drawer",
+ "kloudust_cmdline_params": [
+  "vm_name",
+  "ip",
+  "vnetlist"
+ ],
+ "title": "{{{i18n.IPUnassignTitle}}}",
+ "i18n": {
+  "en": {
+   "IPUnassignTitle": "Unassign address",
+   "IPUnassignDescription": "Removes this public address from the machine holding it and returns it to the free pool. The machine keeps running but loses its public address.",
+   "IPUnassignVM": "Machine holding the address",
+   "IPUnassignIP": "Address",
+   "IPUnassignSubmit": "Unassign",
+   "FieldValidationErrorGeneric": "Validation error",
+   "Required": "Required"
+  },
+  "hi": {
+   "IPUnassignTitle": "Unassign address",
+   "IPUnassignDescription": "Removes this public address from the machine holding it and returns it to the free pool. The machine keeps running but loses its public address.",
+   "IPUnassignVM": "Machine holding the address",
+   "IPUnassignIP": "Address",
+   "IPUnassignSubmit": "Unassign",
+   "FieldValidationErrorGeneric": "Validation error",
+   "Required": "Required"
+  },
+  "ja": {
+   "IPUnassignTitle": "Unassign address",
+   "IPUnassignDescription": "Removes this public address from the machine holding it and returns it to the free pool. The machine keeps running but loses its public address.",
+   "IPUnassignVM": "Machine holding the address",
+   "IPUnassignIP": "Address",
+   "IPUnassignSubmit": "Unassign",
+   "FieldValidationErrorGeneric": "Validation error",
+   "Required": "Required"
+  },
+  "zh": {
+   "IPUnassignTitle": "Unassign address",
+   "IPUnassignDescription": "Removes this public address from the machine holding it and returns it to the free pool. The machine keeps running but loses its public address.",
+   "IPUnassignVM": "Machine holding the address",
+   "IPUnassignIP": "Address",
+   "IPUnassignSubmit": "Unassign",
+   "FieldValidationErrorGeneric": "Validation error",
+   "Required": "Required"
+  }
+ },
+ "form": {
+  "description": "{{{i18n.IPUnassignDescription}}}",
+  "required_label": "{{{i18n.Required}}}",
+  "required_fields": [
+   {
+    "id": "vm_name",
+    "type": "text",
+    "label": "{{{i18n.IPUnassignVM}}}",
+    "required": true,
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._ip_form_data.attachedto}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._ip_form_data.attachedto}}true{{/APP_CONSTANTS.ENV._ip_form_data.attachedto}}"
+   },
+   {
+    "id": "ip",
+    "type": "text",
+    "label": "{{{i18n.IPUnassignIP}}}",
+    "required": true,
+    "pattern": "^((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)$",
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "value": "{{{APP_CONSTANTS.ENV._ip_form_data.ip}}}",
+    "readonly": "{{#APP_CONSTANTS.ENV._ip_form_data.ip}}true{{/APP_CONSTANTS.ENV._ip_form_data.ip}}"
+   },
+   {
+    "id": "vnetlist",
+    "type": "hidden",
+    "value": ""
+   }
+  ],
+  "submitlabel": "{{{i18n.IPUnassignSubmit}}}"
+ }
+}

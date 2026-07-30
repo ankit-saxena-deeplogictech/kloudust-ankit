@@ -247,6 +247,12 @@ select.input {
 .segbar span { display: block; border-radius: 2px; }
 .seg-legend { display: flex; gap: var(--sp-4); flex-wrap: wrap; font-size: var(--fs-sm); color: var(--text-2); }
 .seg-legend .dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 6px; }
+/* Segment roles — the colour is shared vocabulary, only the proportion is data.
+   Every segment is also labelled in the legend, so colour is never the only cue. */
+.seg-used { background: var(--data-good); }
+.seg-idle { background: var(--data-idle); }
+.seg-held { background: var(--data-warn); }
+.seg-over { background: var(--data-bad); }
 
 /* Capacity meter: single-hue fill + text value (never color alone) */
 .meter { margin-bottom: var(--sp-4); }

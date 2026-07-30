@@ -1,0 +1,72 @@
+{
+  "id": "ippools",
+  "command": "ippools",
+  "type": "frontend_module",
+  "title": "{{{i18n.IPPoolsTitle}}}",
+  "i18n": {
+    "en": {
+      "IPPoolsTitle": "Pools",
+      "IPPoolsTotal": "Total addresses",
+      "IPPoolsFree": "Free to assign",
+      "IPPoolsAssigned": "assigned",
+      "IPPoolsReserved": "reserved",
+      "IPPoolsFreeLower": "free",
+      "IPPoolsKPITotal": "Addresses in the pool",
+      "IPPoolsKPIFree": "Free to assign",
+      "IPPoolsKPIAssigned": "Assigned",
+      "IPPoolsKPIHosts": "Routing hosts",
+      "IPPoolsNoHost": "No routing host",
+      "IPPoolsFoot": "Reserved addresses are the network, gateway and broadcast addresses held back when the block was added. They count as used.",
+      "IPPoolsEmptyTitle": "No addresses in the pool",
+      "IPPoolsEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses."
+    },
+    "hi": {
+      "IPPoolsTitle": "Pools",
+      "IPPoolsTotal": "Total addresses",
+      "IPPoolsFree": "Free to assign",
+      "IPPoolsAssigned": "assigned",
+      "IPPoolsReserved": "reserved",
+      "IPPoolsFreeLower": "free",
+      "IPPoolsKPITotal": "Addresses in the pool",
+      "IPPoolsKPIFree": "Free to assign",
+      "IPPoolsKPIAssigned": "Assigned",
+      "IPPoolsKPIHosts": "Routing hosts",
+      "IPPoolsNoHost": "No routing host",
+      "IPPoolsFoot": "Reserved addresses are the network, gateway and broadcast addresses held back when the block was added. They count as used.",
+      "IPPoolsEmptyTitle": "No addresses in the pool",
+      "IPPoolsEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses."
+    },
+    "ja": {
+      "IPPoolsTitle": "Pools",
+      "IPPoolsTotal": "Total addresses",
+      "IPPoolsFree": "Free to assign",
+      "IPPoolsAssigned": "assigned",
+      "IPPoolsReserved": "reserved",
+      "IPPoolsFreeLower": "free",
+      "IPPoolsKPITotal": "Addresses in the pool",
+      "IPPoolsKPIFree": "Free to assign",
+      "IPPoolsKPIAssigned": "Assigned",
+      "IPPoolsKPIHosts": "Routing hosts",
+      "IPPoolsNoHost": "No routing host",
+      "IPPoolsFoot": "Reserved addresses are the network, gateway and broadcast addresses held back when the block was added. They count as used.",
+      "IPPoolsEmptyTitle": "No addresses in the pool",
+      "IPPoolsEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses."
+    },
+    "zh": {
+      "IPPoolsTitle": "Pools",
+      "IPPoolsTotal": "Total addresses",
+      "IPPoolsFree": "Free to assign",
+      "IPPoolsAssigned": "assigned",
+      "IPPoolsReserved": "reserved",
+      "IPPoolsFreeLower": "free",
+      "IPPoolsKPITotal": "Addresses in the pool",
+      "IPPoolsKPIFree": "Free to assign",
+      "IPPoolsKPIAssigned": "Assigned",
+      "IPPoolsKPIHosts": "Routing hosts",
+      "IPPoolsNoHost": "No routing host",
+      "IPPoolsFoot": "Reserved addresses are the network, gateway and broadcast addresses held back when the block was added. They count as used.",
+      "IPPoolsEmptyTitle": "No addresses in the pool",
+      "IPPoolsEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses."
+    }
+  }
+}

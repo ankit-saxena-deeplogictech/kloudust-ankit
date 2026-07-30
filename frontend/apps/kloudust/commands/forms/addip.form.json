@@ -19,7 +19,12 @@
    "FieldValidationErrorGeneric": "Validation error",
    "IPAddSubmitLabel": "Add",
    "Advanced": "Optional",
-   "Required": "Required"
+   "Required": "Required",
+   "IPAddLabel": "Address or CIDR block",
+   "IPAddHint": "A single address like 203.0.113.10, or a block like 203.0.113.0/28 — a block is expanded into its individual addresses.",
+   "IPAddHostLabel": "Routable via host",
+   "IPAddHostHint": "The host the network already routes these addresses to. Kloudust does not configure that routing.",
+   "IPAddReservedHint": "Holds back the network, gateway and broadcast addresses of a block so they are never handed out."
   },
   "hi": {
    "IPAddTitle": "Add IP",
@@ -30,7 +35,12 @@
    "FieldValidationErrorGeneric": "Validation error",
    "IPAddSubmitLabel": "Add",
    "Advanced": "Optional",
-   "Required": "Required"
+   "Required": "Required",
+   "IPAddLabel": "Address or CIDR block",
+   "IPAddHint": "A single address like 203.0.113.10, or a block like 203.0.113.0/28 — a block is expanded into its individual addresses.",
+   "IPAddHostLabel": "Routable via host",
+   "IPAddHostHint": "The host the network already routes these addresses to. Kloudust does not configure that routing.",
+   "IPAddReservedHint": "Holds back the network, gateway and broadcast addresses of a block so they are never handed out."
   },
   "ja": {
    "IPAddTitle": "Add IP",
@@ -41,7 +51,12 @@
    "FieldValidationErrorGeneric": "Validation error",
    "IPAddSubmitLabel": "Add",
    "Advanced": "Optional",
-   "Required": "Required"
+   "Required": "Required",
+   "IPAddLabel": "Address or CIDR block",
+   "IPAddHint": "A single address like 203.0.113.10, or a block like 203.0.113.0/28 — a block is expanded into its individual addresses.",
+   "IPAddHostLabel": "Routable via host",
+   "IPAddHostHint": "The host the network already routes these addresses to. Kloudust does not configure that routing.",
+   "IPAddReservedHint": "Holds back the network, gateway and broadcast addresses of a block so they are never handed out."
   },
   "zh": {
    "IPAddTitle": "Add IP",
@@ -52,7 +67,12 @@
    "FieldValidationErrorGeneric": "Validation error",
    "IPAddSubmitLabel": "Add",
    "Advanced": "Optional",
-   "Required": "Required"
+   "Required": "Required",
+   "IPAddLabel": "Address or CIDR block",
+   "IPAddHint": "A single address like 203.0.113.10, or a block like 203.0.113.0/28 — a block is expanded into its individual addresses.",
+   "IPAddHostLabel": "Routable via host",
+   "IPAddHostHint": "The host the network already routes these addresses to. Kloudust does not configure that routing.",
+   "IPAddReservedHint": "Holds back the network, gateway and broadcast addresses of a block so they are never handed out."
   }
  },
  "form": {
@@ -65,13 +85,17 @@
     "placeholder": "{{{i18n.IP}}}",
     "required": true,
     "pattern": "^((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)(\\/([0-9]|[12]\\d|3[0-2]))?$",
-    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+    "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}",
+    "label": "{{{i18n.IPAddLabel}}}",
+    "hint": "{{{i18n.IPAddHint}}}"
    },
    {
     "id": "hostname",
-    "type": "text",
-    "pattern": "\\s*[A-Za-z0-9]+\\s*",
-    "placeholder": "{{{i18n.IPAddHostname}}}"
+    "multioption": true,
+    "type": "select",
+    "label": "{{{i18n.IPAddHostLabel}}}",
+    "hint": "{{{i18n.IPAddHostHint}}}",
+    "options": []
    }
   ],
   "optional_label": "{{{i18n.Advanced}}}",
@@ -80,9 +104,18 @@
     "id": "reserved",
     "type": "switch",
     "label": "{{{i18n.IPAddReserved}}}",
-    "value": "false"
+    "value": "false",
+    "hint": "{{{i18n.IPAddReservedHint}}}"
    }
   ],
-  "submitlabel": "{{{i18n.IPAddSubmitLabel}}}"
+  "submitlabel": "{{{i18n.IPAddSubmitLabel}}}",
+  "load_javascript": [
+   "const form = arguments[0]||{};",
+   "const hostsResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {cmd: 'listHosts'}, true);",
+   "const hostField = form.required_fields.find(field => field.id == 'hostname');",
+   "for (const host of hostsResult?.resources||[]) ",
+   "   hostField.options.push({value: host.hostname, label: `${host.hostname} — ${host.hostaddress}`});",
+   "return form;"
+  ]
  }
 }

@@ -1,0 +1,171 @@
+{
+ "id": "ipassignments",
+ "command": "tablelist",
+ "type": "table_display",
+ "title": "{{{i18n.IPAssignTitle}}}",
+ "i18n": {
+  "en": {
+   "IPA_ip": "Address",
+   "IPA_state": "State",
+   "IPA_attachedto": "Attached to",
+   "IPA_hostname": "Routable via host",
+   "IPA_since": "Added",
+   "IPAssignTitle": "IP addresses",
+   "IPAssignEmptyTitle": "No addresses in the pool",
+   "IPAssignEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses.",
+   "IPAssignAssign": "Assign to a machine",
+   "IPAssignUnassign": "Unassign",
+   "IPAssignAdd": "Add addresses",
+   "IPStateFree": "Free",
+   "IPStateReserved": "Reserved",
+   "IPStateAssigned": "Assigned",
+   "IPAssignSubtitle": "Routable addresses Kloudust can hand to machines, and where each one is routed",
+   "IPAssignAssignAuto": "Assign an address to a machine"
+  },
+  "hi": {
+   "IPA_ip": "Address",
+   "IPA_state": "State",
+   "IPA_attachedto": "Attached to",
+   "IPA_hostname": "Routable via host",
+   "IPA_since": "Added",
+   "IPAssignTitle": "IP addresses",
+   "IPAssignEmptyTitle": "No addresses in the pool",
+   "IPAssignEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses.",
+   "IPAssignAssign": "Assign to a machine",
+   "IPAssignUnassign": "Unassign",
+   "IPAssignAdd": "Add addresses",
+   "IPStateFree": "Free",
+   "IPStateReserved": "Reserved",
+   "IPStateAssigned": "Assigned",
+   "IPAssignSubtitle": "Routable addresses Kloudust can hand to machines, and where each one is routed",
+   "IPAssignAssignAuto": "Assign an address to a machine"
+  },
+  "ja": {
+   "IPA_ip": "Address",
+   "IPA_state": "State",
+   "IPA_attachedto": "Attached to",
+   "IPA_hostname": "Routable via host",
+   "IPA_since": "Added",
+   "IPAssignTitle": "IP addresses",
+   "IPAssignEmptyTitle": "No addresses in the pool",
+   "IPAssignEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses.",
+   "IPAssignAssign": "Assign to a machine",
+   "IPAssignUnassign": "Unassign",
+   "IPAssignAdd": "Add addresses",
+   "IPStateFree": "Free",
+   "IPStateReserved": "Reserved",
+   "IPStateAssigned": "Assigned",
+   "IPAssignSubtitle": "Routable addresses Kloudust can hand to machines, and where each one is routed",
+   "IPAssignAssignAuto": "Assign an address to a machine"
+  },
+  "zh": {
+   "IPA_ip": "Address",
+   "IPA_state": "State",
+   "IPA_attachedto": "Attached to",
+   "IPA_hostname": "Routable via host",
+   "IPA_since": "Added",
+   "IPAssignTitle": "IP addresses",
+   "IPAssignEmptyTitle": "No addresses in the pool",
+   "IPAssignEmptyMessage": "Add a routable IP or CIDR block so machines can be given public addresses.",
+   "IPAssignAssign": "Assign to a machine",
+   "IPAssignUnassign": "Unassign",
+   "IPAssignAdd": "Add addresses",
+   "IPStateFree": "Free",
+   "IPStateReserved": "Reserved",
+   "IPStateAssigned": "Assigned",
+   "IPAssignSubtitle": "Routable addresses Kloudust can hand to machines, and where each one is routed",
+   "IPAssignAssignAuto": "Assign an address to a machine"
+  }
+ },
+ "tabledef": {
+  "i18nPrefix": "IPA",
+  "enable_copy": true,
+  "subtitle": "{{{i18n.IPAssignSubtitle}}}",
+  "pageactions": [
+   {
+    "id": "addip",
+    "label": "{{{i18n.IPAssignAdd}}}",
+    "primary": true
+   },
+   {
+    "id": "assignipvm",
+    "label": "{{{i18n.IPAssignAssignAuto}}}"
+   }
+  ],
+  "searchbar": true,
+  "filterkey": "state",
+  "pagesize": 25,
+  "rowactions": true,
+  "popupform": {
+   "rolelist": {
+    "*": [
+     {
+      "id": "unassignipvm",
+      "label": "{{{i18n.IPAssignUnassign}}}",
+      "logo": "img/removeuser.png"
+     }
+    ]
+   }
+  },
+  "clickrow_javascript": [
+   "const data = arguments[0]; APP_CONSTANTS.ENV._ip_form_data = data;"
+  ],
+  "load_javascript": [
+   "const result = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', ",
+   "   {cmd: 'listIPs', project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const org = $$.libsession.get(APP_CONSTANTS.USERORG), project = $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT);",
+   "// allocatedto is '' when free, the literal 'reserved' for network/gateway/",
+   "// broadcast, and otherwise the resolved resource name (raw_org_project).",
+   "const suffix = `_${org}_${project}`.toLowerCase();",
+   "const ips = (result?.ips)||[];",
+   "for (const entry of ips) {",
+   "   const held = (entry.allocatedto||'').trim();",
+   "   entry.state = held === '' ? '{{{i18n.IPStateFree}}}' : held.toLowerCase() === 'reserved' ",
+   "      ? '{{{i18n.IPStateReserved}}}' : '{{{i18n.IPStateAssigned}}}';",
+   "   entry.attachedto = (held === '' || held.toLowerCase() === 'reserved') ? '' : ",
+   "      (held.toLowerCase().endsWith(suffix) ? held.substring(0, held.length - suffix.length) : held);",
+   "   entry.since = entry.timestamp ? new Date(parseInt(entry.timestamp)).toLocaleDateString() : '';",
+   "}",
+   "return {keys: ['ip','state','attachedto','hostname','since'], table: ips};"
+  ],
+  "columns": [
+   {
+    "key": "ip",
+    "type": "main",
+    "sortable": true
+   },
+   {
+    "key": "state",
+    "type": "badge",
+    "sortable": true,
+    "badgemap": {
+     "free": "success",
+     "reserved": "warning",
+     "assigned": "info",
+     "*": "neutral"
+    }
+   },
+   {
+    "key": "attachedto",
+    "type": "mono"
+   },
+   {
+    "key": "hostname",
+    "type": "muted",
+    "sortable": true
+   },
+   {
+    "key": "since",
+    "type": "muted",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "timestamp",
+    "priority": 2
+   }
+  ],
+  "emptystate": {
+   "title": "{{{i18n.IPAssignEmptyTitle}}}",
+   "message": "{{{i18n.IPAssignEmptyMessage}}}"
+  }
+ }
+}

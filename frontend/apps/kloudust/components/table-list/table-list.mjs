@@ -36,6 +36,9 @@
  *              click for clickrow_command. Requires popupform. Without it the
  *              legacy click-the-row-for-actions behaviour is unchanged.
  *  - clickrow_command: "<id>" — row click opens that command (detail pages).
+ *  - subtitle: "<text>" — sub line under the page heading.
+ *  - pageactions: [{id, label, primary}] — buttons in the page head, opened
+ *              with nothing pinned (unlike rowactions).
  *  - embedded: true — skip the page heading (rendering inside a tab).
  *
  * clickrow_javascript runs on every row click in all modes. Raw HTML/CSS
@@ -92,6 +95,8 @@ async function elementConnected(host) {
         confirmgo: await $$.libi18n.get("TLConfirmGo"), cancel: await $$.libi18n.get("TLCancel"),
         nomatch: await $$.libi18n.get("TLNoMatch"), rowactions: await $$.libi18n.get("TLRowActions")};
     if (tableObject.bulkactions) tableObject.bulkactions.forEach((action, index) => action.index = index);
+    for (const action of tableObject.pageactions||[])
+        action.buttonclass = action.primary ? "btn-primary" : "btn-secondary";
     tableObject._view = {search: "", filter: "*", page: 1, sort: null};
 
     // First paint is a skeleton. load_javascript then runs from elementRendered
@@ -386,6 +391,14 @@ async function rowClicked(event, rowdataJSON) {
     if (data.popupform && !data.rowactions) await _displayRowActionsMenu(event, data);
 }
 
+/** Page-head action: opens a command with no row pinned. */
+function pageAction(event, commandID) {
+    event.stopPropagation();
+    const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
+    cmdmanager.registerCommand({id: commandID});
+    cmdmanager.cmdClicked(commandID);
+}
+
 /** Kebab column handler. Pins the row exactly as a row click would, then opens
  *  the same popupform menu anchored under the button. */
 async function rowActions(event, rowdataJSON) {
@@ -499,6 +512,6 @@ async function _runOnLoadJavascript(tabledef) {
 const _getArrayAsJoinedString = (array, skipEOLs) => array?(Array.isArray(array)?array:[array]).join(skipEOLs?"":"\n"):"";
 
 export const table_list = {trueWebComponentMode: true, elementConnected, elementRendered, close, rowClicked,
-    hidePopup, searchTable, filterTable, gotoPage, sortTable, rowActions, rowSelected, selectAll, clearSelection,
+    hidePopup, searchTable, filterTable, gotoPage, sortTable, rowActions, pageAction, rowSelected, selectAll, clearSelection,
     bulkAction, confirmAckChanged, closeBulkConfirm, confirmBulk};
 $$.libmonkshu_component.register("table-list", `${COMPONENT_PATH}/table-list.html`, table_list);

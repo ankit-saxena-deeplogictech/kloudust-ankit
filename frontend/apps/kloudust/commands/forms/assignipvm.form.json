@@ -23,7 +23,8 @@
    "VMIPTypePublic": "Public",
    "VMIPTypePrivate": "Private",
    "VMAssignSubmitLabel": "Submit",
-   "FieldValidationErrorGeneric": "Validation error"
+   "FieldValidationErrorGeneric": "Validation error",
+   "VMAssignIPDescriptionHonest": "Assign or remove an address for a machine. For a public address Kloudust picks a free one routed to the machine's own host — the address cannot be chosen. Private addresses are entered directly."
   },
   "hi": {
    "VMAssignIPTitle": "Assign or unassign IP to a virtual machine",
@@ -38,7 +39,8 @@
    "VMIPTypePublic": "Public",
    "VMIPTypePrivate": "Private",
    "VMAssignSubmitLabel": "Submit",
-   "FieldValidationErrorGeneric": "Validation error"
+   "FieldValidationErrorGeneric": "Validation error",
+   "VMAssignIPDescriptionHonest": "Assign or remove an address for a machine. For a public address Kloudust picks a free one routed to the machine's own host — the address cannot be chosen. Private addresses are entered directly."
   },
   "ja": {
    "VMAssignIPTitle": "Assign or unassign IP to a virtual machine",
@@ -53,7 +55,8 @@
    "VMIPTypePublic": "Public",
    "VMIPTypePrivate": "Private",
    "VMAssignSubmitLabel": "Submit",
-   "FieldValidationErrorGeneric": "Validation error"
+   "FieldValidationErrorGeneric": "Validation error",
+   "VMAssignIPDescriptionHonest": "Assign or remove an address for a machine. For a public address Kloudust picks a free one routed to the machine's own host — the address cannot be chosen. Private addresses are entered directly."
   },
   "zh": {
    "VMAssignIPTitle": "Assign or unassign IP to a virtual machine",
@@ -68,11 +71,12 @@
    "VMIPTypePublic": "Public",
    "VMIPTypePrivate": "Private",
    "VMAssignSubmitLabel": "Submit",
-   "FieldValidationErrorGeneric": "Validation error"
+   "FieldValidationErrorGeneric": "Validation error",
+   "VMAssignIPDescriptionHonest": "Assign or remove an address for a machine. For a public address Kloudust picks a free one routed to the machine's own host — the address cannot be chosen. Private addresses are entered directly."
   }
  },
  "form": {
-  "description": "{{{i18n.VMAssignIPDescription}}}",
+  "description": "{{{i18n.VMAssignIPDescriptionHonest}}}",
   "required_label": "{{{i18n.Required}}}",
   "required_fields": [
    {

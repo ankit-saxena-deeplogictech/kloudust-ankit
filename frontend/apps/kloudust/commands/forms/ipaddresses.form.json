@@ -1,0 +1,43 @@
+{
+  "id": "ipaddresses",
+  "command": "tabgroup",
+  "type": "frontend_module",
+  "title": "{{{i18n.IPAddressesTitle}}}",
+  "subtitle": "{{{i18n.IPAddressesSubtitle}}}",
+  "tabs": [
+    {
+      "id": "ippools",
+      "label": "{{{i18n.IPAddressesPools}}}"
+    },
+    {
+      "id": "ipassignments",
+      "label": "{{{i18n.IPAddressesList}}}"
+    }
+  ],
+  "i18n": {
+    "en": {
+      "IPAddressesTitle": "IP addresses",
+      "IPAddressesSubtitle": "The routable addresses Kloudust can hand to machines, and where each one is routed",
+      "IPAddressesPools": "Pools",
+      "IPAddressesList": "Addresses"
+    },
+    "hi": {
+      "IPAddressesTitle": "IP addresses",
+      "IPAddressesSubtitle": "The routable addresses Kloudust can hand to machines, and where each one is routed",
+      "IPAddressesPools": "Pools",
+      "IPAddressesList": "Addresses"
+    },
+    "ja": {
+      "IPAddressesTitle": "IP addresses",
+      "IPAddressesSubtitle": "The routable addresses Kloudust can hand to machines, and where each one is routed",
+      "IPAddressesPools": "Pools",
+      "IPAddressesList": "Addresses"
+    },
+    "zh": {
+      "IPAddressesTitle": "IP addresses",
+      "IPAddressesSubtitle": "The routable addresses Kloudust can hand to machines, and where each one is routed",
+      "IPAddressesPools": "Pools",
+      "IPAddressesList": "Addresses"
+    }
+  }
+}

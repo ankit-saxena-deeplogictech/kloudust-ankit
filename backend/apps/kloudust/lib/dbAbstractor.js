@@ -1272,6 +1272,21 @@ exports.getHostWithVnets = async function(vnet_ids) {
 }
 
 /**
+ * Returns every IP in the assignable pool, optionally narrowed to one host.
+ * The only multi-row read of this table — getHostForIP and getAssignableIP
+ * answer about a single address each, which is why nothing could list the pool.
+ * @param {string} hostname Optional: only IPs routable via this host
+ * @returns The IP rows, or false if the caller may not look them up
+ */
+exports.getIPs = async function(hostname) {
+    if (!roleman.checkAccess(roleman.ACTIONS.lookup_cloud_resource)) {_logUnauthorized(); return false;}
+
+    const query = hostname ? "select * from ip where hostname = ? collate nocase order by hostname, ip" :
+        "select * from ip order by hostname, ip";
+    return await _db().getQuery(query, hostname ? [hostname] : []);
+}
+
+/**
  * Returns an IP that can be assigned to vms
  * @returns An IP that can be assigned to vms
  */

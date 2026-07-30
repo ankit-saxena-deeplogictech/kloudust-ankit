@@ -44,6 +44,12 @@
     "group": "cloud"
    },
    {
+    "id": "ipaddresses",
+    "label": "{{{i18n.IPAddresses}}}",
+    "logo": "img/assignipvm.svg",
+    "group": "networking"
+   },
+   {
     "id": "cloudadmin",
     "label": "{{{i18n.CloudAdmin}}}",
     "logo": "img/cloudadmin.svg",
@@ -148,7 +154,8 @@
    "CloudShell": "Cloud shell",
    "Networking": "Networking",
    "Hosts": "Hosts",
-   "LiveMigration": "Live migration"
+   "LiveMigration": "Live migration",
+   "IPAddresses": "IP addresses"
   },
   "hi": {
    "Create": "Create",
@@ -173,7 +180,8 @@
    "CloudShell": "Cloud shell",
    "Networking": "Networking",
    "Hosts": "Hosts",
-   "LiveMigration": "Live migration"
+   "LiveMigration": "Live migration",
+   "IPAddresses": "IP addresses"
   },
   "ja": {
    "Create": "Create",
@@ -198,7 +206,8 @@
    "CloudShell": "Cloud shell",
    "Networking": "Networking",
    "Hosts": "Hosts",
-   "LiveMigration": "Live migration"
+   "LiveMigration": "Live migration",
+   "IPAddresses": "IP addresses"
   },
   "zh": {
    "Create": "Create",
@@ -223,7 +232,8 @@
    "CloudShell": "Cloud shell",
    "Networking": "Networking",
    "Hosts": "Hosts",
-   "LiveMigration": "Live migration"
+   "LiveMigration": "Live migration",
+   "IPAddresses": "IP addresses"
   }
  }
 }
