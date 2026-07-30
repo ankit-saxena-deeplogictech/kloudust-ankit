@@ -72,7 +72,7 @@
     "type": "text",
     "placeholder": "{{{i18n.ImageName}}}",
     "required": true,
-    "pattern": "\\s*\\[w-_]+\\s*",
+    "pattern": "\\s*[A-Za-z0-9_-]+\\s*",
     "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
    },
    {
@@ -138,6 +138,26 @@
    }
   ],
   "submitlabel": "{{{i18n.AddImageSubmitLabel}}}",
-  "submit_javascript": "const retObject = arguments[0]||{};\r\n\r\nretObject.extrainfo = retObject.os_variant+':'+retObject.image_type;\r\nreturn true;"
+  "submit_javascript": "const retObject = arguments[0]||{};\r\n\r\nretObject.extrainfo = retObject.os_variant+':'+retObject.image_type;\r\nreturn true;",
+  "load_javascript": [
+   "const form = arguments[0]||{};",
+   "// Opened as Edit metadata from an image tile or its drawer: addImage is a",
+   "// 'replace into' upsert, so submitting the same name updates that image.",
+   "const pinned = APP_CONSTANTS.ENV._images_form_data;",
+   "if (!pinned) return form;",
+   "const fieldByID = id => form.required_fields.find(field => field.id == id);",
+   "const splits = String(pinned.extrainfo||'').split(':');",
+   "const values = {name: pinned.name, description: pinned.description, uri: pinned.uri,",
+   "   os_variant: (splits[0]||'').trim()};",
+   "for (const [id, value] of Object.entries(values)) {",
+   "   const field = fieldByID(id); if (field && value) field.value = value;",
+   "}",
+   "// Selects show their first option, so lead with the image's current values.",
+   "const lead = (id, value) => {const field = fieldByID(id);",
+   "   if (field && value) field.options.sort((a, b) => (b.value == value) - (a.value == value));};",
+   "lead('processorarch', pinned.processorarchitecture);",
+   "lead('image_type', (splits[1]||'').trim());",
+   "return form;"
+  ]
  }
 }

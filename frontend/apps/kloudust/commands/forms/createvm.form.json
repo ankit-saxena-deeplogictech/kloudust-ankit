@@ -477,6 +477,9 @@
    "   'POST', {cmd: 'listVMImages'}, true);",
    "const imageField = form.steps[1].fields.find(field => field.id == 'creation_image_name');",
    "if (vmResult.result) for (const vm of vmResult.resources) imageField.options.push({value: vm.name, label: vm.description});",
+   "const pinnedImage = APP_CONSTANTS.ENV._images_form_data?.name;",
+   "// Arrived from an image tile's Create VM, so that image leads the list.",
+   "if (pinnedImage) imageField.options.sort((a, b) => (b.value == pinnedImage) - (a.value == pinnedImage));",
    "if (!monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.isCloudAdminLoggedIn()) ",
    "   form.steps[2].fields = form.steps[2].fields.filter(field => !['host_network','override_host'].includes(field.id));",
    "return form;"

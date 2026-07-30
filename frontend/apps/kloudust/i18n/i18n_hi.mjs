@@ -1,4 +1,6 @@
 export const i18n = {
+"Required": "Required",
+"VMImage": "Image",
 "RoleCloudadmin": "Cloud admin",
 "RoleOrgadmin": "Org admin",
 "RoleUser": "Project user",

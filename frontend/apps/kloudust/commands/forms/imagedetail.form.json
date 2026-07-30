@@ -1,0 +1,116 @@
+{
+ "id": "imagedetail",
+ "command": "imagedetail",
+ "type": "frontend_module",
+ "presentation": "drawer",
+ "title": "{{{i18n.ImageDetailTitle}}}",
+ "rolelist": {
+  "*": [
+   {
+    "id": "createvm",
+    "label": "{{{i18n.ImagesCreateVM}}}",
+    "logo": "img/createvm.svg"
+   },
+   {
+    "id": "addimage",
+    "label": "{{{i18n.ImagesEdit}}}",
+    "logo": "img/addimage.svg"
+   },
+   {
+    "id": "deleteimage",
+    "label": "{{{i18n.ImagesDelete}}}",
+    "logo": "img/deleteimage.svg"
+   }
+  ]
+ },
+ "i18n": {
+  "en": {
+   "ImageDetailTitle": "Image",
+   "ImageDetailDescription": "Description",
+   "ImageDetailOSVariant": "OS variant",
+   "ImageDetailFormat": "Format",
+   "ImageDetailArch": "Architecture",
+   "ImageDetailSource": "Source",
+   "ImageDetailVisibility": "Visibility",
+   "ImageDetailVisibilityValue": "All projects in {org}",
+   "ImageDetailAdded": "Added",
+   "ImageDetailCopy": "Copy value",
+   "ImageDetailVMs": "Virtual machines built from this image",
+   "ImageDetailVMName": "Name",
+   "ImageDetailVMCreated": "Created",
+   "ImageDetailVMsFoot": "Each machine holds its own copy of the disk. Deleting the image does not affect them.",
+   "ImageDetailNoVMsTitle": "Not in use",
+   "ImageDetailNoVMsMessage": "No virtual machine in this project was built from this image.",
+   "ImageDetailNoImage": "No image is selected. Open one from the Images catalog.",
+   "ImagesCreateVM": "Create VM",
+   "ImagesEdit": "Edit metadata",
+   "ImagesDelete": "Delete"
+  },
+  "hi": {
+   "ImageDetailTitle": "Image",
+   "ImageDetailDescription": "Description",
+   "ImageDetailOSVariant": "OS variant",
+   "ImageDetailFormat": "Format",
+   "ImageDetailArch": "Architecture",
+   "ImageDetailSource": "Source",
+   "ImageDetailVisibility": "Visibility",
+   "ImageDetailVisibilityValue": "All projects in {org}",
+   "ImageDetailAdded": "Added",
+   "ImageDetailCopy": "Copy value",
+   "ImageDetailVMs": "Virtual machines built from this image",
+   "ImageDetailVMName": "Name",
+   "ImageDetailVMCreated": "Created",
+   "ImageDetailVMsFoot": "Each machine holds its own copy of the disk. Deleting the image does not affect them.",
+   "ImageDetailNoVMsTitle": "Not in use",
+   "ImageDetailNoVMsMessage": "No virtual machine in this project was built from this image.",
+   "ImageDetailNoImage": "No image is selected. Open one from the Images catalog.",
+   "ImagesCreateVM": "Create VM",
+   "ImagesEdit": "Edit metadata",
+   "ImagesDelete": "Delete"
+  },
+  "ja": {
+   "ImageDetailTitle": "Image",
+   "ImageDetailDescription": "Description",
+   "ImageDetailOSVariant": "OS variant",
+   "ImageDetailFormat": "Format",
+   "ImageDetailArch": "Architecture",
+   "ImageDetailSource": "Source",
+   "ImageDetailVisibility": "Visibility",
+   "ImageDetailVisibilityValue": "All projects in {org}",
+   "ImageDetailAdded": "Added",
+   "ImageDetailCopy": "Copy value",
+   "ImageDetailVMs": "Virtual machines built from this image",
+   "ImageDetailVMName": "Name",
+   "ImageDetailVMCreated": "Created",
+   "ImageDetailVMsFoot": "Each machine holds its own copy of the disk. Deleting the image does not affect them.",
+   "ImageDetailNoVMsTitle": "Not in use",
+   "ImageDetailNoVMsMessage": "No virtual machine in this project was built from this image.",
+   "ImageDetailNoImage": "No image is selected. Open one from the Images catalog.",
+   "ImagesCreateVM": "Create VM",
+   "ImagesEdit": "Edit metadata",
+   "ImagesDelete": "Delete"
+  },
+  "zh": {
+   "ImageDetailTitle": "Image",
+   "ImageDetailDescription": "Description",
+   "ImageDetailOSVariant": "OS variant",
+   "ImageDetailFormat": "Format",
+   "ImageDetailArch": "Architecture",
+   "ImageDetailSource": "Source",
+   "ImageDetailVisibility": "Visibility",
+   "ImageDetailVisibilityValue": "All projects in {org}",
+   "ImageDetailAdded": "Added",
+   "ImageDetailCopy": "Copy value",
+   "ImageDetailVMs": "Virtual machines built from this image",
+   "ImageDetailVMName": "Name",
+   "ImageDetailVMCreated": "Created",
+   "ImageDetailVMsFoot": "Each machine holds its own copy of the disk. Deleting the image does not affect them.",
+   "ImageDetailNoVMsTitle": "Not in use",
+   "ImageDetailNoVMsMessage": "No virtual machine in this project was built from this image.",
+   "ImageDetailNoImage": "No image is selected. Open one from the Images catalog.",
+   "ImagesCreateVM": "Create VM",
+   "ImagesEdit": "Edit metadata",
+   "ImagesDelete": "Delete"
+  }
+ }
+}

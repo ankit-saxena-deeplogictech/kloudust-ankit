@@ -35,24 +35,46 @@ div#tiletop {
     min-height: 32px;
 }
 
-.tile .card-head { gap: var(--sp-3); justify-content: flex-start; }
+/* The head is monogram + (name over description), with the identity block
+   allowed to shrink so long image names wrap instead of pushing the card wide */
+.tile .card-head { gap: var(--sp-3); justify-content: flex-start; align-items: flex-start; }
+.tile .tile-ident { min-width: 0; }
+.tile .tile-name { display: block; overflow-wrap: anywhere; }
 .tile .tile-sub { color: var(--text-3); font-size: var(--fs-sm); margin-top: 2px; }
+.tile .tile-badges { margin-bottom: var(--sp-3); }
+.tile .kv dd.mono { overflow-wrap: anywhere; }
+
+/* Toolbar above the grid: count, search, filter chips */
+div#tiletop p.sub { color: var(--text-3); margin: var(--sp-1) 0 0; }
+div#tiletoolbar { margin-bottom: var(--sp-4); }
+div#tiletoolbar h3 { font-size: var(--fs-lg); }
+div#tilenomatch { margin-top: var(--sp-4); }
 
 /* Skeleton tiles: staggered widths read as text rather than as three equal bars */
 div.skeleton-tile { display: flex; flex-direction: column; gap: var(--sp-3); }
 div.skeleton-tile span.skeleton:nth-child(1) { width: 40%; }
 div.skeleton-tile span.skeleton:nth-child(2) { width: 75%; }
 div.skeleton-tile span.skeleton:nth-child(3) { width: 55%; }
+
 </style>
 
 <div id="tilebody">
 
 {{^embedded}}
-<div id="tiletop">
-    <div>{{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}</div>
-    <div id="tileclose" class="iconbtn" role="button" tabindex="0" aria-label="Close"
-        onclick='event.stopPropagation(); monkshu_env.components["tile-list"].close(this)'>
-        <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+<div id="tiletop" class="page-head">
+    <div>
+        {{#formtitle}}<h1>{{.}}</h1>{{/formtitle}}
+        {{#subtitletext}}<p class="sub">{{.}}</p>{{/subtitletext}}
+    </div>
+    <div class="page-actions">
+    {{#pageactions}}
+        <span class="btn {{buttonclass}}" role="button" tabindex="0"
+            onclick="monkshu_env.components['tile-list'].pageAction(event, '{{id}}')">{{label}}</span>
+    {{/pageactions}}
+        <div id="tileclose" class="iconbtn" role="button" tabindex="0" aria-label="Close"
+            onclick='event.stopPropagation(); monkshu_env.components["tile-list"].close(this)'>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </div>
     </div>
 </div>
 {{/embedded}}
@@ -69,28 +91,72 @@ div.skeleton-tile span.skeleton:nth-child(3) { width: 55%; }
 </div>
 {{/loading}}
 
+{{#searchbar}}
+<div class="card" id="tiletoolbar">
+    <div class="table-toolbar">
+        <h3 id="tilecount">{{counttext}}</h3>
+        <div class="search">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input class="input" type="search" placeholder="{{i18nlabels.search}}" aria-label="{{i18nlabels.search}}"
+                oninput="monkshu_env.components['tile-list'].searchTiles(event)">
+        </div>
+        <div class="tb-spacer"></div>
+        <div class="cluster" id="tilefilters" role="group" aria-label="{{i18nlabels.filter}}">
+        {{#filterchips}}
+            <button class="chip" data-value="{{value}}" aria-pressed="{{#active}}true{{/active}}{{^active}}false{{/active}}"
+                onclick="monkshu_env.components['tile-list'].filterTiles(this, '{{value}}')">{{label}}</button>
+        {{/filterchips}}
+        </div>
+    </div>
+</div>
+{{/searchbar}}
+
 {{#tiles.length}}
 <div class="tile-grid">
 {{#tiles}}
-<div class="card tile">
+<div class="card tile" data-filter="{{filtervalue}}" data-search="{{searchtext}}">
     <div class="card-head">
         <span class="os-mark" {{#os}}data-os="{{.}}"{{/os}}>{{monogram}}</span>
-        <div>
+        <div class="tile-ident">
             <span class="tile-name">{{title}}</span>
             {{#subtitle}}<div class="tile-sub">{{.}}</div>{{/subtitle}}
         </div>
     </div>
-    {{#haskv}}
+
+    {{#hasbody}}
     <div class="card-body">
+        {{#hasbadges}}
+        <div class="cluster tile-badges">
+        {{#badges}}<span class="badge badge-{{variant}}">{{value}}</span>{{/badges}}
+        </div>
+        {{/hasbadges}}
+        {{#haskv}}
         <dl class="kv">
         {{#kv}}
-            <dt>{{label}}</dt><dd>{{value}}</dd>
+            <dt>{{label}}</dt><dd {{#mono}}class="mono"{{/mono}}{{#muted}}class="muted"{{/muted}}>{{value}}</dd>
         {{/kv}}
         </dl>
+        {{/haskv}}
     </div>
-    {{/haskv}}
+    {{/hasbody}}
+
+    {{#hasactions}}
+    <div class="card-foot">
+    {{#actions}}
+        <span class="btn btn-sm {{buttonclass}}" role="button" tabindex="0"
+            onclick="monkshu_env.components['tile-list'].tileAction(event, '{{id}}', '{{{tiledata_json_base64}}}')">{{label}}</span>
+    {{/actions}}
+    </div>
+    {{/hasactions}}
 </div>
 {{/tiles}}
+</div>
+{{/tiles.length}}
+
+{{#tiles.length}}
+<div class="empty hide" id="tilenomatch">
+    <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <h3>{{i18nlabels.nomatch}}</h3>
 </div>
 {{/tiles.length}}
 

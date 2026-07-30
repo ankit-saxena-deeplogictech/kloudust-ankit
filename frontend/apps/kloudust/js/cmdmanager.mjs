@@ -47,6 +47,10 @@ async function cmdClicked(id) {
         const html = await _getFormHTML(formJSON, asDrawer||undefined);
         if (asDrawer) {_open_drawer_id = id; _main().openDrawer(html, await _expandTitle(formJSON.title)); return;}
 
+        // A page replaces what is behind the drawer, so the drawer must not stay
+        // on top of it — e.g. Create VM opened from the image detail drawer.
+        if (_open_drawer_id) {_open_drawer_id = null; _main().closeDrawer();}
+
         _main().showContent(html, true);
         if (!cmd_stack.length) cmd_stack.push(id); else if (cmd_stack[cmd_stack.length-1] != id) cmd_stack.push(id);
     } catch (err) {LOG.error(`Error loading command files for ${id}: ${err}`); return;}

@@ -1,46 +1,161 @@
 {
-"id": "images",
-"command": "tilelist",
-"type": "table_display",
-"display": "tiles",
-
-"title": "{{{i18n.ImagesTitle}}}",
-
-"i18n": {
-"en": {
-    "ImagesTitle": "Images",
-    "ImagesEmptyTitle": "No images yet",
-    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
-},
-"hi": {
-    "ImagesTitle": "Images",
-    "ImagesEmptyTitle": "No images yet",
-    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
-},
-"ja": {
-    "ImagesTitle": "Images",
-    "ImagesEmptyTitle": "No images yet",
-    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
-},
-"zh": {
-    "ImagesTitle": "Images",
-    "ImagesEmptyTitle": "No images yet",
-    "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog."
-}
-},
-
-"tabledef": {
-    "tiledef": {
-        "titlekey": "name",
-        "subtitlekey": "description"
+ "id": "images",
+ "command": "tilelist",
+ "type": "table_display",
+ "display": "tiles",
+ "title": "{{{i18n.ImagesTitle}}}",
+ "i18n": {
+  "en": {
+   "ImagesTitle": "Images",
+   "ImagesEmptyTitle": "No images yet",
+   "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog.",
+   "ImagesOSVariant": "OS variant",
+   "ImagesUsedBy": "Used by",
+   "ImagesSource": "Source file",
+   "ImagesAdded": "Added",
+   "ImagesCreateVM": "Create VM",
+   "ImagesDelete": "Delete",
+   "ImagesCount": "{n} images",
+   "ImagesDetails": "Details",
+   "ImagesAdd": "Add image",
+   "ImagesSubtitle": "{n} operating-system images every project in this organization can build machines from"
+  },
+  "hi": {
+   "ImagesTitle": "Images",
+   "ImagesEmptyTitle": "No images yet",
+   "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog.",
+   "ImagesOSVariant": "OS variant",
+   "ImagesUsedBy": "Used by",
+   "ImagesSource": "Source file",
+   "ImagesAdded": "Added",
+   "ImagesCreateVM": "Create VM",
+   "ImagesDelete": "Delete",
+   "ImagesCount": "{n} images",
+   "ImagesDetails": "Details",
+   "ImagesAdd": "Add image",
+   "ImagesSubtitle": "{n} operating-system images every project in this organization can build machines from"
+  },
+  "ja": {
+   "ImagesTitle": "Images",
+   "ImagesEmptyTitle": "No images yet",
+   "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog.",
+   "ImagesOSVariant": "OS variant",
+   "ImagesUsedBy": "Used by",
+   "ImagesSource": "Source file",
+   "ImagesAdded": "Added",
+   "ImagesCreateVM": "Create VM",
+   "ImagesDelete": "Delete",
+   "ImagesCount": "{n} images",
+   "ImagesDetails": "Details",
+   "ImagesAdd": "Add image",
+   "ImagesSubtitle": "{n} operating-system images every project in this organization can build machines from"
+  },
+  "zh": {
+   "ImagesTitle": "Images",
+   "ImagesEmptyTitle": "No images yet",
+   "ImagesEmptyMessage": "Ask a cloud administrator to add OS images to the catalog.",
+   "ImagesOSVariant": "OS variant",
+   "ImagesUsedBy": "Used by",
+   "ImagesSource": "Source file",
+   "ImagesAdded": "Added",
+   "ImagesCreateVM": "Create VM",
+   "ImagesDelete": "Delete",
+   "ImagesCount": "{n} images",
+   "ImagesDetails": "Details",
+   "ImagesAdd": "Add image",
+   "ImagesSubtitle": "{n} operating-system images every project in this organization can build machines from"
+  }
+ },
+ "tabledef": {
+  "tiledef": {
+   "titlekey": "name",
+   "subtitlekey": "description",
+   "monogramkey": "osvariant",
+   "badges": [
+    {
+     "key": "format",
+     "variant": "neutral",
+     "uppercase": true
     },
-
-    "emptystate": {"title": "{{{i18n.ImagesEmptyTitle}}}", "message": "{{{i18n.ImagesEmptyMessage}}}"},
-
-    "load_javascript": [
-        "const imagesResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', ",
-        "   {cmd: 'listVMImages', project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
-        "return {table: imagesResult?.resources||[]};"
-    ]
-}
+    {
+     "key": "processorarchitecture",
+     "variant": "neutral"
+    }
+   ],
+   "kv": [
+    {
+     "key": "osvariant",
+     "label": "{{{i18n.ImagesOSVariant}}}",
+     "mono": true
+    },
+    {
+     "key": "usedby",
+     "label": "{{{i18n.ImagesUsedBy}}}"
+    },
+    {
+     "key": "source",
+     "label": "{{{i18n.ImagesSource}}}",
+     "mono": true
+    },
+    {
+     "key": "added",
+     "label": "{{{i18n.ImagesAdded}}}",
+     "muted": true
+    }
+   ],
+   "actions": [
+    {
+     "id": "imagedetail",
+     "label": "{{{i18n.ImagesDetails}}}",
+     "primary": true
+    },
+    {
+     "id": "createvm",
+     "label": "{{{i18n.ImagesCreateVM}}}"
+    },
+    {
+     "id": "deleteimage",
+     "label": "{{{i18n.ImagesDelete}}}",
+     "danger": true
+    }
+   ]
+  },
+  "subtitle": "{{{i18n.ImagesSubtitle}}}",
+  "pageactions": [
+   {
+    "id": "addimage",
+    "label": "{{{i18n.ImagesAdd}}}",
+    "primary": true
+   }
+  ],
+  "searchbar": true,
+  "filterkey": "processorarchitecture",
+  "countlabel": "{{{i18n.ImagesCount}}}",
+  "clickrow_javascript": [
+   "const data = arguments[0]; APP_CONSTANTS.ENV._images_form_data = data;"
+  ],
+  "load_javascript": [
+   "const imagesResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', ",
+   "   {cmd: 'listVMImages', project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const images = imagesResult?.resources||[];",
+   "const vmsResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
+   "   cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPE_VM}\"`,",
+   "   project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const vms = vmsResult?.vms||[];",
+   "for (const image of images) {",
+   "   const splits = (image.extrainfo||'').split(':');",
+   "   image.osvariant = (splits[0]||'').trim();",
+   "   image.format = (splits[1]||'').trim();",
+   "   const users = image.osvariant ? vms.filter(vm => vm.os == image.osvariant).length : 0;",
+   "   image.usedby = users == 1 ? '1 VM' : `${users} VMs`;",
+   "   image.added = image.timestamp ? new Date(parseInt(image.timestamp)).toLocaleDateString() : '';",
+   "   image.source = (image.uri||'').split('/').pop();",
+   "}",
+   "return {table: images};"
+  ],
+  "emptystate": {
+   "title": "{{{i18n.ImagesEmptyTitle}}}",
+   "message": "{{{i18n.ImagesEmptyMessage}}}"
+  }
+ }
 }

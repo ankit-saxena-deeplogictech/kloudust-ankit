@@ -12,25 +12,53 @@
    "DeleteImageTitle": "Delete image",
    "FieldValidationErrorGeneric": "Validation error",
    "DeleteImageSubmitLabel": "Delete",
-   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit.",
+   "DeleteImageConfirmLabel": "Type the image name to confirm",
+   "DeleteImageConfirmPlaceholder": "Image name",
+   "DeleteImageConfirmError": "Type the image name exactly as shown to confirm.",
+   "DeleteImageUsed": "{count} {vms} in this project were built from {name}. They keep running — each holds its own copy of the disk. What you lose is the ability to create new machines from this image, and any automation naming it will start failing.",
+   "DeleteImageUnused": "No machine in this project was built from {name}. Deleting it means re-adding and downloading it again if you need it later.",
+   "DeleteImageVM": "machine",
+   "DeleteImageVMs": "machines"
   },
   "hi": {
    "DeleteImageTitle": "Delete image",
    "FieldValidationErrorGeneric": "Validation error",
    "DeleteImageSubmitLabel": "Delete",
-   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit.",
+   "DeleteImageConfirmLabel": "Type the image name to confirm",
+   "DeleteImageConfirmPlaceholder": "Image name",
+   "DeleteImageConfirmError": "Type the image name exactly as shown to confirm.",
+   "DeleteImageUsed": "{count} {vms} in this project were built from {name}. They keep running — each holds its own copy of the disk. What you lose is the ability to create new machines from this image, and any automation naming it will start failing.",
+   "DeleteImageUnused": "No machine in this project was built from {name}. Deleting it means re-adding and downloading it again if you need it later.",
+   "DeleteImageVM": "machine",
+   "DeleteImageVMs": "machines"
   },
   "ja": {
    "DeleteImageTitle": "Delete image",
    "FieldValidationErrorGeneric": "Validation error",
    "DeleteImageSubmitLabel": "Delete",
-   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit.",
+   "DeleteImageConfirmLabel": "Type the image name to confirm",
+   "DeleteImageConfirmPlaceholder": "Image name",
+   "DeleteImageConfirmError": "Type the image name exactly as shown to confirm.",
+   "DeleteImageUsed": "{count} {vms} in this project were built from {name}. They keep running — each holds its own copy of the disk. What you lose is the ability to create new machines from this image, and any automation naming it will start failing.",
+   "DeleteImageUnused": "No machine in this project was built from {name}. Deleting it means re-adding and downloading it again if you need it later.",
+   "DeleteImageVM": "machine",
+   "DeleteImageVMs": "machines"
   },
   "zh": {
    "DeleteImageTitle": "Delete image",
    "FieldValidationErrorGeneric": "Validation error",
    "DeleteImageSubmitLabel": "Delete",
-   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit."
+   "DeleteImageDescription": "Delete a virtual machine image. Complete the required fields and then submit.",
+   "DeleteImageConfirmLabel": "Type the image name to confirm",
+   "DeleteImageConfirmPlaceholder": "Image name",
+   "DeleteImageConfirmError": "Type the image name exactly as shown to confirm.",
+   "DeleteImageUsed": "{count} {vms} in this project were built from {name}. They keep running — each holds its own copy of the disk. What you lose is the ability to create new machines from this image, and any automation naming it will start failing.",
+   "DeleteImageUnused": "No machine in this project was built from {name}. Deleting it means re-adding and downloading it again if you need it later.",
+   "DeleteImageVM": "machine",
+   "DeleteImageVMs": "machines"
   }
  },
  "form": {
@@ -43,17 +71,64 @@
     "type": "select",
     "label": "{{{i18n.VMImage}}}",
     "options": []
+   },
+   {
+    "id": "confirm_name",
+    "type": "text",
+    "placeholder": "{{{i18n.DeleteImageConfirmPlaceholder}}}",
+    "label": "{{{i18n.DeleteImageConfirmLabel}}}",
+    "required": true,
+    "validation_error": "{{{i18n.DeleteImageConfirmError}}}"
    }
   ],
   "load_javascript": [
    "const form = arguments[0]||{};",
-   "const vmResult = await window.monkshu_env.frameworklibs.apimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, ",
-   "   'POST', {cmd: 'listVMImages'}, true);",
-   "if (vmResult.result) for (const vm of vmResult.resources) { ",
-   "   const imageNameFormField = form.required_fields[form.required_fields.length-1];",
-   "   imageNameFormField.options.push({value: vm.name, label: vm.description}); }",
+   "const imagesResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', ",
+   "   {cmd: 'listVMImages', project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const images = imagesResult?.resources||[];",
+   "const vmsResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
+   "   cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPE_VM}\"`,",
+   "   project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const vms = vmsResult?.vms||[];",
+   "// vms.os holds the image's ostype (backend createVM.js), so this count is real.",
+   "form._usedby = {};",
+   "const nameField = form.required_fields.find(field => field.id == 'name');",
+   "for (const image of images) {",
+   "   const osvariant = String(image.extrainfo||'').split(':')[0].trim();",
+   "   form._usedby[image.name] = osvariant ? vms.filter(vm => vm.os == osvariant).length : 0;",
+   "   nameField.options.push({value: image.name, label: image.description||image.name});",
+   "}",
+   "const pinned = APP_CONSTANTS.ENV._images_form_data?.name;",
+   "if (pinned) nameField.options.sort((a, b) => (b.value == pinned) - (a.value == pinned));",
    "return form;"
   ],
-  "submitlabel": "{{{i18n.DeleteImageSubmitLabel}}}"
+  "submitlabel": "{{{i18n.DeleteImageSubmitLabel}}}",
+  "rendered_javascript": [
+   "const form = arguments[0], shadowRoot = form._form_shadowroot;",
+   "if (!shadowRoot) return true;",
+   "const select = shadowRoot.querySelector('select#name');",
+   "const confirmInput = shadowRoot.querySelector('input#confirm_name');",
+   "const consequence = shadowRoot.querySelector('span#description');",
+   "if (!select || !confirmInput) return true;",
+   "const i18nOf = key => form._i18n?.[key] || '';",
+   "const sync = () => {",
+   "   const name = select.value, used = form._usedby?.[name] ?? 0;",
+   "   // Typing the exact name is the only thing that satisfies the field.",
+   "   confirmInput.pattern = name.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');",
+   "   confirmInput.placeholder = name;",
+   "   confirmInput.value = '';",
+   "   if (consequence) consequence.textContent = used == 0",
+   "      ? i18nOf('DeleteImageUnused').replace('{name}', name)",
+   "      : i18nOf('DeleteImageUsed').replace('{count}', used).replace('{vms}', used == 1 ? i18nOf('DeleteImageVM') : i18nOf('DeleteImageVMs')).replace('{name}', name);",
+   "};",
+   "select.addEventListener('change', sync); sync();",
+   "return true;"
+  ],
+  "_i18n": {
+   "DeleteImageUsed": "{{{i18n.DeleteImageUsed}}}",
+   "DeleteImageUnused": "{{{i18n.DeleteImageUnused}}}",
+   "DeleteImageVM": "{{{i18n.DeleteImageVM}}}",
+   "DeleteImageVMs": "{{{i18n.DeleteImageVMs}}}"
+  }
  }
 }
