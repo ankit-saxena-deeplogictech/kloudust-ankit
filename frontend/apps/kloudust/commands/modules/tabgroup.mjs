@@ -12,9 +12,13 @@
  *   "tabs": [{"id": "vnets", "label": "..."}, {"id": "routers", "label": "..."}]
  *   "activetab": "routers"     // optional, defaults to the first tab
  *
- * All tabs mount at once, so their data loads up front and switching is
- * instant. That costs one API call per tab on open, which is the right trade
- * for pages of this size.
+ * Only the active tab is mounted. Its markup is built for every tab up front,
+ * which costs nothing, but a tab's component is inserted into the DOM - and so
+ * runs its load javascript - when that tab is selected. Mounting them all at
+ * once instead fires their commands concurrently, and the backend rejects
+ * identical concurrent commands as duplicate requests, which killed the
+ * mounts that lost the race. One tab at a time also means selecting a tab
+ * re-reads its data.
  *
  * Renders in the light DOM, so tokens and shared classes apply directly and
  * this module carries no CSS.
@@ -22,6 +26,8 @@
  * (C) 2026 TekMonks. All rights reserved.
  * License: See enclosed license.txt file.
  */
+
+let _tabHTML = [];
 
 const HTML_TEMPLATE = `
 <div id="tabgroup" class="stack">
@@ -49,7 +55,7 @@ const HTML_TEMPLATE = `
 
 {{#tabs}}
 <div class="tab-panel" role="tabpanel" id="tabgroup_panel_{{index}}" aria-labelledby="tabgroup_tab_{{index}}" {{^active}}hidden{{/active}}>
-{{{html}}}
+{{#active}}{{{html}}}{{/active}}
 </div>
 {{/tabs}}
 
@@ -74,6 +80,8 @@ async function getHTML(formObject, cmdmanager) {
             active: (formObject.activetab||formObject.tabs[0]?.id) == tabDef.id});
     }
 
+    _tabHTML = tabs.map(tab => tab.html);
+
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined,
         {i18n: i18nL, title: formObject.title, subtitle: formObject.subtitle, tabs});
 }
@@ -81,8 +89,11 @@ async function getHTML(formObject, cmdmanager) {
 function select(index) {
     for (const tab of document.querySelectorAll("#tabgroup .tabs button.tab"))
         tab.setAttribute("aria-selected", String(tab.id == `tabgroup_tab_${index}`));
-    for (const panel of document.querySelectorAll("#tabgroup .tab-panel"))
-        panel.hidden = panel.id != `tabgroup_panel_${index}`;
+    for (const panel of document.querySelectorAll("#tabgroup .tab-panel")) {
+        const active = panel.id == `tabgroup_panel_${index}`;
+        panel.hidden = !active;
+        panel.innerHTML = active ? (_tabHTML[index]||"") : "";
+    }
 }
 
 export const tabgroup = {getHTML, select};
