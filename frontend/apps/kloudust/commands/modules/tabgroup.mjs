@@ -59,6 +59,8 @@ const HTML_TEMPLATE = `
 async function getHTML(formObject, cmdmanager) {
     if (!monkshu_env.apps[APP_CONSTANTS.APP_NAME].tabgroup) monkshu_env.apps[APP_CONSTANTS.APP_NAME].tabgroup = tabgroup;
     const i18nL = formObject.i18n?.[$$.libi18n.getSessionLang()] || formObject.i18n?.en || {};
+    
+    formObject = JSON.parse(await $$.librouter.expandPageData(JSON.stringify(formObject), undefined, {i18n: i18nL}));
 
     const tabs = [];
     for (const [index, tabDef] of (formObject.tabs||[]).entries()) {
