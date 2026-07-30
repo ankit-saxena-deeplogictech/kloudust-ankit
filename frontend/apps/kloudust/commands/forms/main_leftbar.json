@@ -13,7 +13,8 @@
   },
   {
    "id": "networking",
-   "label": "{{{i18n.GroupNetworking}}}"
+   "label": "{{{i18n.GroupNetworking}}}",
+   "icon": "network"
   },
   {
    "id": "automation",
@@ -35,31 +36,36 @@
     "id": "hosts",
     "label": "{{{i18n.Hosts}}}",
     "logo": "img/addhost.svg",
-    "group": "cloud"
+    "group": "cloud",
+    "icon": "host"
    },
    {
     "id": "livemigrate",
     "label": "{{{i18n.LiveMigration}}}",
     "logo": "img/monitor.svg",
-    "group": "cloud"
+    "group": "cloud",
+    "icon": "migrate"
    },
    {
     "id": "ipaddresses",
     "label": "{{{i18n.IPAddresses}}}",
     "logo": "img/assignipvm.svg",
-    "group": "networking"
+    "group": "networking",
+    "icon": "ip"
    },
    {
     "id": "cloudadmin",
     "label": "{{{i18n.CloudAdmin}}}",
     "logo": "img/cloudadmin.svg",
-    "group": "admin"
+    "group": "admin",
+    "icon": "admin"
    },
    {
     "id": "automations",
     "label": "{{{i18n.Automations}}}",
     "logo": "img/automations.svg",
-    "group": "automation"
+    "group": "automation",
+    "icon": "automation"
    }
   ],
   "orgadmin": [
@@ -67,7 +73,8 @@
     "id": "automations",
     "label": "{{{i18n.Automations}}}",
     "logo": "img/automations.svg",
-    "group": "automation"
+    "group": "automation",
+    "icon": "automation"
    }
   ],
   "*": [
@@ -75,55 +82,64 @@
     "id": "dashboard",
     "label": "{{{i18n.Dashboard}}}",
     "logo": "img/monitor.svg",
-    "group": "overview"
+    "group": "overview",
+    "icon": "dashboard"
    },
    {
     "id": "create",
     "label": "{{{i18n.Create}}}",
     "logo": "img/plus.svg",
-    "group": "compute"
+    "group": "compute",
+    "icon": "plus"
    },
    {
     "id": "manage",
     "label": "{{{i18n.Manage}}}",
     "logo": "img/manage.svg",
-    "group": "compute"
+    "group": "compute",
+    "icon": "wrench"
    },
    {
     "id": "vms",
     "label": "{{{i18n.VirtualMachines}}}",
     "logo": "img/vms.svg",
-    "group": "compute"
+    "group": "compute",
+    "icon": "vm"
    },
    {
     "id": "images",
     "label": "{{{i18n.Images}}}",
     "logo": "img/addimage.svg",
-    "group": "cloud"
+    "group": "cloud",
+    "icon": "image"
    },
    {
     "id": "networking",
     "label": "{{{i18n.Networking}}}",
     "logo": "img/vnets.svg",
-    "group": "networking"
+    "group": "networking",
+    "icon": "network"
    },
    {
     "id": "projects",
     "label": "{{{i18n.Projects}}}",
     "logo": "img/projects.svg",
-    "group": "governance"
+    "group": "governance",
+    "icon": "projects"
    },
    {
     "id": "cloudshell",
     "label": "{{{i18n.CloudShell}}}",
     "logo": "img/cloudcommand.svg",
-    "group": "automation"
+    "group": "automation",
+    "icon": "shell"
    },
    {
     "id": "alerts",
     "label": "{{{i18n.Alerts}}}",
     "logo": "img/alerts.svg",
-    "group": "governance"
+    "group": "governance",
+    "icon": "bell"
    }
   ]
  },

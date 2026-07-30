@@ -63,8 +63,8 @@ div#button {
     transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 div#button:hover { border-color: var(--primary); box-shadow: var(--shadow-md); }
-div#button img {width: 40px; height: 40px;}
-[data-theme="dark"] div#button img {filter: brightness(0) invert(0.85);}
+div#button img {width: 40px; height: 40px; filter: var(--icon-filter);}
+div#button .icon {width: 40px; height: 40px; stroke-width: 1.4; color: var(--primary);}
 div#button span {text-align: center; color: var(--text);}
 </style>
 
@@ -74,7 +74,7 @@ div#button span {text-align: center; color: var(--text);}
 <div id="buttons">
 {{#icons}}
 <div id="button" onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].iconlist.cmdClicked('{{id}}')">
-    <img src="{{{logo}}}"><span>{{label}}</span>
+    {{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}">{{/iconsvg}}<span>{{label}}</span>
 </div>
 {{/icons}}
 </div>

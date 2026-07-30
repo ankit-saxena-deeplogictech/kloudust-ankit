@@ -173,17 +173,20 @@
    {
     "id": "reboothost",
     "label": "{{{i18n.HostsReboot}}}",
-    "logo": "img/poweropvm.svg"
+    "logo": "img/poweropvm.svg",
+    "icon": "reboot"
    },
    {
     "id": "cloudshell",
     "label": "{{{i18n.HostDetailShell}}}",
-    "logo": "img/cloudcommand.svg"
+    "logo": "img/cloudcommand.svg",
+    "icon": "shell"
    },
    {
     "id": "deletehost",
     "label": "{{{i18n.HostsDelete}}}",
-    "logo": "img/delete.svg"
+    "logo": "img/delete.svg",
+    "icon": "trash"
    }
   ]
  }

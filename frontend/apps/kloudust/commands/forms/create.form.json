@@ -1,76 +1,96 @@
 {
-"id": "create",
-"command": "iconlist",
-"type": "frontend_module",
-
-"rolelist": {
-"*": [
-    {"id": "createvm", "label": "{{{i18n.CreateVirtualMachine}}}", "logo": "img/createvm.svg"},
-    {"id": "createvnet", "label": "{{{i18n.CreateVirtualNetwork}}}", "logo": "img/createvnet.svg"},
-    {"id": "createfirewall", "label": "{{{i18n.CreateFirewall}}}", "logo": "img/createfirewall.svg"},
-    {"id": "createrouter", "label": "{{{i18n.CreateRouter}}}", "logo": "img/createrouter.svg"},
-    {"id": "createwindowsvdi", "label": "{{{i18n.CreateWindowsVDI}}}", "logo": "img/createwindowsvdi.svg"}
-]
-},
-
-"i18n": {
-"en": {
-    "AddHost": "Add host",
-    "AddImage": "Add image",
-    "CreateVirtualMachine": "Virtual machine",
-    "CreateVirtualNetwork": "Virtual network",
-    "CreateFirewall": "Firewall ruleset",
-    "CreateRouter": "Router",
-    "CreateContainer": "New container",
-    "CreateOracleManagedDB": "Create serverless Oracle",
-    "CreateMariaManagedDB": "Create serverless MariaDB",
-    "CreateFunction": "Create cloud function",
-    "CreateObjectStorage": "Create object storage",
-    "CreateWindowsVDI": "Create Windows VDI"
-},
-
-"hi": {
-    "AddHost": "Add host",
-    "AddImage": "Add image",
-    "CreateVirtualMachine": "Virtual machine",
-    "CreateVirtualNetwork": "Virtual network",
-    "CreateFirewall": "Firewall ruleset",
-    "CreateRouter": "Router",
-    "CreateContainer": "New container",
-    "CreateOracleManagedDB": "Create serverless Oracle",
-    "CreateFunction": "Create cloud function",
-    "CreateObjectStorage": "Create object storage",
-    "CreateWindowsVDI": "Create Windows VDI"
-},
-
-"ja": {
-    "AddHost": "Add host",
-    "AddImage": "Add image",
-    "CreateVirtualMachine": "Virtual machine",
-    "CreateVirtualNetwork": "Virtual network",
-    "CreateFirewall": "Firewall ruleset",
-    "CreateRouter": "Router",
-    "CreateContainer": "New container",
-    "CreateOracleManagedDB": "Create serverless Oracle",
-    "CreateMariaManagedDB": "Create serverless MariaDB",
-    "CreateFunction": "Create cloud function",
-    "CreateObjectStorage": "Create object storage",
-    "CreateWindowsVDI": "Create Windows VDI"
-},
-
-"zh": {
-    "AddHost": "Add host",
-    "AddImage": "Add image",
-    "CreateVirtualMachine": "Virtual machine",
-    "CreateVirtualNetwork": "Virtual network",
-    "CreateFirewall": "Firewall ruleset",
-    "CreateRouter": "Router",
-    "CreateContainer": "New container",
-    "CreateOracleManagedDB": "Create serverless Oracle",
-    "CreateMariaManagedDB": "Create serverless MariaDB",
-    "CreateFunction": "Create cloud function",
-    "CreateObjectStorage": "Create object storage",
-    "CreateWindowsVDI": "Create Windows VDI"
-}
-}
+ "id": "create",
+ "command": "iconlist",
+ "type": "frontend_module",
+ "rolelist": {
+  "*": [
+   {
+    "id": "createvm",
+    "label": "{{{i18n.CreateVirtualMachine}}}",
+    "logo": "img/createvm.svg",
+    "icon": "plus"
+   },
+   {
+    "id": "createvnet",
+    "label": "{{{i18n.CreateVirtualNetwork}}}",
+    "logo": "img/createvnet.svg",
+    "icon": "network"
+   },
+   {
+    "id": "createfirewall",
+    "label": "{{{i18n.CreateFirewall}}}",
+    "logo": "img/createfirewall.svg",
+    "icon": "firewall"
+   },
+   {
+    "id": "createrouter",
+    "label": "{{{i18n.CreateRouter}}}",
+    "logo": "img/createrouter.svg",
+    "icon": "router"
+   },
+   {
+    "id": "createwindowsvdi",
+    "label": "{{{i18n.CreateWindowsVDI}}}",
+    "logo": "img/createwindowsvdi.svg",
+    "icon": "plus"
+   }
+  ]
+ },
+ "i18n": {
+  "en": {
+   "AddHost": "Add host",
+   "AddImage": "Add image",
+   "CreateVirtualMachine": "Virtual machine",
+   "CreateVirtualNetwork": "Virtual network",
+   "CreateFirewall": "Firewall ruleset",
+   "CreateRouter": "Router",
+   "CreateContainer": "New container",
+   "CreateOracleManagedDB": "Create serverless Oracle",
+   "CreateMariaManagedDB": "Create serverless MariaDB",
+   "CreateFunction": "Create cloud function",
+   "CreateObjectStorage": "Create object storage",
+   "CreateWindowsVDI": "Create Windows VDI"
+  },
+  "hi": {
+   "AddHost": "Add host",
+   "AddImage": "Add image",
+   "CreateVirtualMachine": "Virtual machine",
+   "CreateVirtualNetwork": "Virtual network",
+   "CreateFirewall": "Firewall ruleset",
+   "CreateRouter": "Router",
+   "CreateContainer": "New container",
+   "CreateOracleManagedDB": "Create serverless Oracle",
+   "CreateFunction": "Create cloud function",
+   "CreateObjectStorage": "Create object storage",
+   "CreateWindowsVDI": "Create Windows VDI"
+  },
+  "ja": {
+   "AddHost": "Add host",
+   "AddImage": "Add image",
+   "CreateVirtualMachine": "Virtual machine",
+   "CreateVirtualNetwork": "Virtual network",
+   "CreateFirewall": "Firewall ruleset",
+   "CreateRouter": "Router",
+   "CreateContainer": "New container",
+   "CreateOracleManagedDB": "Create serverless Oracle",
+   "CreateMariaManagedDB": "Create serverless MariaDB",
+   "CreateFunction": "Create cloud function",
+   "CreateObjectStorage": "Create object storage",
+   "CreateWindowsVDI": "Create Windows VDI"
+  },
+  "zh": {
+   "AddHost": "Add host",
+   "AddImage": "Add image",
+   "CreateVirtualMachine": "Virtual machine",
+   "CreateVirtualNetwork": "Virtual network",
+   "CreateFirewall": "Firewall ruleset",
+   "CreateRouter": "Router",
+   "CreateContainer": "New container",
+   "CreateOracleManagedDB": "Create serverless Oracle",
+   "CreateMariaManagedDB": "Create serverless MariaDB",
+   "CreateFunction": "Create cloud function",
+   "CreateObjectStorage": "Create object storage",
+   "CreateWindowsVDI": "Create Windows VDI"
+  }
+ }
 }

@@ -54,7 +54,7 @@ All three are driven from js/main.mjs; ids are a stable contract.
 			{{#items}}
 			<a class="sb-item leftbaritem" id="leftbarcmd_{{id}}"
 					onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.cmdClicked(this, '{{id}}')">
-				<img src="{{{logo}}}" alt=""><span>{{label}}</span>
+				{{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="">{{/iconsvg}}<span>{{label}}</span>
 			</a>
 			{{/items}}
 		</div>
@@ -144,7 +144,7 @@ All three are driven from js/main.mjs; ids are a stable contract.
 		<ul id="palette_list">
 			{{#mainPageData.paletteCommands}}
 			<li><button onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.paletteRun('{{id}}')">
-				<img src="{{{logo}}}" alt=""><span>{{label}}</span>
+				{{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="">{{/iconsvg}}<span>{{label}}</span>
 			</button></li>
 			{{/mainPageData.paletteCommands}}
 		</ul>
@@ -179,7 +179,7 @@ All three are driven from js/main.mjs; ids are a stable contract.
 <div id="buttons">
 	{{#mainPageData.mainCommands}}
 	<div class="quickaction" onclick="window.monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.cmdClicked(this, '{{id}}')">
-		<img src="{{{logo}}}" alt=""><span>{{label}}</span>
+		{{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="">{{/iconsvg}}<span>{{label}}</span>
 	</div>
 	{{/mainPageData.mainCommands}}
 </div>

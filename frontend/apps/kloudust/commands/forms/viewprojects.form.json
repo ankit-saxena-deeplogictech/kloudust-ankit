@@ -55,17 +55,20 @@
      {
       "id": "addusertoproject",
       "label": "{{{i18n.ProjectsAddUserToProject}}}",
-      "logo": "img/adduser.png"
+      "logo": "img/adduser.png",
+      "icon": "users"
      },
      {
       "id": "removeuserfromproject",
       "label": "{{{i18n.ProjectsRemoveUserFromProject}}}",
-      "logo": "img/removeuser.png"
+      "logo": "img/removeuser.png",
+      "icon": "users"
      },
      {
       "id": "deleteproject",
       "label": "{{{i18n.ProjectsDeleteProject}}}",
-      "logo": "img/delete.svg"
+      "logo": "img/delete.svg",
+      "icon": "trash"
      }
     ]
    }

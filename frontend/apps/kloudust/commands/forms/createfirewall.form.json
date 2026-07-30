@@ -2,7 +2,6 @@
  "id": "createfirewall",
  "command": "createFirewallRuleset",
  "type": "kloudust_cmdline",
- "presentation": "drawer",
  "kloudust_cmdline_params": [
   "firewall_name",
   "firewall_description",
@@ -80,6 +79,7 @@
    "   retObject.firewall_settings = JSON.stringify(firewallRules.value)",
    "}",
    "return true;"
-  ]
+  ],
+  "layout": "wide"
  }
 }

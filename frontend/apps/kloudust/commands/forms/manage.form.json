@@ -7,27 +7,32 @@
    {
     "id": "snapshots",
     "label": "{{{i18n.VirtualMachineSnapshots}}}",
-    "logo": "img/snapshot.svg"
+    "logo": "img/snapshot.svg",
+    "icon": "snapshot"
    },
    {
     "id": "deletevm",
     "label": "{{{i18n.DeleteVirtualMachine}}}",
-    "logo": "img/deletevm_manage.svg"
+    "logo": "img/deletevm_manage.svg",
+    "icon": "trash"
    },
    {
     "id": "deletevnet",
     "label": "{{{i18n.DeleteVirtualNetwork}}}",
-    "logo": "img/deletevnet.svg"
+    "logo": "img/deletevnet.svg",
+    "icon": "trash"
    },
    {
     "id": "deletefirewallruleset",
     "label": "{{{i18n.DeleteFirewall}}}",
-    "logo": "img/deletefirewall.svg"
+    "logo": "img/deletefirewall.svg",
+    "icon": "trash"
    },
    {
     "id": "deleterouter",
     "label": "{{{i18n.DeleteRouter}}}",
-    "logo": "img/deleterouter_manage.svg"
+    "logo": "img/deleterouter_manage.svg",
+    "icon": "trash"
    }
   ]
  },

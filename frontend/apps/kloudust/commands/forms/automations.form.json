@@ -7,12 +7,14 @@
    {
     "id": "automationsupload",
     "label": "{{{i18n.AutomationsUpload}}}",
-    "logo": "img/automationupload.svg"
+    "logo": "img/automationupload.svg",
+    "icon": "upload"
    },
    {
     "id": "automationsdelete",
     "label": "{{{i18n.AutomationsDelete}}}",
-    "logo": "img/automationdelete.svg"
+    "logo": "img/automationdelete.svg",
+    "icon": "trash"
    }
   ],
   "!user": [
@@ -20,7 +22,8 @@
     "id": "automations_createteams",
     "label": "{{{i18n.AutomationsCreateTeams}}}",
     "logo": "img/automations_createteams.svg",
-    "name": "Create Teams"
+    "name": "Create Teams",
+    "icon": "users"
    }
   ]
  },

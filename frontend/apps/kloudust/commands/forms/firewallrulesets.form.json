@@ -55,17 +55,20 @@
      {
       "id": "viewfirewallruleset",
       "label": "{{{i18n.RULESETView}}}",
-      "logo": "img/view.png"
+      "logo": "img/view.png",
+      "icon": "eye"
      },
      {
       "id": "editfirewallruleset",
       "label": "{{{i18n.RULESETEdit}}}",
-      "logo": "img/edit.png"
+      "logo": "img/edit.png",
+      "icon": "edit"
      },
      {
       "id": "deletefirewallruleset",
       "label": "{{{i18n.RULESETDelete}}}",
-      "logo": "img/delete.svg"
+      "logo": "img/delete.svg",
+      "icon": "trash"
      }
     ]
    }

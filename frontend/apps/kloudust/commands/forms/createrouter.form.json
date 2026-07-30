@@ -2,7 +2,6 @@
  "id": "createrouter",
  "command": "createOrUpdateRouter",
  "type": "kloudust_cmdline",
- "presentation": "drawer",
  "kloudust_cmdline_params": [
   "router_name",
   "router_description",
@@ -82,8 +81,16 @@
    "const vnets = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
    "cmd: `listVnets`, ",
    "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
-   "form.required_fields[3].value = JSON.stringify({'vnets' : vnets.resources.map(v=>v.raw_name).filter(v=>!v.includes('backbone'))});",
+   "// listVnets can come back empty or fail outright (role, network). Find the",
+   "// field by id rather than by position, and default to an empty vnet list, so",
+   "// the form still renders instead of throwing out of elementConnected.",
+   "const vnetField = form.required_fields.find(field => field.id == 'routerVnetsComponent');",
+   "const names = (vnets && Array.isArray(vnets.resources) ? vnets.resources : [])",
+   "   .map(vnet => vnet.raw_name).filter(name => name && !name.includes('backbone'));",
+   "if (vnetField) vnetField.value = JSON.stringify({vnets: names});",
+   "else LOG.error('routerVnetsComponent field missing from the router form');",
    "return form;"
-  ]
+  ],
+  "layout": "wide"
  }
 }

@@ -15,6 +15,11 @@
  *  - validation_error    already existed; it now also renders a persistent
  *                        inline .error-msg instead of only a native bubble.
  *
+ * The form object also takes layout: "wide", which removes the reading-width
+ * cap on div#main. Use it only when a field genuinely needs the room — a
+ * custom component that lays its inputs out in a row — never for plain forms,
+ * where a narrow column is easier to read.
+ *
  * (C) 2022 TekMonks. All rights reserved.
  * License: See enclosed LICENSE file.
  */
@@ -29,6 +34,8 @@ async function elementConnected(host) {
     const expandedData = await router.expandPageData(formData);
     let formObject = JSON.parse(expandedData);
     if (formObject.optional_fields) formObject.showOptional = true;
+    // layout: "wide" drops the reading-width cap — see the note in the template
+    formObject.wide = String(formObject.layout||"").toLowerCase() == "wide";
     formObject = await _runOnLoadJavascript(formObject);
     _markSwitchFields(formObject.required_fields); _markSwitchFields(formObject.optional_fields);
     formObject.required_rowgroups = _groupFieldsIntoRows(formObject.required_fields);
@@ -117,14 +124,22 @@ const _clearFieldErrors = shadowRoot => {
     for (const input of shadowRoot.querySelectorAll(".error")) input.classList.remove("error");
 }
 
+/** A form's load javascript reaches out to the backend, so it can throw —
+ *  a lookup returning nothing, a role refusing the command. Letting that
+ *  escape kills elementConnected and the form renders as a blank page with no
+ *  clue why. Catching it means the fields still appear, minus whatever the
+ *  script would have filled in, and the reason lands in the console. */
 async function _runOnLoadJavascript(form) {
     const onloadjsFunction = _getFromPropertyJSAsFunction(form, "load_javascript");
     if (!onloadjsFunction) return form;
-    const load_js_result = await onloadjsFunction(form);
-    if (!load_js_result) {
-        LOG.error(`Form load JS failed`);
-        return form;
-    } else return load_js_result;
+
+    let load_js_result; try {load_js_result = await onloadjsFunction(form);}
+    catch (err) {
+        LOG.error(`Form load JS threw for ${form.formtitle||"form"}: ${err}${err?.stack?"\n"+err.stack:""}`);
+        return form;    // render what we have rather than nothing at all
+    }
+    if (!load_js_result) {LOG.error(`Form load JS failed`); return form;}
+    return load_js_result;
 }
 
 async function _runOnRenderedJavascript(form) {

@@ -7,57 +7,68 @@
    {
     "id": "poweropvm",
     "label": "{{{i18n.VMSPowerOpVM}}}",
-    "logo": "img/poweropvm.svg"
+    "logo": "img/poweropvm.svg",
+    "icon": "power"
    },
    {
     "id": "resizevm",
     "label": "{{{i18n.VMSResize}}}",
-    "logo": "img/resizevm.svg"
+    "logo": "img/resizevm.svg",
+    "icon": "resize"
    },
    {
     "id": "addvmdisk",
     "label": "{{{i18n.VMSAddDisk}}}",
-    "logo": "img/resizevm.svg"
+    "logo": "img/resizevm.svg",
+    "icon": "disk"
    },
    {
     "id": "removevmdisk",
     "label": "{{{i18n.VMSRemoveDisk}}}",
-    "logo": "img/resizevm.svg"
+    "logo": "img/resizevm.svg",
+    "icon": "disk"
    },
    {
     "id": "snapshotvm",
     "label": "{{{i18n.VMSSnapshot}}}",
-    "logo": "img/snapshot.svg"
+    "logo": "img/snapshot.svg",
+    "icon": "snapshot"
    },
    {
     "id": "clonevm",
     "label": "{{{i18n.VMSClone}}}",
-    "logo": "img/clonevm.svg"
+    "logo": "img/clonevm.svg",
+    "icon": "clone"
    },
    {
     "id": "firewallvm",
     "label": "{{{i18n.VMSFirewall}}}",
-    "logo": "img/firewall.svg"
+    "logo": "img/firewall.svg",
+    "icon": "firewall"
    },
    {
     "id": "assignipvm",
     "label": "{{{i18n.VMSAssignIP}}}",
-    "logo": "img/assignipvm.svg"
+    "logo": "img/assignipvm.svg",
+    "icon": "ip"
    },
    {
     "id": "vnetvm",
     "label": "{{{i18n.VMSVNet}}}",
-    "logo": "img/vnet.svg"
+    "logo": "img/vnet.svg",
+    "icon": "network"
    },
    {
     "id": "exportvm",
     "label": "{{{i18n.VMSExport}}}",
-    "logo": "img/exportvm.svg"
+    "logo": "img/exportvm.svg",
+    "icon": "export"
    },
    {
     "id": "deletevm",
     "label": "{{{i18n.VMSDelete}}}",
-    "logo": "img/deletevm.svg"
+    "logo": "img/deletevm.svg",
+    "icon": "trash"
    }
   ]
  },

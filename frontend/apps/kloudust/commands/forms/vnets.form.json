@@ -43,7 +43,8 @@
      {
       "id": "deletevnet",
       "label": "{{{i18n.VNETSDelete}}}",
-      "logo": "img/delete.svg"
+      "logo": "img/delete.svg",
+      "icon": "trash"
      }
     ]
    }

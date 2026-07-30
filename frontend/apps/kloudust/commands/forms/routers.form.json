@@ -59,12 +59,14 @@
      {
       "id": "editrouter",
       "label": "{{{i18n.RoutersEdit}}}",
-      "logo": "img/edit.png"
+      "logo": "img/edit.png",
+      "icon": "edit"
      },
      {
       "id": "deleterouter",
       "label": "{{{i18n.RoutersDelete}}}",
-      "logo": "img/delete.svg"
+      "logo": "img/delete.svg",
+      "icon": "trash"
      }
     ]
    }

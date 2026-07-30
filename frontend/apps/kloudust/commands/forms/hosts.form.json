@@ -18,7 +18,18 @@
    "HostsReboot": "Reboot",
    "HostsDelete": "Delete",
    "HostsEmptyTitle": "No hosts attached yet",
-   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines.",
+   "HostsSubtitle": "Physical machines and the capacity they provide — shared by every project in this organization",
+   "HostsAdd": "Add host",
+   "HostsKPIHosts": "Hosts",
+   "HostsKPIVMs": "machines placed",
+   "HostsKPICores": "vCPU allocated",
+   "HostsKPICoresUnit": "cores",
+   "HostsKPIMemory": "Memory allocated",
+   "HostsKPIStorage": "Storage allocated",
+   "HOSTS_cpumeter": "vCPU allocated",
+   "HOSTS_memmeter": "Memory allocated",
+   "HOSTS_diskmeter": "Storage allocated"
   },
   "hi": {
    "HOSTS_hostname": "Name",
@@ -34,7 +45,18 @@
    "HostsReboot": "Reboot",
    "HostsDelete": "Delete",
    "HostsEmptyTitle": "No hosts attached yet",
-   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines.",
+   "HostsSubtitle": "Physical machines and the capacity they provide — shared by every project in this organization",
+   "HostsAdd": "Add host",
+   "HostsKPIHosts": "Hosts",
+   "HostsKPIVMs": "machines placed",
+   "HostsKPICores": "vCPU allocated",
+   "HostsKPICoresUnit": "cores",
+   "HostsKPIMemory": "Memory allocated",
+   "HostsKPIStorage": "Storage allocated",
+   "HOSTS_cpumeter": "vCPU allocated",
+   "HOSTS_memmeter": "Memory allocated",
+   "HOSTS_diskmeter": "Storage allocated"
   },
   "ja": {
    "HOSTS_hostname": "Name",
@@ -50,7 +72,18 @@
    "HostsReboot": "Reboot",
    "HostsDelete": "Delete",
    "HostsEmptyTitle": "No hosts attached yet",
-   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines.",
+   "HostsSubtitle": "Physical machines and the capacity they provide — shared by every project in this organization",
+   "HostsAdd": "Add host",
+   "HostsKPIHosts": "Hosts",
+   "HostsKPIVMs": "machines placed",
+   "HostsKPICores": "vCPU allocated",
+   "HostsKPICoresUnit": "cores",
+   "HostsKPIMemory": "Memory allocated",
+   "HostsKPIStorage": "Storage allocated",
+   "HOSTS_cpumeter": "vCPU allocated",
+   "HOSTS_memmeter": "Memory allocated",
+   "HOSTS_diskmeter": "Storage allocated"
   },
   "zh": {
    "HOSTS_hostname": "Name",
@@ -66,82 +99,58 @@
    "HostsReboot": "Reboot",
    "HostsDelete": "Delete",
    "HostsEmptyTitle": "No hosts attached yet",
-   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines."
+   "HostsEmptyMessage": "Attach a physical KVM host before creating virtual machines.",
+   "HostsSubtitle": "Physical machines and the capacity they provide — shared by every project in this organization",
+   "HostsAdd": "Add host",
+   "HostsKPIHosts": "Hosts",
+   "HostsKPIVMs": "machines placed",
+   "HostsKPICores": "vCPU allocated",
+   "HostsKPICoresUnit": "cores",
+   "HostsKPIMemory": "Memory allocated",
+   "HostsKPIStorage": "Storage allocated",
+   "HOSTS_cpumeter": "vCPU allocated",
+   "HOSTS_memmeter": "Memory allocated",
+   "HOSTS_diskmeter": "Storage allocated"
   }
  },
  "tabledef": {
   "i18nPrefix": "HOSTS",
-  "searchbar": true,
   "enable_copy": true,
+  "subtitle": "{{{i18n.HostsSubtitle}}}",
+  "pageactions": [
+   {
+    "id": "addhost",
+    "label": "{{{i18n.HostsAdd}}}",
+    "primary": true,
+    "icon": "plus"
+   }
+  ],
+  "searchbar": true,
+  "pagesize": 25,
+  "rowactions": true,
   "popupform": {
    "rolelist": {
     "*": [
      {
       "id": "hostdetail",
       "label": "{{{i18n.HostsView}}}",
-      "logo": "img/monitor.svg"
+      "logo": "img/monitor.svg",
+      "icon": "host"
      },
      {
       "id": "reboothost",
       "label": "{{{i18n.HostsReboot}}}",
-      "logo": "img/poweropvm.svg"
+      "logo": "img/poweropvm.svg",
+      "icon": "reboot"
      },
      {
       "id": "deletehost",
       "label": "{{{i18n.HostsDelete}}}",
-      "logo": "img/delete.svg"
+      "logo": "img/delete.svg",
+      "icon": "trash"
      }
     ]
    }
-  },
-  "columns": [
-   {
-    "key": "hostname",
-    "type": "main",
-    "sub": "hostaddress",
-    "subtype": "mono",
-    "sortable": true,
-    "link": true
-   },
-   {
-    "key": "type",
-    "type": "badge",
-    "badgemap": {
-     "*": "neutral"
-    }
-   },
-   {
-    "key": "vmcount",
-    "sortable": true,
-    "sorttype": "num"
-   },
-   {
-    "key": "cores",
-    "sortable": true,
-    "sorttype": "num"
-   },
-   {
-    "key": "memory_display",
-    "sortable": true,
-    "sorttype": "num",
-    "sortkey": "memory"
-   },
-   {
-    "key": "disk_display",
-    "sortable": true,
-    "sorttype": "num",
-    "sortkey": "disk",
-    "priority": 2
-   },
-   {
-    "key": "processorarchitecture",
-    "type": "muted",
-    "priority": 3
-   }
-  ],
-  "emptystate": {
-   "title": "{{{i18n.HostsEmptyTitle}}}",
-   "message": "{{{i18n.HostsEmptyMessage}}}"
   },
   "clickrow_javascript": [
    "const data = arguments[0]; APP_CONSTANTS.ENV._hosts_form_data = data;"
@@ -153,15 +162,94 @@
    "const vmsResult = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
    "  cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPE_VM}\"`,",
    "  project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const vms = vmsResult?.vms||[];",
    "const gb = bytes => {const g = (parseInt(bytes)||0)/1073741824; return g >= 1024 ? (g/1024).toFixed(1)+' TB' : Math.round(g)+' GB';};",
+   "// Reserved capacity, not measured load — the schema stores declared sizes.",
+   "const meter = (used, total, fmt) => {",
+   "  const percent = total > 0 ? Math.min(Math.round(used/total*100), 999) : 0;",
+   "  return {used: fmt(used), total: fmt(total), percent,",
+   "    level: percent >= 90 ? 'crit' : percent >= 75 ? 'warn' : ''};",
+   "};",
+   "const fleet = {cores: 0, memory: 0, disk: 0, ucores: 0, umemory: 0, udisk: 0};",
    "for (const host of hosts) {",
-   "  host.memory_display = gb(host.memory); host.disk_display = gb(host.disk);",
-   "  host.vmcount = (vmsResult?.vms||[]).filter(vm => vm.hostname == host.hostname).length;",
+   "  const mine = vms.filter(vm => vm.hostname == host.hostname);",
+   "  const used = mine.reduce((sum, vm) => ({",
+   "    cores: sum.cores + (parseInt(vm.cpus)||0), memory: sum.memory + (parseInt(vm.memory)||0),",
+   "    disk: sum.disk + (parseInt(vm.disk)||0)}), {cores: 0, memory: 0, disk: 0});",
+   "  host.vmcount = mine.length;",
+   "  host.cpumeter = meter(used.cores, parseInt(host.cores)||0, value => `${value}`);",
+   "  host.memmeter = meter(used.memory, parseInt(host.memory)||0, gb);",
+   "  host.diskmeter = meter(used.disk, parseInt(host.disk)||0, gb);",
+   "  host.cpupercent = host.cpumeter.percent; host.mempercent = host.memmeter.percent; host.diskpercent = host.diskmeter.percent;",
+   "  fleet.cores += parseInt(host.cores)||0; fleet.memory += parseInt(host.memory)||0; fleet.disk += parseInt(host.disk)||0;",
+   "  fleet.ucores += used.cores; fleet.umemory += used.memory; fleet.udisk += used.disk;",
    "}",
-   "return {keys: ['hostname','hostaddress','type','vmcount','cores','memory_display','disk_display','processorarchitecture'], table: hosts};"
+   "const pct = (used, total) => total > 0 ? Math.round(used/total*100) : 0;",
+   "const kpis = [",
+   "  {label: '{{{i18n.HostsKPIHosts}}}', value: hosts.length,",
+   "   meta: `${vms.length} {{{i18n.HostsKPIVMs}}}`},",
+   "  {label: '{{{i18n.HostsKPICores}}}', value: pct(fleet.ucores, fleet.cores), unit: '%',",
+   "   meter: {...meter(fleet.ucores, fleet.cores, value => `${value}`), total: `${fleet.cores} {{{i18n.HostsKPICoresUnit}}}`}},",
+   "  {label: '{{{i18n.HostsKPIMemory}}}', value: pct(fleet.umemory, fleet.memory), unit: '%',",
+   "   meter: meter(fleet.umemory, fleet.memory, gb)},",
+   "  {label: '{{{i18n.HostsKPIStorage}}}', value: pct(fleet.udisk, fleet.disk), unit: '%',",
+   "   meter: meter(fleet.udisk, fleet.disk, gb)}",
+   "];",
+   "return {keys: ['hostname','type','vmcount','cpumeter','memmeter','diskmeter','processorarchitecture'], table: hosts, kpis};"
   ],
-  "filterkey": "type",
-  "pagesize": 25,
-  "rowactions": true
+  "columns": [
+   {
+    "key": "hostname",
+    "type": "main",
+    "sub": "hostaddress",
+    "subtype": "mono",
+    "sortable": true,
+    "link": true
+   },
+   {
+    "key": "vmcount",
+    "sortable": true,
+    "sorttype": "num"
+   },
+   {
+    "key": "cpumeter",
+    "type": "meter",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "cpupercent"
+   },
+   {
+    "key": "memmeter",
+    "type": "meter",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "mempercent"
+   },
+   {
+    "key": "diskmeter",
+    "type": "meter",
+    "sortable": true,
+    "sorttype": "num",
+    "sortkey": "diskpercent",
+    "priority": 2
+   },
+   {
+    "key": "type",
+    "type": "badge",
+    "badgemap": {
+     "*": "neutral"
+    },
+    "priority": 3
+   },
+   {
+    "key": "processorarchitecture",
+    "type": "muted",
+    "priority": 3
+   }
+  ],
+  "emptystate": {
+   "title": "{{{i18n.HostsEmptyTitle}}}",
+   "message": "{{{i18n.HostsEmptyMessage}}}"
+  }
  }
 }

@@ -1,45 +1,54 @@
 {
-"id": "networking",
-"command": "tabgroup",
-"type": "frontend_module",
-
-"title": "{{{i18n.NetworkingTitle}}}",
-"subtitle": "{{{i18n.NetworkingSubtitle}}}",
-
-"tabs": [
-    {"id": "vnets", "label": "{{{i18n.NetworkingVnets}}}"},
-    {"id": "firewallrulesets", "label": "{{{i18n.NetworkingFirewalls}}}"},
-    {"id": "routers", "label": "{{{i18n.NetworkingRouters}}}"}
-],
-
-"i18n": {
-"en": {
-    "NetworkingTitle": "Networking",
-    "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
-    "NetworkingVnets": "Virtual networks",
-    "NetworkingFirewalls": "Firewall rulesets",
-    "NetworkingRouters": "Routers"
-},
-"hi": {
-    "NetworkingTitle": "Networking",
-    "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
-    "NetworkingVnets": "Virtual networks",
-    "NetworkingFirewalls": "Firewall rulesets",
-    "NetworkingRouters": "Routers"
-},
-"ja": {
-    "NetworkingTitle": "Networking",
-    "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
-    "NetworkingVnets": "Virtual networks",
-    "NetworkingFirewalls": "Firewall rulesets",
-    "NetworkingRouters": "Routers"
-},
-"zh": {
-    "NetworkingTitle": "Networking",
-    "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
-    "NetworkingVnets": "Virtual networks",
-    "NetworkingFirewalls": "Firewall rulesets",
-    "NetworkingRouters": "Routers"
-}
-}
+ "id": "networking",
+ "command": "tabgroup",
+ "type": "frontend_module",
+ "title": "{{{i18n.NetworkingTitle}}}",
+ "subtitle": "{{{i18n.NetworkingSubtitle}}}",
+ "tabs": [
+  {
+   "id": "vnets",
+   "label": "{{{i18n.NetworkingVnets}}}",
+   "icon": "network"
+  },
+  {
+   "id": "firewallrulesets",
+   "label": "{{{i18n.NetworkingFirewalls}}}",
+   "icon": "firewall"
+  },
+  {
+   "id": "routers",
+   "label": "{{{i18n.NetworkingRouters}}}",
+   "icon": "router"
+  }
+ ],
+ "i18n": {
+  "en": {
+   "NetworkingTitle": "Networking",
+   "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
+   "NetworkingVnets": "Virtual networks",
+   "NetworkingFirewalls": "Firewall rulesets",
+   "NetworkingRouters": "Routers"
+  },
+  "hi": {
+   "NetworkingTitle": "Networking",
+   "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
+   "NetworkingVnets": "Virtual networks",
+   "NetworkingFirewalls": "Firewall rulesets",
+   "NetworkingRouters": "Routers"
+  },
+  "ja": {
+   "NetworkingTitle": "Networking",
+   "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
+   "NetworkingVnets": "Virtual networks",
+   "NetworkingFirewalls": "Firewall rulesets",
+   "NetworkingRouters": "Routers"
+  },
+  "zh": {
+   "NetworkingTitle": "Networking",
+   "NetworkingSubtitle": "Virtual networks, firewall rulesets and routers in this project",
+   "NetworkingVnets": "Virtual networks",
+   "NetworkingFirewalls": "Firewall rulesets",
+   "NetworkingRouters": "Routers"
+  }
+ }
 }

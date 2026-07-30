@@ -249,6 +249,10 @@ select.input {
 .seg-legend .dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 6px; }
 /* Segment roles — the colour is shared vocabulary, only the proportion is data.
    Every segment is also labelled in the legend, so colour is never the only cue. */
+/* Legacy multi-colour command icons, normalised to the page's ink. New icons
+   should be inline currentColor SVG instead — see js/icons.mjs. */
+.cmdicon { width: 16px; height: 16px; flex: none; filter: var(--icon-filter); }
+
 .seg-used { background: var(--data-good); }
 .seg-idle { background: var(--data-idle); }
 .seg-held { background: var(--data-warn); }

@@ -8,6 +8,11 @@
  * passthrough; use columns (type/badgemap/priority/sub/sortable)/searchbar/
  * filterkey/pagesize/selectable/bulkactions/rowactions/emptystate instead.
  *
+ * The only inline style in this file is a meter's fill width. That is a
+ * measured value, not a design decision — it cannot be a class — and it is the
+ * same thing dashboard.mjs, hostdetail.mjs and ippools.mjs already do. Every
+ * colour and dimension around it still comes from tokens and components.css.
+ *
  * Backward compatibility: ids div#onclick_html and div#hider are queried by
  * table-list.mjs; div#tablebody, div#tablemain and div#tableclose are kept as
  * stable public ids. The enable_copy blocks and row onclick handlers are
@@ -49,6 +54,8 @@ div#tablemain {
 }
 
 div#tabletop p.sub { color: var(--text-3); margin: var(--sp-1) 0 0; }
+div#tablekpis { margin-bottom: var(--sp-4); }
+.dt td .meter { min-width: 130px; }
 
 /* Bulk bar dims while its commands are running */
 div#tablebulkbar.running { opacity: 0.6; pointer-events: none; }
@@ -78,7 +85,7 @@ div#onclick_html.rowmenu-holder {
     min-width: 200px;
 }
 div#onclick_html .menu { position: static; box-shadow: var(--shadow-md); }
-div#onclick_html .menu img { width: 16px; height: 16px; flex: none; }
+div#onclick_html .menu img { width: 16px; height: 16px; flex: none; filter: var(--icon-filter); }
 
 /* --- Shift+click copy affordance ------------------------------------------ */
 {{#enable_copy}}tbody td {position: relative; cursor: copy;}{{/enable_copy}}
@@ -146,6 +153,24 @@ div#tableconfirmlist { margin-bottom: var(--sp-4); white-space: pre-wrap; }
     </div>
 </div>
 {{/embedded}}
+
+{{#kpis.length}}
+<div class="grid grid-kpi" id="tablekpis">
+{{#kpis}}
+    <div class="card kpi">
+        <span class="kpi-label">{{label}}</span>
+        <span class="kpi-value">{{value}}{{#unit}}<span class="text-sm">{{.}}</span>{{/unit}}</span>
+        {{#meter}}
+        <div class="meter mb-0 {{level}}">
+            <div class="meter-head"><span><strong>{{used}}</strong> of {{total}}</span></div>
+            <div class="track"><div class="fill" style="width: {{percent}}%;"></div></div>
+        </div>
+        {{/meter}}
+        {{#meta}}<span class="kpi-meta">{{.}}</span>{{/meta}}
+    </div>
+{{/kpis}}
+</div>
+{{/kpis.length}}
 
 <div id="tablemain" class="card table-card">
 
@@ -237,7 +262,13 @@ div#tableconfirmlist { margin-bottom: var(--sp-4); white-space: pre-wrap; }
     {{/selectable}}
     {{#cells}}
     <td {{#priority}}data-priority="{{.}}"{{/priority}} {{#tdclass}}class="{{.}}"{{/tdclass}}>
-        <span data-cellmain>{{#islink}}<button class="name-link" onclick="event.stopPropagation(); monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')">{{value}}</button>{{/islink}}{{^islink}}{{#isbadge}}<span class="badge {{badgeclass}}"><span class="dot"></span>{{value}}</span>{{/isbadge}}{{^isbadge}}{{value}}{{/isbadge}}{{/islink}}</span>
+        {{#ismeter}}
+        <div class="meter mb-0 {{meter.level}}">
+            <div class="meter-head"><span><strong>{{meter.used}}</strong> / {{meter.total}}</span><span>{{meter.percent}}%</span></div>
+            <div class="track"><div class="fill" style="width: {{meter.percent}}%;"></div></div>
+        </div>
+        {{/ismeter}}
+        {{^ismeter}}<span data-cellmain>{{#islink}}<button class="name-link" onclick="event.stopPropagation(); monkshu_env.components['table-list'].rowClicked(event, '{{{rowdata_json_base64}}}')">{{value}}</button>{{/islink}}{{^islink}}{{#isbadge}}<span class="badge {{badgeclass}}"><span class="dot"></span>{{value}}</span>{{/isbadge}}{{^isbadge}}{{value}}{{/isbadge}}{{/islink}}</span>{{/ismeter}}
         {{#hassub}}<div class="cell-sub {{subclass}}">{{sub}}</div>{{/hassub}}
     </td>
     {{/cells}}

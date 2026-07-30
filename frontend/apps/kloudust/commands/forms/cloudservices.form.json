@@ -79,22 +79,26 @@
      {
       "id": "firewallvm",
       "label": "{{{i18n.VMSFirewall}}}",
-      "logo": "img/firewall.svg"
+      "logo": "img/firewall.svg",
+      "icon": "firewall"
      },
      {
       "id": "poweropvm",
       "label": "{{{i18n.VMSPowerOpVM}}}",
-      "logo": "img/poweropvm.svg"
+      "logo": "img/poweropvm.svg",
+      "icon": "power"
      },
      {
       "id": "deletevm",
       "label": "{{{i18n.VMSDelete}}}",
-      "logo": "img/deletevm.svg"
+      "logo": "img/deletevm.svg",
+      "icon": "trash"
      },
      {
       "id": "resizevm",
       "label": "{{{i18n.VMSResize}}}",
-      "logo": "img/resizevm.svg"
+      "logo": "img/resizevm.svg",
+      "icon": "resize"
      }
     ]
    }

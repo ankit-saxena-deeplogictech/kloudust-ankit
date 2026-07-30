@@ -2,7 +2,6 @@
  "id": "deletefirewallruleset",
  "command": "deleteFirewallRuleset",
  "type": "kloudust_cmdline",
- "presentation": "drawer",
  "kloudust_cmdline_params": [
   "ruleset_name"
  ],

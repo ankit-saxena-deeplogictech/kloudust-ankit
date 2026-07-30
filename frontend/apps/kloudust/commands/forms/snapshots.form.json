@@ -51,12 +51,14 @@
      {
       "id": "restoresnapshot",
       "label": "{{{i18n.SNAPSHOTSRestore}}}",
-      "logo": "img/restore.svg"
+      "logo": "img/restore.svg",
+      "icon": "reboot"
      },
      {
       "id": "deletesnapshot",
       "label": "{{{i18n.SNAPSHOTSDelete}}}",
-      "logo": "img/delete.svg"
+      "logo": "img/delete.svg",
+      "icon": "trash"
      }
     ]
    }

@@ -38,6 +38,11 @@
 div#body { color: var(--text); }
 
 div#main { max-width: var(--form-max); }
+/* layout: "wide" — for forms carrying a custom component that lays its fields
+   out in a row (firewall-rules, vnet-ip). The id beats .form-wide on
+   specificity, so the override is stated here rather than relying on the
+   shared class alone. */
+div#main.form-wide { max-width: 100%; }
 
 span#description {
     display: block;
@@ -168,7 +173,7 @@ div.collapsed { height: 0px; display: none; }
     supplies the close, so only the description carries over as content. }}
 {{#embedded}}{{#description}}<span id="description">{{.}}</span>{{/description}}{{/embedded}}
 
-<div id="main">
+<div id="main" class="{{#wide}}form-wide{{/wide}}">
 <div id="required">
 {{#required_rowgroups}}
 <div {{#isrow}}class="field-row"{{/isrow}}>

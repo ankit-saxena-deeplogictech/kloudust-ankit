@@ -39,6 +39,14 @@
  *  - subtitle: "<text>" — sub line under the page heading.
  *  - pageactions: [{id, label, primary}] — buttons in the page head, opened
  *              with nothing pinned (unlike rowactions).
+ *
+ * Two things come from the load javascript rather than the tabledef, because
+ * they are computed from the same fetch that builds the rows:
+ *  - a column of type "meter" reads {used, total, percent, level} off the row
+ *    and draws a .meter bar in the cell; sort it with sortkey/sorttype pointing
+ *    at a plain numeric field.
+ *  - returning "kpis" alongside "table" renders a .grid-kpi row above the
+ *    table: [{label, value, unit, meta, meter: {used, total, percent, level}}].
  *  - embedded: true — skip the page heading (rendering inside a tab).
  *
  * clickrow_javascript runs on every row click in all modes. Raw HTML/CSS
@@ -418,7 +426,8 @@ async function _displayRowActionsMenu(event, data, anchor) {
 
     let menuHTML = `<div class="menu open" role="menu">`;
     for (const command of commands) menuHTML +=
-        `<button onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('${command.id}')"><img src="${command.logo}" alt="">${command.label}</button>`;
+        `<button onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('${command.id}')">${
+            command.iconsvg || `<img class="cmdicon" src="${command.logo}" alt="">`}${command.label}</button>`;
     menuHTML += `</div>`;
 
     const shadowRoot = table_list.getShadowRootByContainedElement(event.target);
@@ -477,6 +486,13 @@ async function _runOnLoadJavascript(tabledef) {
             // link: true renders the value as a real button, so it is a keyboard
             // stop with a visible affordance instead of a click anywhere on the row
             if (col.link) cell.islink = true;
+            // type: "meter" expects the load javascript to have put a
+            // {used, total, percent, level} object on the row — the component
+            // draws the bar, the data layer decides what it means.
+            if (col.type == "meter") {
+                cell.ismeter = true; cell.tdclass = "";
+                cell.meter = (value && typeof value == "object") ? value : {used: 0, total: 0, percent: 0, level: ""};
+            }
             // A "sub" column folds a second field into the same cell as a
             // quieter line, instead of spending a whole column on it.
             const subValue = col.sub !== undefined ? row[col.sub] : undefined;
@@ -506,7 +522,7 @@ async function _runOnLoadJavascript(tabledef) {
     // without one keep the legacy whole-row click.
     const rowclickable = !(columns||[]).some(col => col.link);
 
-    return {headers, rows, filterchips, rowclickable};
+    return {headers, rows, filterchips, rowclickable, kpis: loadResult.kpis};
 }
 
 const _getArrayAsJoinedString = (array, skipEOLs) => array?(Array.isArray(array)?array:[array]).join(skipEOLs?"":"\n"):"";

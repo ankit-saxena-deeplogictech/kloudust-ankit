@@ -85,11 +85,13 @@
    {
     "id": "addip",
     "label": "{{{i18n.IPAssignAdd}}}",
-    "primary": true
+    "primary": true,
+    "icon": "plus"
    },
    {
     "id": "assignipvm",
-    "label": "{{{i18n.IPAssignAssignAuto}}}"
+    "label": "{{{i18n.IPAssignAssignAuto}}}",
+    "icon": "ip"
    }
   ],
   "searchbar": true,
@@ -102,7 +104,8 @@
      {
       "id": "unassignipvm",
       "label": "{{{i18n.IPAssignUnassign}}}",
-      "logo": "img/removeuser.png"
+      "logo": "img/removeuser.png",
+      "icon": "ip"
      }
     ]
    }

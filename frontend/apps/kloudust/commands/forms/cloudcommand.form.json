@@ -2,7 +2,6 @@
  "id": "cloudcommand",
  "command": "RAW_COMMANDLINE",
  "type": "kloudust_cmdline",
- "presentation": "drawer",
  "kloudust_cmdline_params": [
   "command"
  ],
@@ -56,6 +55,7 @@
     "rows": 20
    }
   ],
-  "submitlabel": "{{{i18n.CloudCommandRun}}}"
+  "submitlabel": "{{{i18n.CloudCommandRun}}}",
+  "layout": "wide"
  }
 }

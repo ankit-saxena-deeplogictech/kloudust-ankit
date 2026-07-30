@@ -41,8 +41,9 @@ div#clear, div#close {
     font: 500 var(--fs-md) var(--font-sans);
 }
 div#clear:hover, div#close:hover {background-color: var(--surface-2); color: var(--text);}
-div#clear img {width: 16px; height: 16px; filter: brightness(0) invert(0.35);}
-[data-theme="dark"] div#clear img {filter: brightness(0) invert(0.8);}
+div#clear img {width: 16px; height: 16px; filter: var(--icon-filter);}
+/* span#alerticon images are deliberately NOT filtered: red means error and
+   green means info, and flattening them to one neutral would delete that. */
 
 div#main {
     display: flex;

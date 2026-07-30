@@ -125,7 +125,7 @@ const HTML_TEMPLATE = `
     {{#actions}}
         <span class="btn {{buttonclass}}" role="button" tabindex="0"
             onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].hostdetail.runCommand('{{id}}')">
-            <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
+            {{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="" width="16" height="16">{{/iconsvg}}{{label}}
         </span>
     {{/actions}}
     </div>

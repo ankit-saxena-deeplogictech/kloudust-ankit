@@ -177,7 +177,7 @@ const HTML_TEMPLATE = `
     {{#actions}}
         <span class="btn {{#isdanger}}btn-danger-outline{{/isdanger}}{{^isdanger}}btn-secondary{{/isdanger}}" role="button" tabindex="0"
             onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">
-            <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
+            {{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="" width="16" height="16">{{/iconsvg}}{{label}}
         </span>
     {{/actions}}
     </div>

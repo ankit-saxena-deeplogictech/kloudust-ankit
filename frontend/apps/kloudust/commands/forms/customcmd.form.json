@@ -2,7 +2,6 @@
  "id": "customcmd",
  "command": "customCmd",
  "type": "kloudust_cmdline",
- "presentation": "drawer",
  "kloudust_cmdline_params": [
   "sql",
   "hostname",
@@ -90,6 +89,7 @@
    "   hostNameObject.options.push({value: host.hostname, label: host.hostname}); }",
    "return form;"
   ],
-  "submitlabel": "{{{i18n.CloudAdminCommandRun}}}"
+  "submitlabel": "{{{i18n.CloudAdminCommandRun}}}",
+  "layout": "wide"
  }
 }

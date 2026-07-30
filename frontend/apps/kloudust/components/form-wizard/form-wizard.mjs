@@ -246,9 +246,15 @@ function _groupFieldsIntoRows(fields) {
 async function _runOnLoadJavascript(form) {
     const onloadjsFunction = _getFromPropertyJSAsFunction(form, "load_javascript");
     if (!onloadjsFunction) return form;
-    const load_js_result = await onloadjsFunction(form);
+
+    // See form-runner: a throw here must not leave the user with a blank page.
+    let load_js_result; try {load_js_result = await onloadjsFunction(form);}
+    catch (err) {
+        LOG.error(`Form load JS threw for ${form.formtitle||"form"}: ${err}${err?.stack?"\n"+err.stack:""}`);
+        return form;
+    }
     if (!load_js_result) {LOG.error(`Form load JS failed`); return form;}
-    else return load_js_result;
+    return load_js_result;
 }
 
 async function _runOnRenderedJavascript(form) {

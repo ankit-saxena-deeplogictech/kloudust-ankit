@@ -2,7 +2,6 @@
  "id": "firewallvm",
  "command": "applyFirewallRuleset",
  "type": "kloudust_cmdline",
- "presentation": "drawer",
  "kloudust_cmdline_params": [
   "vm_name",
   "ruleset",

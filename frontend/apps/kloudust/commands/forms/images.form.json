@@ -107,16 +107,19 @@
     {
      "id": "imagedetail",
      "label": "{{{i18n.ImagesDetails}}}",
-     "primary": true
+     "primary": true,
+     "icon": "image"
     },
     {
      "id": "createvm",
-     "label": "{{{i18n.ImagesCreateVM}}}"
+     "label": "{{{i18n.ImagesCreateVM}}}",
+     "icon": "plus"
     },
     {
      "id": "deleteimage",
      "label": "{{{i18n.ImagesDelete}}}",
-     "danger": true
+     "danger": true,
+     "icon": "trash"
     }
    ]
   },
@@ -125,7 +128,8 @@
    {
     "id": "addimage",
     "label": "{{{i18n.ImagesAdd}}}",
-    "primary": true
+    "primary": true,
+    "icon": "upload"
    }
   ],
   "searchbar": true,

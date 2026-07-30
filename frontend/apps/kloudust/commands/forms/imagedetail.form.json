@@ -9,17 +9,20 @@
    {
     "id": "createvm",
     "label": "{{{i18n.ImagesCreateVM}}}",
-    "logo": "img/createvm.svg"
+    "logo": "img/createvm.svg",
+    "icon": "plus"
    },
    {
     "id": "addimage",
     "label": "{{{i18n.ImagesEdit}}}",
-    "logo": "img/addimage.svg"
+    "logo": "img/addimage.svg",
+    "icon": "upload"
    },
    {
     "id": "deleteimage",
     "label": "{{{i18n.ImagesDelete}}}",
-    "logo": "img/deleteimage.svg"
+    "logo": "img/deleteimage.svg",
+    "icon": "trash"
    }
   ]
  },
