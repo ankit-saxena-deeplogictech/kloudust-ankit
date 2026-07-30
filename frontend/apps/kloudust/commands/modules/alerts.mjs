@@ -37,7 +37,7 @@ div#clear, div#close {
     font: 500 var(--fs-md) var(--font-sans);
 }
 div#clear:hover, div#close:hover {background-color: var(--surface-2); color: var(--text);}
-div#clear img {width: 16px; height: 16px;}
+div#clear img {width: 16px; height: 16px; filter: brightness(0) invert(0.35);}
 [data-theme="dark"] div#clear img {filter: brightness(0) invert(0.8);}
 
 div#main {
