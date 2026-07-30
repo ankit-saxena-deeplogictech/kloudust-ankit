@@ -297,6 +297,11 @@
       "placeholder": "{{{i18n.VMAdministratorPasswordPlaceholder}}}",
       "required": true,
       "validation_error": "{{{i18n.FieldValidationErrorGeneric}}}"
+     },
+     {
+      "id": "vmtype",
+      "type": "hidden",
+      "value": "vm"
      }
     ]
    },

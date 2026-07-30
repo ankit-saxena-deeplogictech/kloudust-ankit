@@ -43,6 +43,7 @@ async function elementConnected(host) {
     formObject = await _runOnLoadJavascript(formObject);
     let stepindex = 0; for (const step of formObject.steps||[]) {
         step.stepindex = ++stepindex; step.first = step.stepindex == 1;
+        for (const field of step.fields||[]) field.label = field.label||"";
         step.rowgroups = _groupFieldsIntoRows(step.fields);
         // Base64 keeps the values map out of the HTML attribute's quoting rules.
         for (const option of step.presets?.options||[])
