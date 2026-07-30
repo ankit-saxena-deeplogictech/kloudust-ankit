@@ -23,6 +23,8 @@
  * License: See enclosed license.txt file.
  */
 
+const PROCESSOR_PROBE_LENGTH = 20;
+
 const HTML_TEMPLATE = `
 <div id="hostdetail" class="stack">
 
@@ -66,7 +68,13 @@ const HTML_TEMPLATE = `
         <div class="card-body">
             <dl class="props">
             {{#props}}
-                <dt>{{label}}</dt><dd {{#mono}}class="mono"{{/mono}}>{{value}}</dd>
+                <dt>{{label}}</dt>
+                <dd {{#mono}}class="mono"{{/mono}}{{#muted}}class="muted"{{/muted}}>{{value}}{{#copyable}}
+                    <span class="iconbtn" role="button" tabindex="0" aria-label="{{i18n.HostDetailCopy}}"
+                        onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].hostdetail.copyValue(this, '{{{copyable}}}')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+                    </span>
+                {{/copyable}}</dd>
             {{/props}}
             </dl>
         </div>
@@ -79,15 +87,27 @@ const HTML_TEMPLATE = `
     <div class="table-scroll">
         <table class="dt">
             <thead><tr>
-                <th>{{i18n.HostDetailVMName}}</th><th>{{i18n.HostDetailVMCores}}</th><th>{{i18n.HostDetailVMMemory}}</th>
+                <th>{{i18n.HostDetailVMName}}</th>
+                <th>{{i18n.HostDetailVMSize}}</th>
+                <th data-priority="2">{{i18n.HostDetailVMDisk}}</th>
+                <th data-priority="2">{{i18n.HostDetailVMProject}}</th>
             </tr></thead>
             <tbody>
             {{#vms}}
-                <tr><td class="cell-main">{{name}}</td><td>{{cores}}</td><td class="muted">{{memory}}</td></tr>
+                <tr>
+                    <td class="cell-main">
+                        <button class="name-link"
+                            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].hostdetail.openVM('{{{payload}}}')">{{name}}</button>
+                    </td>
+                    <td>{{size}}</td>
+                    <td class="muted" data-priority="2">{{disk}}</td>
+                    <td class="muted" data-priority="2">{{project}}</td>
+                </tr>
             {{/vms}}
             </tbody>
         </table>
     </div>
+    <div class="card-foot">{{i18n.HostDetailVMsFoot}}</div>
     {{/vms.length}}
     {{^vms}}
     <div class="empty">
@@ -97,6 +117,21 @@ const HTML_TEMPLATE = `
     </div>
     {{/vms}}
 </div>
+
+{{#actions.length}}
+<div class="card">
+    <div class="card-head"><h3>{{i18n.HostDetailActions}}</h3></div>
+    <div class="card-body cluster">
+    {{#actions}}
+        <span class="btn {{buttonclass}}" role="button" tabindex="0"
+            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].hostdetail.runCommand('{{id}}')">
+            <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
+        </span>
+    {{/actions}}
+    </div>
+    <div class="card-foot">{{i18n.HostDetailActionsFoot}}</div>
+</div>
+{{/actions.length}}
 
 </div>
 `;
@@ -112,7 +147,8 @@ const NO_HOST_TEMPLATE = `
 </div>
 `;
 
-async function getHTML(formObject, _cmdmanager) {
+async function getHTML(formObject, cmdmanager) {
+    if (!monkshu_env.apps[APP_CONSTANTS.APP_NAME].hostdetail) monkshu_env.apps[APP_CONSTANTS.APP_NAME].hostdetail = hostdetail;
     const i18nL = formObject.i18n?.[$$.libi18n.getSessionLang()] || formObject.i18n?.en || {};
     const host = APP_CONSTANTS.ENV._hosts_form_data;
     if (!host) return await $$.librouter.expandPageData(NO_HOST_TEMPLATE, undefined, {i18n: i18nL});
@@ -133,22 +169,88 @@ async function getHTML(formObject, _cmdmanager) {
         _meter(i18nL.HostDetailDisk||"Storage", allocated.disk, parseInt(host.disk)||0, _formatBytes, i18nL)
     ];
 
-    const props = [
-        [i18nL.HostDetailAddress||"Address", host.hostaddress, true],
-        [i18nL.HostDetailOS||"Operating system", host.type],
-        [i18nL.HostDetailPort||"SSH port", host.port],
-        [i18nL.HostDetailProcessor||"Processor", host.processor],
-        [i18nL.HostDetailArch||"Architecture", host.processorarchitecture],
-        [i18nL.HostDetailSockets||"Sockets", host.sockets],
-        [i18nL.HostDetailNetSpeed||"Network speed", host.networkspeed ? `${_formatBytes(host.networkspeed)}/s` : undefined],
-        [i18nL.HostDetailAdded||"Added", host.timestamp ? new Date(parseInt(host.timestamp)).toLocaleString() : undefined]
-    ].filter(([_label, value]) => value !== undefined && value !== null && String(value).trim() != "")
-     .map(([label, value, mono]) => ({label, value, mono: mono||false}));
+    // Address and port are one fact for an operator, so they read as one line
+    // and copy as one string, the way the wireframe presents them.
+    const endpoint = host.port ? `${host.hostaddress}:${host.port}` : host.hostaddress;
 
-    const vms = hostVMs.map(vm => ({name: vm.name_raw || vm.name, cores: vm.cpus, memory: _formatBytes(vm.memory)}));
+    const props = _properties([
+        [i18nL.HostDetailAddress||"Address", endpoint, {mono: true, copyable: endpoint}],
+        [i18nL.HostDetailAdminLogin||"Admin login", host.rootid, {mono: true}],
+        [i18nL.HostDetailHostKey||"Host key fingerprint", host.hostkey, {mono: true, copyable: host.hostkey}],
+        [i18nL.HostDetailOS||"Host OS", host.type],
+        [i18nL.HostDetailProcessor||"Processor", _readableProcessor(host.processor)],
+        [i18nL.HostDetailArch||"Architecture", host.processorarchitecture],
+        [i18nL.HostDetailTopology||"Topology",
+            host.sockets && host.cores ? (i18nL.HostDetailTopologyValue||"{sockets} socket(s) · {cores} cores")
+                .replace("{sockets}", host.sockets).replace("{cores}", host.cores) : undefined],
+        [i18nL.HostDetailNetSpeed||"Network speed", host.networkspeed ? `${_formatBytes(host.networkspeed)}/s` : undefined],
+        [i18nL.HostDetailAdded||"Attached", host.timestamp ? new Date(parseInt(host.timestamp)).toLocaleString() : undefined],
+        // Written by addImage/deleteImage, so it is the image-catalogue sync and
+        // never a heartbeat. Absent until one has run.
+        [i18nL.HostDetailImageSync||"Image catalogue synced",
+            parseInt(host.synctimestamp) > 0 ? new Date(parseInt(host.synctimestamp)).toLocaleString() : undefined,
+            {muted: true}]
+    ]);
+
+    const vms = hostVMs.map(vm => ({
+        name: vm.name_raw || vm.name,
+        size: `${vm.cpus||"?"} vCPU · ${_formatBytes(vm.memory)}`,
+        disk: _formatBytes(vm.disk),
+        project: vm.projectid || "",
+        payload: $$.libutil.stringToBase64(JSON.stringify(vm))
+    }));
+
+    const cmdlist = (await import(`${APP_CONSTANTS.LIB_PATH}/cmdlist.mjs`)).cmdlist;
+    const actions = (await cmdlist.getCommands(undefined, formObject)) || [];
+    for (const action of actions) {
+        cmdmanager.registerCommand(action);
+        action.buttonclass = action.id == "deletehost" ? "btn-danger-outline" : "btn-secondary";
+    }
 
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined,
-        {i18n: i18nL, host, meters, props, vmcount: vms.length, vms: vms.length ? vms : undefined});
+        {i18n: i18nL, host, meters, props, actions, vmcount: vms.length, vms: vms.length ? vms : undefined});
+}
+
+/** The stored processor string is colon separated from the host probe, and its
+ *  model field arrives with the name doubled:
+ *    "Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz CPU @ 3.7GHz"
+ *  Collapse the repeat and show the model as the probe reported it. The numeric
+ *  field alongside it disagrees with the clock in the model name, so it is not
+ *  shown rather than printed as a second, contradictory speed. */
+function _readableProcessor(processor) {
+    if (!processor) return undefined;
+    const parts = String(processor).split(":");
+    const model = (parts.length > 1 ? parts[1] : parts[0]).trim();
+    if (model.length < PROCESSOR_PROBE_LENGTH*2) return model;
+
+    // If the opening run of the name reappears, everything before that second
+    // occurrence is the unit that got repeated.
+    const opening = model.substring(0, PROCESSOR_PROBE_LENGTH);
+    const repeatAt = model.indexOf(opening, 1);
+    return repeatAt > 0 ? model.substring(0, repeatAt).trim() : model;
+}
+
+const _properties = rows => rows
+    .filter(([_label, value]) => value !== undefined && value !== null && String(value).trim() != "")
+    .map(([label, value, options]) => ({label, value, mono: options?.mono||false,
+        muted: options?.muted||false, copyable: options?.copyable}));
+
+/** Jumps to a machine on this host, pinning it the way the VMs table does. */
+function openVM(payloadBase64) {
+    let vm; try {vm = JSON.parse($$.libutil.base64ToString(payloadBase64));}
+    catch (err) {LOG.error(`Bad VM payload: ${err}`); return;}
+    APP_CONSTANTS.ENV._vms_form_data = vm;
+    runCommand("vmdetail");
+}
+
+function runCommand(commandID) {
+    const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
+    cmdmanager.registerCommand({id: commandID}); cmdmanager.cmdClicked(commandID);
+}
+
+function copyValue(element, value) {
+    $$.copyTextToClipboard(value);
+    element.setAttribute("aria-label", "Copied");
 }
 
 function _meter(label, used, total, format, i18nL) {
@@ -172,4 +274,4 @@ async function _command(cmd, project, resultKey) {
     } catch (err) {LOG.error(`Host detail lookup failed for ${cmd}: ${err}`); return [];}
 }
 
-export const hostdetail = {getHTML};
+export const hostdetail = {getHTML, openVM, runCommand, copyValue};

@@ -30,9 +30,12 @@ module.exports.exec = async function(params) {
         return CMD_CONSTANTS.FALSE_RESULT(results.error || "Unable to locate compatible live migration hosts");
     }
 
-    const out = `Compatible live migration hosts follow\n${JSON.stringify(results.hosts)}`;
+    // A list for display, so the root password does not ride along — see listHosts.
+    const hosts = (results.hosts||[]).map(host => ({...host, rootpw: undefined}));
+
+    const out = `Compatible live migration hosts follow\n${JSON.stringify(hosts)}`;
     params.consoleHandlers.LOGINFO(out);
 
-    return {result: true, err: "",stderr: "", out, stdout: out, resources: results.hosts, hosts: results.hosts, 
+    return {result: true, err: "",stderr: "", out, stdout: out, resources: hosts, hosts,
         sourceHost: results.sourceHost?.hostname, sourceVendor: results.sourceVendor};
 }

@@ -18,11 +18,17 @@ const CMD_CONSTANTS = require(`${KLOUD_CONSTANTS.LIBDIR}/cmd/cmdconstants.js`);
 module.exports.exec = async function(params) {
     if (!roleman.checkAccess(roleman.ACTIONS.lookup_cloud_resource)) {params.consoleHandlers.LOGUNAUTH(); return CMD_CONSTANTS.FALSE_RESULT();}
 
-    const hosts = await dbAbstractor.getHosts(); 
-    if (!hosts) {const err = "No registered hosts found"; params.consoleHandlers.LOGERROR(err); 
+    const hostsRaw = await dbAbstractor.getHosts();
+    if (!hostsRaw) {const err = "No registered hosts found"; params.consoleHandlers.LOGERROR(err);
         return CMD_CONSTANTS.FALSE_RESULT(err); }
 
-    const out = `Host information follows\n${JSON.stringify(hosts)}`; 
+    // This is a list for display — it is called on every page that shows hosts,
+    // so the root password must not ride along. lookupHost stays the deliberate
+    // path for a cloud admin who actually needs it. Same convention as the
+    // creationcmd stripping in getVMInfo/listVMsForHost.
+    const hosts = hostsRaw.map(host => ({...host, rootpw: undefined}));
+
+    const out = `Host information follows\n${JSON.stringify(hosts)}`;
 
     params.consoleHandlers.LOGINFO(out);
     return {result: true, stderr: "", err: "", out, stdout: out, resources: hosts};
