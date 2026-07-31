@@ -145,6 +145,10 @@ const interceptPageLoadData = _ => $$.librouter.addOnLoadPageData(APP_CONSTANTS.
     mainPageData.leftbarGroups = _groupCommands(leftbar.commands, leftbar.groups);
     mainPageData.mainCommands = await cmdlist.fetchCommands(MAIN_COMMANDS);
 
+    // The palette answers to both modifiers everywhere; the hint names the one
+    // this machine's keyboard actually has, and reads as the two-key press it is.
+    mainPageData.palettehint = _isApplePlatform() ? "⌘ + K" : "Ctrl + K";
+
     const seenPaletteIDs = new Set(); mainPageData.paletteCommands = [];
     for (const command of [...mainPageData.leftbarCommands, ...mainPageData.mainCommands])
         if (!seenPaletteIDs.has(command.id)) {seenPaletteIDs.add(command.id); mainPageData.paletteCommands.push(command);}
@@ -182,6 +186,11 @@ async function _roleLabel() {
         [APP_CONSTANTS.KLOUDUST_ROLES.user]: "RoleUser"};
     return keys[role] ? await $$.libi18n.get(keys[role]) : "";
 }
+
+/** True on Macs, iPads and iPhones, whose keyboards carry ⌘ where the rest carry Ctrl.
+ *  userAgentData.platform is the modern source; navigator.platform is the fallback. */
+const _isApplePlatform = _ => /mac|iphone|ipad|ipod/i.test(
+    navigator.userAgentData?.platform || navigator.platform || "");
 
 /** Buckets commands into the ordered "groups" declared by the list file.
  *  No groups declared -> one unlabeled group (legacy flat sidebar). */
