@@ -23,6 +23,8 @@
  * License: See enclosed license.txt file.
  */
 
+const HEAD_ACTIONS = ["poweropvm", "snapshotvm"];
+
 const HTML_TEMPLATE = `
 <div id="vmdetail" class="stack">
 
@@ -34,9 +36,43 @@ const HTML_TEMPLATE = `
             <span class="current">{{vm.name_raw}}</span>
         </nav>
         <h1>{{vm.name_raw}}</h1>
-        {{#vm.description}}<p class="sub">{{.}}</p>{{/vm.description}}
+        {{#subtitle}}<p class="sub">{{.}}</p>{{/subtitle}}
     </div>
     <div class="page-actions">
+        {{#headactions}}
+        <span class="btn btn-secondary" role="button" tabindex="0"
+            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">
+            <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
+        </span>
+        {{/headactions}}
+        {{#hasmenu}}
+        <div class="menu-wrap">
+            <span class="btn btn-secondary" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false"
+                onclick="event.stopPropagation(); monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.toggleMenu(this)">
+                {{i18n.VMDetailMore}}
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+            <div class="menu" role="menu">
+                {{#menuactions}}
+                <button role="menuitem"
+                    onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">
+                    <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
+                </button>
+                {{/menuactions}}
+                {{#dangeractions.length}}<hr>{{/dangeractions.length}}
+                {{#dangeractions}}
+                <button class="danger" role="menuitem"
+                    onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">
+                    <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
+                </button>
+                {{/dangeractions}}
+            </div>
+        </div>
+        {{/hasmenu}}
+        <span class="btn btn-secondary" role="button" tabindex="0"
+            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.reloadForm()">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg>{{i18n.VMDetailRefresh}}
+        </span>
         <span class="iconbtn" role="button" tabindex="0" aria-label="Close"
             onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm()">
             <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -171,19 +207,6 @@ const HTML_TEMPLATE = `
     </div>
 </div>
 
-<div class="card">
-    <div class="card-head"><h3>{{i18n.VMDetailActions}}</h3></div>
-    <div class="card-body cluster">
-    {{#actions}}
-        <span class="btn {{#isdanger}}btn-danger-outline{{/isdanger}}{{^isdanger}}btn-secondary{{/isdanger}}" role="button" tabindex="0"
-            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">
-            <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
-        </span>
-    {{/actions}}
-    </div>
-    <div class="card-foot">{{i18n.VMDetailActionsFoot}}</div>
-</div>
-
 </div>
 `;
 
@@ -263,9 +286,15 @@ async function getHTML(formObject, cmdmanager) {
     const cmdlist = (await import(`${APP_CONSTANTS.LIB_PATH}/cmdlist.mjs`)).cmdlist;
     const actions = (await cmdlist.getCommands(undefined, formObject)) || [];
     for (const action of actions) {cmdmanager.registerCommand(action); action.isdanger = action.id.includes("delete");}
+    const headactions = actions.filter(action => HEAD_ACTIONS.includes(action.id));
+    const rest = actions.filter(action => !HEAD_ACTIONS.includes(action.id));
+    const menuactions = rest.filter(action => !action.isdanger), dangeractions = rest.filter(action => action.isdanger);
+
+    const subtitle = [vm.description, vm.os, vm.hostname].filter(part => part && String(part).trim()).join(" · ");
 
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined,
-        {i18n: i18nL, vm, kpis, props, networkprops, actions,
+        {i18n: i18nL, vm, kpis, props, networkprops, subtitle: subtitle || undefined,
+         headactions, menuactions, dangeractions, hasmenu: rest.length ? true : undefined,
          disks: disks.length ? disks : undefined, snapshots: snapshots.length ? snapshots : undefined,
          vnetlist: vnetlist.length ? vnetlist : undefined,
          rulesetlist: rulesetlist.length ? rulesetlist : undefined});

@@ -26,6 +26,7 @@
    "VMSExport": "Export",
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
+   "VMSCreate": "Create VM",
    "VMSEmptyTitle": "No virtual machines yet",
    "VMSEmptyMessage": "Create your first virtual machine to get started.",
    "VMSBulkStart": "Start",
@@ -59,6 +60,7 @@
    "VMSExport": "Export",
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
+   "VMSCreate": "Create VM",
    "VMSEmptyTitle": "No virtual machines yet",
    "VMSEmptyMessage": "Create your first virtual machine to get started.",
    "VMSBulkStart": "Start",
@@ -92,6 +94,7 @@
    "VMSExport": "Export",
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
+   "VMSCreate": "Create VM",
    "VMSEmptyTitle": "No virtual machines yet",
    "VMSEmptyMessage": "Create your first virtual machine to get started.",
    "VMSBulkStart": "Start",
@@ -126,6 +129,7 @@
    "VMSExport": "Export",
    "VMSClone": "Clone",
    "VMSTitle": "Virtual machines",
+   "VMSCreate": "Create VM",
    "VMSEmptyTitle": "No virtual machines yet",
    "VMSEmptyMessage": "Create your first virtual machine to get started.",
    "VMSBulkStart": "Start",
@@ -140,6 +144,12 @@
  "tabledef": {
   "i18nPrefix": "VMS",
   "enable_copy": true,
+  "pageactions": [
+   {
+    "label": "{{{i18n.VMSCreate}}}",
+    "command": "createvm"
+   }
+  ],
   "clickrow_javascript": [
    "const data = arguments[0]; APP_CONSTANTS.ENV._vms_form_data = data;"
   ],

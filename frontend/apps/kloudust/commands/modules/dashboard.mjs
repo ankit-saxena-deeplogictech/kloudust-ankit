@@ -27,9 +27,15 @@ const HTML_TEMPLATE = `
 <div class="page-head">
     <div>
         <h1>{{i18n.DashboardTitle}}</h1>
-        <p class="sub">{{i18n.DashboardSubtitle}} <strong>{{project}}</strong></p>
+        <p class="sub">{{i18n.DashboardSubtitle}} <strong>{{project}}</strong>{{#hostsummary}} · {{.}}{{/hostsummary}}</p>
     </div>
     <div class="page-actions">
+        {{#cancreatehost}}
+        <span class="btn btn-secondary" role="button" tabindex="0"
+            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('addhost')">
+            <img src="img/addhost.svg" alt="" width="16" height="16">{{i18n.DashboardAttachHost}}
+        </span>
+        {{/cancreatehost}}
         <span class="btn btn-primary" role="button" tabindex="0"
             onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('createvm')">
             <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> {{i18n.DashboardCreateVM}}
@@ -37,12 +43,38 @@ const HTML_TEMPLATE = `
     </div>
 </div>
 
+{{#banner}}
+<div class="banner banner-warning" role="status">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M12 9v4m0 4v.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+    <div><strong>{{title}}</strong> {{message}}</div>
+</div>
+{{/banner}}
+
 <div class="grid grid-kpi">
 {{#kpis}}
     <div class="card kpi">
         <span class="kpi-label">{{label}}</span>
         <span class="kpi-value">{{value}}</span>
         {{#meta}}<span class="kpi-meta">{{.}}</span>{{/meta}}
+        {{#segments}}
+        <div class="segbar" aria-hidden="true">
+        {{#parts}}
+            <span style="flex: {{count}}; background: var(--{{color}});"></span>
+        {{/parts}}
+        </div>
+        <div class="seg-legend">
+        {{#parts}}
+            <span><span class="dot" style="background: var(--{{color}});"></span>{{count}} {{label}}</span>
+        {{/parts}}
+        </div>
+        {{/segments}}
+        {{#metabadges}}
+        <span class="kpi-meta">
+        {{#badges}}
+            <span class="badge badge-{{variant}}"><span class="dot"></span>{{text}}</span>
+        {{/badges}}
+        </span>
+        {{/metabadges}}
     </div>
 {{/kpis}}
 </div>
@@ -68,13 +100,22 @@ const HTML_TEMPLATE = `
 {{/showcapacity}}
 
     <div class="card">
-        <div class="card-head"><h3>{{i18n.DashboardActivity}}</h3></div>
+        <div class="card-head">
+            <h3>{{i18n.DashboardActivity}}</h3>
+            {{#alerts}}<a class="text-sm" role="button" tabindex="0"
+                onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('alerts')"
+                onkeydown="if (event.key == 'Enter' || event.key == ' ') {event.preventDefault(); monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('alerts');}">{{i18n.DashboardViewAll}}</a>{{/alerts}}
+        </div>
         <div class="card-body">
         {{#alerts}}
             <div class="feed-item">
                 {{#iserror}}<svg class="icon text-danger" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6m0-6-6 6"/></svg>{{/iserror}}
                 {{^iserror}}<svg class="icon text-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8v.01"/></svg>{{/iserror}}
-                <div><div class="m">{{message}}</div></div>
+                <div>
+                    <div class="t">{{title}}</div>
+                    {{#message}}<div class="m">{{.}}</div>{{/message}}
+                </div>
+                {{#when}}<time>{{.}}</time>{{/when}}
             </div>
         {{/alerts}}
         {{^alerts}}
@@ -87,16 +128,18 @@ const HTML_TEMPLATE = `
         </div>
     </div>
 
-</div>
-
-<div class="card">
-    <div class="card-head"><h3>{{i18n.DashboardQuickActions}}</h3></div>
-    <div class="card-body cluster">
-    {{#quickactions}}
-        <span class="btn btn-secondary" role="button" tabindex="0"
-            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">{{label}}</span>
-    {{/quickactions}}
+    <div class="card">
+        <div class="card-head"><h3>{{i18n.DashboardQuickActions}}</h3></div>
+        <div class="card-body grid grid-2">
+        {{#quickactions}}
+            <span class="btn btn-secondary" role="button" tabindex="0"
+                onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">
+                <img src="{{{logo}}}" alt="" width="16" height="16">{{label}}
+            </span>
+        {{/quickactions}}
+        </div>
     </div>
+
 </div>
 
 </div>
@@ -110,32 +153,60 @@ async function getHTML(formObject, cmdmanager) {
     const vnets = await _command(`listVnets`, project, "resources");
     const hosts = await _command(`listHosts`, project, "resources");   // cloud-role gated; [] when not permitted
 
+    // Each stack is keyed by the millisecond it started, so the key is the timestamp
+    // and the first line of the first message is what the command was.
     const alertObject = cmdmanager.getAlerts(), alerts = [];
-    for (const alertID of Object.keys(alertObject).sort().reverse()) for (const alert of alertObject[alertID]) {
-        if (alerts.length >= 8) break;
-        alerts.push({message: (alert.message||"").split("\n")[0].substring(0, 160),
-            iserror: alert.type == cmdmanager.ALERT_ERROR});
+    let errorstacks = 0, infostacks = 0;
+    for (const alertID of Object.keys(alertObject).sort().reverse()) {
+        const stack = alertObject[alertID], iserror = stack.some(alert => alert.type == cmdmanager.ALERT_ERROR);
+        if (iserror) errorstacks++; else infostacks++;
+        if (alerts.length >= 6) continue;
+        const last = stack[stack.length-1];
+        alerts.push({iserror, title: _firstLine(stack[0]?.message, 90),
+            message: stack.length > 1 ? _firstLine(last?.message, 120) : undefined,
+            when: _relativeTime(parseInt(alertID))});
     }
 
+    const meters = _buildCapacityMeters(hosts, vms, i18nL);
+    const strained = meters.find(meter => meter.level == "crit") || meters.find(meter => meter.level == "warn");
+    const hostsinuse = hosts.filter(host => vms.some(vm => vm.hostname == host.hostname)).length;
+
     const kpis = [
-        {label: i18nL.DashboardKPIVMs||"Virtual machines", value: vms.length},
+        {label: i18nL.DashboardKPIVMs||"Virtual machines", value: vms.length,
+         segments: vms.length ? {parts: _vmsPerHost(vms, i18nL)} : undefined},
         {label: i18nL.DashboardKPIVnets||"Virtual networks", value: vnets.length},
-        {label: i18nL.DashboardKPIHosts||"Hosts", value: hosts.length},
-        {label: i18nL.DashboardKPIAlerts||"Alerts this session", value: Object.keys(alertObject).length}
+        {label: i18nL.DashboardKPIHosts||"Hosts", value: hosts.length,
+         metabadges: hosts.length ? {badges: [
+            {variant: "success", text: `${hostsinuse} ${i18nL.DashboardHostsInUse||"in use"}`},
+            ...(hosts.length-hostsinuse ? [{variant: "neutral", text: `${hosts.length-hostsinuse} ${i18nL.DashboardHostsIdle||"idle"}`}] : [])
+         ]} : undefined},
+        {label: i18nL.DashboardKPIAlerts||"Alerts this session", value: Object.keys(alertObject).length,
+         metabadges: (errorstacks || infostacks) ? {badges: [
+            ...(errorstacks ? [{variant: "danger", text: `${errorstacks} ${i18nL.DashboardFailed||"failed"}`}] : []),
+            ...(infostacks ? [{variant: "success", text: `${infostacks} ${i18nL.DashboardOK||"ok"}`}] : [])
+         ]} : undefined}
     ];
 
     const quickactions = [
-        {id: "createvm", label: i18nL.DashboardQACreateVM||"New virtual machine"},
-        {id: "vms", label: i18nL.DashboardQAVMs||"Virtual machines"},
-        {id: "networking", label: i18nL.DashboardQANetworking||"Networking"},
-        {id: "projects", label: i18nL.DashboardQAProjects||"Projects"},
-        {id: "cloudshell", label: i18nL.DashboardQACloudShell||"Cloud shell"}
+        {id: "createvm", label: i18nL.DashboardQACreateVM||"New virtual machine", logo: "img/createvm.svg"},
+        {id: "createfirewall", label: i18nL.DashboardQAFirewall||"New firewall ruleset", logo: "img/createfirewall.svg"},
+        {id: "createvnet", label: i18nL.DashboardQAVnet||"New virtual network", logo: "img/createvnet.svg"},
+        {id: "createrouter", label: i18nL.DashboardQARouter||"New router", logo: "img/createrouter.svg"},
+        {id: "vms", label: i18nL.DashboardQAVMs||"Virtual machines", logo: "img/vms.svg"},
+        {id: "networking", label: i18nL.DashboardQANetworking||"Networking", logo: "img/vnets.svg"},
+        {id: "projects", label: i18nL.DashboardQAProjects||"Projects", logo: "img/projects.svg"},
+        {id: "cloudshell", label: i18nL.DashboardQACloudShell||"Cloud shell", logo: "img/cloudcommand.svg"}
     ];
     for (const action of quickactions) cmdmanager.registerCommand({id: action.id});
+    cmdmanager.registerCommand({id: "alerts"}); cmdmanager.registerCommand({id: "addhost"});
 
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined, {i18n: i18nL, project, kpis, quickactions,
         alerts: alerts.length ? alerts : undefined,
-        showcapacity: hosts.length > 0, meters: _buildCapacityMeters(hosts, vms, i18nL)});
+        hostsummary: hosts.length ? `${hosts.length} ${i18nL.DashboardKPIHosts||"Hosts"}`.toLowerCase() : undefined,
+        cancreatehost: cmdmanager.isCloudAdminLoggedIn() ? true : undefined,
+        banner: strained ? {title: `${strained.label} ${strained.percent}%.`,
+            message: `${strained.used} ${i18nL.DashboardBannerOf||"of"} ${strained.total} ${i18nL.DashboardBannerReserved||"reserved across this project."}`} : undefined,
+        showcapacity: hosts.length > 0, meters});
 }
 
 /** Sums physical host capacity against reserved VM capacity. Both sides use the
@@ -166,6 +237,32 @@ function _meter(label, used, total, format, i18nL) {
     const note = percent >= 90 ? (i18nL.DashboardMeterOver||"over-committed")
         : percent >= 75 ? (i18nL.DashboardMeterNear||"approaching limit") : undefined;
     return {label, used: format(used), total: format(total), percent, level, note};
+}
+
+const SEG_COLORS = ["data-good", "data-brand", "data-idle", "data-warn"];
+
+/** Where the machines actually sit. Three biggest hosts, then everything else. */
+function _vmsPerHost(vms, i18nL) {
+    const counts = {}; for (const vm of vms) {
+        const host = vm.hostname || (i18nL.DashboardHostUnknown||"unassigned");
+        counts[host] = (counts[host]||0)+1;
+    }
+    const ranked = Object.entries(counts).sort((a, b) => b[1]-a[1]);
+    const parts = ranked.slice(0, 3).map(([label, count], index) => ({label, count, color: SEG_COLORS[index]}));
+    const rest = ranked.slice(3).reduce((total, entry) => total+entry[1], 0);
+    if (rest) parts.push({label: i18nL.DashboardHostsOther||"other hosts", count: rest, color: SEG_COLORS[3]});
+    return parts;
+}
+
+const _firstLine = (text, max) => (text||"").split("\n")[0].substring(0, max);
+
+function _relativeTime(timestamp) {
+    if (!timestamp) return undefined;
+    const minutes = Math.floor((Date.now()-timestamp)/60000);
+    if (minutes < 1) return "now";
+    if (minutes < 60) return `${minutes}m`;
+    const hours = Math.floor(minutes/60); if (hours < 24) return `${hours}h`;
+    return `${Math.floor(hours/24)}d`;
 }
 
 function _formatBytes(bytes) {

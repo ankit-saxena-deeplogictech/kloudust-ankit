@@ -55,25 +55,25 @@ const i18n = {
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
         TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
-        TLRowActions: "Row actions"},
+        TLRowActions: "Row actions", TLRefresh: "Refresh"},
     "hi": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
         TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
         TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
-        TLRowActions: "Row actions"},
+        TLRowActions: "Row actions", TLRefresh: "Refresh"},
     "ja": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
         TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
         TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
-        TLRowActions: "Row actions"},
+        TLRowActions: "Row actions", TLRefresh: "Refresh"},
     "zh": {ClickToCopy: "Shift+click to copy", Copied: "Copied", TLNoDataTitle: "Nothing here yet",
         TLNoDataMessage: "No records were found for this view.", TLAll: "All", TLSelected: "selected",
         TLClear: "Clear", TLShowing: "Showing", TLOf: "of", TLPrev: "Previous", TLNext: "Next",
         TLConfirmTitle: "Run this on the selected rows?", TLConfirmAck: "I understand this cannot be undone",
         TLConfirmGo: "Run it", TLCancel: "Cancel", TLNoMatch: "No rows match the current filters.",
-        TLRowActions: "Row actions"}
+        TLRowActions: "Row actions", TLRefresh: "Refresh"}
 }
 
 async function elementConnected(host) {
@@ -90,7 +90,8 @@ async function elementConnected(host) {
         of: await $$.libi18n.get("TLOf"), prev: await $$.libi18n.get("TLPrev"), next: await $$.libi18n.get("TLNext"),
         confirmtitle: await $$.libi18n.get("TLConfirmTitle"), confirmack: await $$.libi18n.get("TLConfirmAck"),
         confirmgo: await $$.libi18n.get("TLConfirmGo"), cancel: await $$.libi18n.get("TLCancel"),
-        nomatch: await $$.libi18n.get("TLNoMatch"), rowactions: await $$.libi18n.get("TLRowActions")};
+        nomatch: await $$.libi18n.get("TLNoMatch"), rowactions: await $$.libi18n.get("TLRowActions"),
+        refresh: await $$.libi18n.get("TLRefresh")};
     if (tableObject.bulkactions) tableObject.bulkactions.forEach((action, index) => action.index = index);
     tableObject._view = {search: "", filter: "*", page: 1, sort: null};
 
