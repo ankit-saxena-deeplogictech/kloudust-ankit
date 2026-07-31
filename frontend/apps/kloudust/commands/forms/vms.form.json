@@ -34,7 +34,8 @@
    "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
    "VMS_size": "Size",
    "VMS_hostname": "Host",
-   "VMS_disk_display": "Disk"
+   "VMS_disk_display": "Disk",
+   "VMSCreate": "Create VM"
   },
   "hi": {
    "VMS_name_raw": "Name",
@@ -67,7 +68,8 @@
    "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
    "VMS_size": "Size",
    "VMS_hostname": "Host",
-   "VMS_disk_display": "Disk"
+   "VMS_disk_display": "Disk",
+   "VMSCreate": "Create VM"
   },
   "ja": {
    "VMS_name_raw": "Name",
@@ -100,7 +102,8 @@
    "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
    "VMS_size": "Size",
    "VMS_hostname": "Host",
-   "VMS_disk_display": "Disk"
+   "VMS_disk_display": "Disk",
+   "VMSCreate": "Create VM"
   },
   "zh": {
    "VMS_name_raw": "Name",
@@ -134,7 +137,8 @@
    "VMSBulkDeleteConfirm": "This permanently deletes {count} virtual machine(s), their disks and every snapshot they have.",
    "VMS_size": "Size",
    "VMS_hostname": "Host",
-   "VMS_disk_display": "Disk"
+   "VMS_disk_display": "Disk",
+   "VMSCreate": "Create VM"
   }
  },
  "tabledef": {
@@ -159,6 +163,13 @@
    "return {keys: ['name_raw','description','ips','privateips','vnets','rulesets','os','disk','cpus','memory','datetime'], table: vms.vms||[]};"
   ],
   "clickrow_command": "vmdetail",
+  "pageactions": [
+   {
+    "id": "createvm",
+    "label": "{{{i18n.VMSCreate}}}",
+    "primary": true
+   }
+  ],
   "searchbar": true,
   "columns": [
    {

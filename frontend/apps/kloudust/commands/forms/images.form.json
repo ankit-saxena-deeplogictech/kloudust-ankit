@@ -111,11 +111,6 @@
      "icon": "image"
     },
     {
-     "id": "createvm",
-     "label": "{{{i18n.ImagesCreateVM}}}",
-     "icon": "plus"
-    },
-    {
      "id": "deleteimage",
      "label": "{{{i18n.ImagesDelete}}}",
      "danger": true,

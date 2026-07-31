@@ -127,31 +127,6 @@
   ],
   "searchbar": true,
   "pagesize": 25,
-  "rowactions": true,
-  "popupform": {
-   "rolelist": {
-    "*": [
-     {
-      "id": "hostdetail",
-      "label": "{{{i18n.HostsView}}}",
-      "logo": "img/monitor.svg",
-      "icon": "host"
-     },
-     {
-      "id": "reboothost",
-      "label": "{{{i18n.HostsReboot}}}",
-      "logo": "img/poweropvm.svg",
-      "icon": "reboot"
-     },
-     {
-      "id": "deletehost",
-      "label": "{{{i18n.HostsDelete}}}",
-      "logo": "img/delete.svg",
-      "icon": "trash"
-     }
-    ]
-   }
-  },
   "clickrow_javascript": [
    "const data = arguments[0]; APP_CONSTANTS.ENV._hosts_form_data = data;"
   ],

@@ -28,11 +28,6 @@
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
    "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host.",
-   "HostsReboot": "Reboot host",
-   "HostsDelete": "Remove host",
-   "HostDetailShell": "Cloud shell",
-   "HostDetailActions": "Actions",
-   "HostDetailActionsFoot": "Each action maps 1:1 to a Kloudust command and runs against this host.",
    "HostDetailCopy": "Copy value",
    "HostDetailAdminLogin": "Admin login",
    "HostDetailHostKey": "Host key fingerprint",
@@ -69,11 +64,6 @@
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
    "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host.",
-   "HostsReboot": "Reboot host",
-   "HostsDelete": "Remove host",
-   "HostDetailShell": "Cloud shell",
-   "HostDetailActions": "Actions",
-   "HostDetailActionsFoot": "Each action maps 1:1 to a Kloudust command and runs against this host.",
    "HostDetailCopy": "Copy value",
    "HostDetailAdminLogin": "Admin login",
    "HostDetailHostKey": "Host key fingerprint",
@@ -110,11 +100,6 @@
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
    "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host.",
-   "HostsReboot": "Reboot host",
-   "HostsDelete": "Remove host",
-   "HostDetailShell": "Cloud shell",
-   "HostDetailActions": "Actions",
-   "HostDetailActionsFoot": "Each action maps 1:1 to a Kloudust command and runs against this host.",
    "HostDetailCopy": "Copy value",
    "HostDetailAdminLogin": "Admin login",
    "HostDetailHostKey": "Host key fingerprint",
@@ -151,11 +136,6 @@
    "HostDetailVMMemory": "Memory",
    "HostDetailNoVMsTitle": "No virtual machines here",
    "HostDetailNoVMsMessage": "No virtual machine in any project is placed on this host.",
-   "HostsReboot": "Reboot host",
-   "HostsDelete": "Remove host",
-   "HostDetailShell": "Cloud shell",
-   "HostDetailActions": "Actions",
-   "HostDetailActionsFoot": "Each action maps 1:1 to a Kloudust command and runs against this host.",
    "HostDetailCopy": "Copy value",
    "HostDetailAdminLogin": "Admin login",
    "HostDetailHostKey": "Host key fingerprint",
@@ -167,27 +147,5 @@
    "HostDetailVMProject": "Project",
    "HostDetailVMsFoot": "Every project on this host is listed — a machine consumes the host's capacity whoever owns it."
   }
- },
- "rolelist": {
-  "*": [
-   {
-    "id": "reboothost",
-    "label": "{{{i18n.HostsReboot}}}",
-    "logo": "img/poweropvm.svg",
-    "icon": "reboot"
-   },
-   {
-    "id": "cloudshell",
-    "label": "{{{i18n.HostDetailShell}}}",
-    "logo": "img/cloudcommand.svg",
-    "icon": "shell"
-   },
-   {
-    "id": "deletehost",
-    "label": "{{{i18n.HostsDelete}}}",
-    "logo": "img/delete.svg",
-    "icon": "trash"
-   }
-  ]
  }
 }

@@ -118,21 +118,6 @@ const HTML_TEMPLATE = `
     {{/vms}}
 </div>
 
-{{#actions.length}}
-<div class="card">
-    <div class="card-head"><h3>{{i18n.HostDetailActions}}</h3></div>
-    <div class="card-body cluster">
-    {{#actions}}
-        <span class="btn {{buttonclass}}" role="button" tabindex="0"
-            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].hostdetail.runCommand('{{id}}')">
-            {{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="" width="16" height="16">{{/iconsvg}}{{label}}
-        </span>
-    {{/actions}}
-    </div>
-    <div class="card-foot">{{i18n.HostDetailActionsFoot}}</div>
-</div>
-{{/actions.length}}
-
 </div>
 `;
 
@@ -200,15 +185,8 @@ async function getHTML(formObject, cmdmanager) {
         payload: $$.libutil.stringToBase64(JSON.stringify(vm))
     }));
 
-    const cmdlist = (await import(`${APP_CONSTANTS.LIB_PATH}/cmdlist.mjs`)).cmdlist;
-    const actions = (await cmdlist.getCommands(undefined, formObject)) || [];
-    for (const action of actions) {
-        cmdmanager.registerCommand(action);
-        action.buttonclass = action.id == "deletehost" ? "btn-danger-outline" : "btn-secondary";
-    }
-
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined,
-        {i18n: i18nL, host, meters, props, actions, vmcount: vms.length, vms: vms.length ? vms : undefined});
+        {i18n: i18nL, host, meters, props, vmcount: vms.length, vms: vms.length ? vms : undefined});
 }
 
 /** The stored processor string is colon separated from the host probe, and its
@@ -274,4 +252,4 @@ async function _command(cmd, project, resultKey) {
     } catch (err) {LOG.error(`Host detail lookup failed for ${cmd}: ${err}`); return [];}
 }
 
-export const hostdetail = {getHTML, openVM, runCommand, copyValue};
+export const hostdetail = {getHTML, openVM, copyValue};
