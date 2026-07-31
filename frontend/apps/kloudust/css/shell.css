@@ -226,8 +226,6 @@ body {
 /* Open/close animation hook used by main.mjs showContent() */
 #maincontent { transition: opacity 400ms ease; }
 #maincontent.close { opacity: 0; }
-/* Hosted components (form-runner, table-list) fill the content area */
-#maincontent > div { min-height: 100%; }
 
 /* ----------------------------------------------------------------------------
    COMMAND PALETTE (⌘K)

@@ -121,7 +121,8 @@
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
    "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
-   "VMDetailSubOn": "on"
+   "VMDetailSubOn": "on",
+   "VMDetailPrimaryDisk": "Primary (boot) disk"
   },
   "hi": {
    "VMSPowerOpVM": "Power",
@@ -174,7 +175,8 @@
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
    "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
-   "VMDetailSubOn": "on"
+   "VMDetailSubOn": "on",
+   "VMDetailPrimaryDisk": "Primary (boot) disk"
   },
   "ja": {
    "VMSPowerOpVM": "Power",
@@ -227,7 +229,8 @@
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
    "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
-   "VMDetailSubOn": "on"
+   "VMDetailSubOn": "on",
+   "VMDetailPrimaryDisk": "Primary (boot) disk"
   },
   "zh": {
    "VMSPowerOpVM": "Power",
@@ -280,7 +283,8 @@
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
    "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
-   "VMDetailSubOn": "on"
+   "VMDetailSubOn": "on",
+   "VMDetailPrimaryDisk": "Primary (boot) disk"
   }
  }
 }

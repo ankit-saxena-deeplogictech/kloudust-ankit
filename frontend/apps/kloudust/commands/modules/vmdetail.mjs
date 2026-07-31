@@ -25,6 +25,9 @@
  * License: See enclosed license.txt file.
  */
 
+/** The name the backend gives a VM's boot disk — same sentinel the resize form uses. */
+const DEFAULT_DISK = "__org_kloudust_default_disk_name";
+
 const HTML_TEMPLATE = `
 <div id="vmdetail" class="stack">
 
@@ -270,8 +273,9 @@ async function getHTML(formObject, cmdmanager) {
 
     const disks = (vm.disks||[]).map(disk => typeof disk == "string"
         ? {name: disk, size: ""}
-        : {name: disk.name || disk.disk || disk.path || JSON.stringify(disk),
-           size: disk.size !== undefined ? _formatBytes(disk.size) : ""});
+        : {name: disk.diskname == DEFAULT_DISK ? (i18nL.VMDetailPrimaryDisk||"Primary (boot) disk")
+            : (disk.diskname || disk.name || disk.disk || disk.path || ""),
+           size: _formatBytes(disk.size)});
 
     const cmdlist = (await import(`${APP_CONSTANTS.LIB_PATH}/cmdlist.mjs`)).cmdlist;
     const actions = (await cmdlist.getCommands(undefined, formObject)) || [];
