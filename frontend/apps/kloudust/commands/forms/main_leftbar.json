@@ -61,6 +61,13 @@
     "logo": "img/automations.svg",
     "group": "automation",
     "icon": "automation"
+   },
+   {
+    "id": "images",
+    "label": "{{{i18n.Images}}}",
+    "logo": "img/addimage.svg",
+    "group": "cloud",
+    "icon": "image"
    }
   ],
   "orgadmin": [
@@ -70,6 +77,13 @@
     "logo": "img/automations.svg",
     "group": "automation",
     "icon": "automation"
+   },
+   {
+    "id": "images",
+    "label": "{{{i18n.Images}}}",
+    "logo": "img/addimage.svg",
+    "group": "cloud",
+    "icon": "image"
    }
   ],
   "*": [
@@ -93,13 +107,6 @@
     "logo": "img/snapshot.svg",
     "group": "compute",
     "icon": "snapshot"
-   },
-   {
-    "id": "images",
-    "label": "{{{i18n.Images}}}",
-    "logo": "img/addimage.svg",
-    "group": "cloud",
-    "icon": "image"
    },
    {
     "id": "vnets",
