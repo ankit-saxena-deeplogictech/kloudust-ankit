@@ -9,7 +9,9 @@
    "VNETSDelete": "Delete",
    "VNETSTitle": "Virtual networks",
    "VNETSEmptyTitle": "No virtual networks yet",
-   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router."
+   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router.",
+   "VNETSCreate": "Create network",
+   "VNETSSubtitle": "Private networks in this project — every virtual machine and router attaches to one"
   },
   "hi": {
    "VNETS_raw_name": "Name",
@@ -17,7 +19,9 @@
    "VNETSDelete": "Delete",
    "VNETSTitle": "Virtual networks",
    "VNETSEmptyTitle": "No virtual networks yet",
-   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router."
+   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router.",
+   "VNETSCreate": "Create network",
+   "VNETSSubtitle": "Private networks in this project — every virtual machine and router attaches to one"
   },
   "ja": {
    "VNETS_raw_name": "Name",
@@ -25,7 +29,9 @@
    "VNETSDelete": "Delete",
    "VNETSTitle": "Virtual networks",
    "VNETSEmptyTitle": "No virtual networks yet",
-   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router."
+   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router.",
+   "VNETSCreate": "Create network",
+   "VNETSSubtitle": "Private networks in this project — every virtual machine and router attaches to one"
   },
   "zh": {
    "VNETS_raw_name": "Name",
@@ -33,7 +39,9 @@
    "VNETSDelete": "Delete",
    "VNETSTitle": "Virtual networks",
    "VNETSEmptyTitle": "No virtual networks yet",
-   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router."
+   "VNETSEmptyMessage": "Virtual networks are created with your first virtual machine or router.",
+   "VNETSCreate": "Create network",
+   "VNETSSubtitle": "Private networks in this project — every virtual machine and router attaches to one"
   }
  },
  "tabledef": {
@@ -58,6 +66,14 @@
    "cmd: `listVnets`, ",
    "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
    "return {keys: ['raw_name','description'], table: vnets.resources||[]};"
+  ],
+  "subtitle": "{{{i18n.VNETSSubtitle}}}",
+  "pageactions": [
+   {
+    "id": "createvnet",
+    "label": "{{{i18n.VNETSCreate}}}",
+    "primary": true
+   }
   ],
   "searchbar": true,
   "columns": [

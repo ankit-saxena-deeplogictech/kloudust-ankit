@@ -13,7 +13,9 @@
    "RoutersEdit": "Edit",
    "RoutersTitle": "Routers",
    "RoutersEmptyTitle": "No routers yet",
-   "RoutersEmptyMessage": "Create a router to connect your virtual networks."
+   "RoutersEmptyMessage": "Create a router to connect your virtual networks.",
+   "RoutersCreate": "Create router",
+   "RoutersSubtitle": "Routers in this project — each one links virtual networks and holds the addresses routed to them"
   },
   "hi": {
    "Routers_name_raw": "Name",
@@ -25,7 +27,9 @@
    "RoutersEdit": "Edit",
    "RoutersTitle": "Routers",
    "RoutersEmptyTitle": "No routers yet",
-   "RoutersEmptyMessage": "Create a router to connect your virtual networks."
+   "RoutersEmptyMessage": "Create a router to connect your virtual networks.",
+   "RoutersCreate": "Create router",
+   "RoutersSubtitle": "Routers in this project — each one links virtual networks and holds the addresses routed to them"
   },
   "ja": {
    "Routers_name_raw": "Name",
@@ -37,7 +41,9 @@
    "RoutersEdit": "Edit",
    "RoutersTitle": "Routers",
    "RoutersEmptyTitle": "No routers yet",
-   "RoutersEmptyMessage": "Create a router to connect your virtual networks."
+   "RoutersEmptyMessage": "Create a router to connect your virtual networks.",
+   "RoutersCreate": "Create router",
+   "RoutersSubtitle": "Routers in this project — each one links virtual networks and holds the addresses routed to them"
   },
   "zh": {
    "Routers_name_raw": "Name",
@@ -49,7 +55,9 @@
    "RoutersEdit": "Edit",
    "RoutersTitle": "Routers",
    "RoutersEmptyTitle": "No routers yet",
-   "RoutersEmptyMessage": "Create a router to connect your virtual networks."
+   "RoutersEmptyMessage": "Create a router to connect your virtual networks.",
+   "RoutersCreate": "Create router",
+   "RoutersSubtitle": "Routers in this project — each one links virtual networks and holds the addresses routed to them"
   }
  },
  "tabledef": {
@@ -86,6 +94,14 @@
    "   router.vnets = router.vnet_ips.length === 0 ? 'No Vnet Found' : router.vnet_ips.map(vi=>vi.vnet).join(','); ",
    "}",
    "return {keys: ['name_raw','description','vnets','ips','datetime'], table: routers.routers||[]};"
+  ],
+  "subtitle": "{{{i18n.RoutersSubtitle}}}",
+  "pageactions": [
+   {
+    "id": "createrouter",
+    "label": "{{{i18n.RoutersCreate}}}",
+    "primary": true
+   }
   ],
   "searchbar": true,
   "columns": [

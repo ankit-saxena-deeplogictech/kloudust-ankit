@@ -12,7 +12,9 @@
    "RULESETDelete": "Delete",
    "RULESETTitle": "Firewall rulesets",
    "RULESETEmptyTitle": "No firewall rulesets yet",
-   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks."
+   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks.",
+   "RULESETCreate": "Create ruleset",
+   "RULESETSubtitle": "Reusable rule sets in this project — apply one to a virtual machine to control the traffic it accepts"
   },
   "hi": {
    "RULESET_name": "Name",
@@ -23,7 +25,9 @@
    "RULESETDelete": "Delete",
    "RULESETTitle": "Firewall rulesets",
    "RULESETEmptyTitle": "No firewall rulesets yet",
-   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks."
+   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks.",
+   "RULESETCreate": "Create ruleset",
+   "RULESETSubtitle": "Reusable rule sets in this project — apply one to a virtual machine to control the traffic it accepts"
   },
   "ja": {
    "RULESET_name": "Name",
@@ -34,7 +38,9 @@
    "RULESETDelete": "Delete",
    "RULESETTitle": "Firewall rulesets",
    "RULESETEmptyTitle": "No firewall rulesets yet",
-   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks."
+   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks.",
+   "RULESETCreate": "Create ruleset",
+   "RULESETSubtitle": "Reusable rule sets in this project — apply one to a virtual machine to control the traffic it accepts"
   },
   "zh": {
    "RULESET_name": "Name",
@@ -45,7 +51,9 @@
    "RULESETDelete": "Delete",
    "RULESETTitle": "Firewall rulesets",
    "RULESETEmptyTitle": "No firewall rulesets yet",
-   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks."
+   "RULESETEmptyMessage": "Create a firewall ruleset to protect your virtual networks.",
+   "RULESETCreate": "Create ruleset",
+   "RULESETSubtitle": "Reusable rule sets in this project — apply one to a virtual machine to control the traffic it accepts"
   }
  },
  "tabledef": {
@@ -83,6 +91,14 @@
    "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
    "for (const ruleset of firewallRulesets.rulesets||[]) {ruleset.created_ts = new Date(ruleset.created_at).getTime(); ruleset.created_at = new Date(ruleset.created_at).toLocaleDateString();}",
    "return {keys: ['name','description','created_at'], table: firewallRulesets.rulesets||[]};"
+  ],
+  "subtitle": "{{{i18n.RULESETSubtitle}}}",
+  "pageactions": [
+   {
+    "id": "createfirewall",
+    "label": "{{{i18n.RULESETCreate}}}",
+    "primary": true
+   }
   ],
   "searchbar": true,
   "columns": [

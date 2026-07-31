@@ -95,11 +95,25 @@
     "icon": "image"
    },
    {
-    "id": "networking",
-    "label": "{{{i18n.Networking}}}",
+    "id": "vnets",
+    "label": "{{{i18n.VirtualNetworks}}}",
     "logo": "img/vnets.svg",
     "group": "networking",
     "icon": "network"
+   },
+   {
+    "id": "firewallrulesets",
+    "label": "{{{i18n.FirewallRulesets}}}",
+    "logo": "img/createfirewall.svg",
+    "group": "networking",
+    "icon": "firewall"
+   },
+   {
+    "id": "routers",
+    "label": "{{{i18n.Routers}}}",
+    "logo": "img/createrouter.svg",
+    "group": "networking",
+    "icon": "router"
    },
    {
     "id": "projects",
@@ -134,7 +148,7 @@
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
    "VirtualNetworks": "Virtual networks",
-   "FirewallRulesets": "Firewall Rulesets",
+   "FirewallRulesets": "Firewall rulesets",
    "CloudServices": "Cloud services",
    "Alerts": "Alerts",
    "Containers": "Containers",
@@ -163,7 +177,7 @@
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
    "VirtualNetworks": "Virtual networks",
-   "FirewallRulesets": "Firewall Rulesets",
+   "FirewallRulesets": "Firewall rulesets",
    "CloudServices": "Cloud services",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
@@ -189,7 +203,7 @@
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
    "VirtualNetworks": "Virtual networks",
-   "FirewallRulesets": "Firewall Rulesets",
+   "FirewallRulesets": "Firewall rulesets",
    "CloudServices": "Cloud services",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
@@ -215,7 +229,7 @@
    "VirtualMachines": "Virtual machines",
    "Routers": "Routers",
    "VirtualNetworks": "Virtual networks",
-   "FirewallRulesets": "Firewall Rulesets",
+   "FirewallRulesets": "Firewall rulesets",
    "CloudServices": "Cloud services",
    "Alerts": "Alerts",
    "Dashboard": "Dashboard",
