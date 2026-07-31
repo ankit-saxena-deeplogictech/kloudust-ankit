@@ -91,10 +91,10 @@ const HTML_TEMPLATE = `
 
 <div class="card">
     <div class="card-head"><h3>{{i18n.DashboardQuickActions}}</h3></div>
-    <div class="card-body cluster">
+    <div class="card-body grid grid-2">
     {{#quickactions}}
-        <span class="btn btn-secondary" role="button" tabindex="0"
-            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">{{label}}</span>
+        <button class="btn btn-secondary" type="button"
+            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">{{{iconsvg}}}{{label}}</button>
     {{/quickactions}}
     </div>
 </div>
@@ -125,12 +125,17 @@ async function getHTML(formObject, cmdmanager) {
     ];
 
     const quickactions = [
-        {id: "createvm", label: i18nL.DashboardQACreateVM||"New virtual machine"},
-        {id: "vms", label: i18nL.DashboardQAVMs||"Virtual machines"},
-        {id: "networking", label: i18nL.DashboardQANetworking||"Networking"},
-        {id: "projects", label: i18nL.DashboardQAProjects||"Projects"},
-        {id: "cloudshell", label: i18nL.DashboardQACloudShell||"Cloud shell"}
+        {id: "createvm", label: i18nL.DashboardQACreateVM||"New virtual machine", icon: "plus"},
+        {id: "createfirewall", label: i18nL.DashboardQAFirewall||"New firewall ruleset", icon: "firewall"},
+        {id: "createvnet", label: i18nL.DashboardQAVnet||"New virtual network", icon: "network"},
+        {id: "images", label: i18nL.DashboardQAImages||"Images", icon: "image"},
+        {id: "vms", label: i18nL.DashboardQAVMs||"Virtual machines", icon: "vm"},
+        {id: "networking", label: i18nL.DashboardQANetworking||"Networking", icon: "router"},
+        {id: "projects", label: i18nL.DashboardQAProjects||"Projects", icon: "projects"},
+        {id: "cloudshell", label: i18nL.DashboardQACloudShell||"Cloud shell", icon: "shell"}
     ];
+    const icons = (await import(`${APP_CONSTANTS.LIB_PATH}/icons.mjs`)).icons;
+    for (const action of quickactions) action.iconsvg = icons.svg(action.icon);
     for (const action of quickactions) cmdmanager.registerCommand({id: action.id});
 
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined, {i18n: i18nL, project, kpis, quickactions,
