@@ -88,6 +88,13 @@
     "icon": "vm"
    },
    {
+    "id": "snapshots",
+    "label": "{{{i18n.Snapshots}}}",
+    "logo": "img/snapshot.svg",
+    "group": "compute",
+    "icon": "snapshot"
+   },
+   {
     "id": "images",
     "label": "{{{i18n.Images}}}",
     "logo": "img/addimage.svg",
@@ -166,7 +173,8 @@
    "Networking": "Networking",
    "Hosts": "Hosts",
    "LiveMigration": "Live migration",
-   "IPAddresses": "IP addresses"
+   "IPAddresses": "IP addresses",
+   "Snapshots": "Snapshots"
   },
   "hi": {
    "Create": "Create",
@@ -192,7 +200,8 @@
    "Networking": "Networking",
    "Hosts": "Hosts",
    "LiveMigration": "Live migration",
-   "IPAddresses": "IP addresses"
+   "IPAddresses": "IP addresses",
+   "Snapshots": "Snapshots"
   },
   "ja": {
    "Create": "Create",
@@ -218,7 +227,8 @@
    "Networking": "Networking",
    "Hosts": "Hosts",
    "LiveMigration": "Live migration",
-   "IPAddresses": "IP addresses"
+   "IPAddresses": "IP addresses",
+   "Snapshots": "Snapshots"
   },
   "zh": {
    "Create": "Create",
@@ -244,7 +254,8 @@
    "Networking": "Networking",
    "Hosts": "Hosts",
    "LiveMigration": "Live migration",
-   "IPAddresses": "IP addresses"
+   "IPAddresses": "IP addresses",
+   "Snapshots": "Snapshots"
   }
  }
 }

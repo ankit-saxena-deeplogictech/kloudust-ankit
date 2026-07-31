@@ -11,7 +11,8 @@
    "SNAPSHOTSDelete": "Delete",
    "SNAPSHOTSTitle": "Snapshots",
    "SNAPSHOTSEmptyTitle": "No snapshots yet",
-   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here."
+   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here.",
+   "SNAPSHOTSSubtitle": "Point-in-time copies of this project's virtual machines — restore or delete one from its row menu"
   },
   "hi": {
    "SNAPSHOTS_name": "Name",
@@ -21,7 +22,8 @@
    "SNAPSHOTSDelete": "Delete",
    "SNAPSHOTSTitle": "Snapshots",
    "SNAPSHOTSEmptyTitle": "No snapshots yet",
-   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here."
+   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here.",
+   "SNAPSHOTSSubtitle": "Point-in-time copies of this project's virtual machines — restore or delete one from its row menu"
   },
   "ja": {
    "SNAPSHOTS_name": "Name",
@@ -31,7 +33,8 @@
    "SNAPSHOTSDelete": "Delete",
    "SNAPSHOTSTitle": "Snapshots",
    "SNAPSHOTSEmptyTitle": "No snapshots yet",
-   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here."
+   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here.",
+   "SNAPSHOTSSubtitle": "Point-in-time copies of this project's virtual machines — restore or delete one from its row menu"
   },
   "zh": {
    "SNAPSHOTS_name": "Name",
@@ -41,7 +44,8 @@
    "SNAPSHOTSDelete": "Delete",
    "SNAPSHOTSTitle": "Snapshots",
    "SNAPSHOTSEmptyTitle": "No snapshots yet",
-   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here."
+   "SNAPSHOTSEmptyMessage": "Snapshot a virtual machine to see it listed here.",
+   "SNAPSHOTSSubtitle": "Point-in-time copies of this project's virtual machines — restore or delete one from its row menu"
   }
  },
  "tabledef": {
@@ -71,9 +75,19 @@
    "let snapshots = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
    "cmd: `listSnapshots`, ",
    "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
-   "snapshots = (snapshots.snapshots||[]).map(snapshotObj => ({ ...snapshotObj, localtime: new Date(snapshotObj.timestamp).toLocaleString() }));",
+   "// listSnapshots derives its vm field by cutting the org out of the stored id, which comes back",
+   "// empty whenever the org name holds a space. The VM list carries the display name already, so",
+   "// the snapshot is matched to its machine on the id both sides agree on.",
+   "const vms = await $$.libapimanager.rest(APP_CONSTANTS.API_KLOUDUSTCMD, 'POST', {",
+   "cmd: `listVMsForOrgOrProject \"${$$.libsession.get(APP_CONSTANTS.USERORG)}\" \"${$$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}\" \"${APP_CONSTANTS.VM_TYPE_VM}\"`, ",
+   "project: $$.libsession.get(APP_CONSTANTS.ACTIVE_PROJECT)}, true);",
+   "const vmNames = {}; for (const vm of vms.vms||[]) vmNames[vm.name] = vm.name_raw;",
+   "snapshots = (snapshots.snapshots||[]).map(snapshotObj => ({ ...snapshotObj,",
+   "   vm: vmNames[snapshotObj.resourceid] || snapshotObj.vm || snapshotObj.resourceid,",
+   "   localtime: new Date(snapshotObj.timestamp).toLocaleString() }));",
    "return {keys: ['name','vm','localtime'], table: snapshots};"
   ],
+  "subtitle": "{{{i18n.SNAPSHOTSSubtitle}}}",
   "searchbar": true,
   "columns": [
    {
