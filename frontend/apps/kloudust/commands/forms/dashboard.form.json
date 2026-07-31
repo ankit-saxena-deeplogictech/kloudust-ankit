@@ -26,7 +26,10 @@
    "DashboardMeterNear": "approaching limit",
    "DashboardMeterOver": "over-committed",
    "DashboardQANetworking": "Networking",
-   "DashboardQACloudShell": "Cloud shell"
+   "DashboardQACloudShell": "Cloud shell",
+   "DashboardQAFirewall": "New firewall ruleset",
+   "DashboardQAVnet": "New virtual network",
+   "DashboardQAImages": "Images"
   },
   "hi": {
    "DashboardTitle": "Dashboard",
@@ -51,7 +54,10 @@
    "DashboardMeterNear": "approaching limit",
    "DashboardMeterOver": "over-committed",
    "DashboardQANetworking": "Networking",
-   "DashboardQACloudShell": "Cloud shell"
+   "DashboardQACloudShell": "Cloud shell",
+   "DashboardQAFirewall": "New firewall ruleset",
+   "DashboardQAVnet": "New virtual network",
+   "DashboardQAImages": "Images"
   },
   "ja": {
    "DashboardTitle": "Dashboard",
@@ -76,7 +82,10 @@
    "DashboardMeterNear": "approaching limit",
    "DashboardMeterOver": "over-committed",
    "DashboardQANetworking": "Networking",
-   "DashboardQACloudShell": "Cloud shell"
+   "DashboardQACloudShell": "Cloud shell",
+   "DashboardQAFirewall": "New firewall ruleset",
+   "DashboardQAVnet": "New virtual network",
+   "DashboardQAImages": "Images"
   },
   "zh": {
    "DashboardTitle": "Dashboard",
@@ -101,7 +110,10 @@
    "DashboardMeterNear": "approaching limit",
    "DashboardMeterOver": "over-committed",
    "DashboardQANetworking": "Networking",
-   "DashboardQACloudShell": "Cloud shell"
+   "DashboardQACloudShell": "Cloud shell",
+   "DashboardQAFirewall": "New firewall ruleset",
+   "DashboardQAVnet": "New virtual network",
+   "DashboardQAImages": "Images"
   }
  }
 }

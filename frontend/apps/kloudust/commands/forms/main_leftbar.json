@@ -23,11 +23,6 @@
   {
    "id": "governance",
    "label": "{{{i18n.GroupGovernance}}}"
-  },
-  {
-   "id": "admin",
-   "label": "{{{i18n.GroupAdministration}}}",
-   "danger": true
   }
  ],
  "rolelist": {
@@ -50,14 +45,14 @@
     "id": "ipaddresses",
     "label": "{{{i18n.IPAddresses}}}",
     "logo": "img/assignipvm.svg",
-    "group": "networking",
+    "group": "cloud",
     "icon": "ip"
    },
    {
-    "id": "cloudadmin",
+    "id": "customcmd",
     "label": "{{{i18n.CloudAdmin}}}",
     "logo": "img/cloudadmin.svg",
-    "group": "admin",
+    "group": "cloud",
     "icon": "admin"
    },
    {
@@ -84,20 +79,6 @@
     "logo": "img/monitor.svg",
     "group": "overview",
     "icon": "dashboard"
-   },
-   {
-    "id": "create",
-    "label": "{{{i18n.Create}}}",
-    "logo": "img/plus.svg",
-    "group": "compute",
-    "icon": "plus"
-   },
-   {
-    "id": "manage",
-    "label": "{{{i18n.Manage}}}",
-    "logo": "img/manage.svg",
-    "group": "compute",
-    "icon": "wrench"
    },
    {
     "id": "vms",
