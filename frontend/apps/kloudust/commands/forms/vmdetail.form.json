@@ -8,7 +8,15 @@
     "id": "poweropvm",
     "label": "{{{i18n.VMSPowerOpVM}}}",
     "logo": "img/poweropvm.svg",
-    "icon": "power"
+    "icon": "power",
+    "primary": true
+   },
+   {
+    "id": "snapshotvm",
+    "label": "{{{i18n.VMSSnapshot}}}",
+    "logo": "img/snapshot.svg",
+    "icon": "snapshot",
+    "primary": true
    },
    {
     "id": "resizevm",
@@ -17,28 +25,22 @@
     "icon": "resize"
    },
    {
-    "id": "addvmdisk",
-    "label": "{{{i18n.VMSAddDisk}}}",
-    "logo": "img/resizevm.svg",
-    "icon": "disk"
-   },
-   {
-    "id": "removevmdisk",
-    "label": "{{{i18n.VMSRemoveDisk}}}",
-    "logo": "img/resizevm.svg",
-    "icon": "disk"
-   },
-   {
-    "id": "snapshotvm",
-    "label": "{{{i18n.VMSSnapshot}}}",
-    "logo": "img/snapshot.svg",
-    "icon": "snapshot"
+    "id": "livemigrate",
+    "label": "{{{i18n.VMSMigrate}}}",
+    "logo": "img/monitor.svg",
+    "icon": "migrate"
    },
    {
     "id": "clonevm",
     "label": "{{{i18n.VMSClone}}}",
     "logo": "img/clonevm.svg",
     "icon": "clone"
+   },
+   {
+    "id": "exportvm",
+    "label": "{{{i18n.VMSExport}}}",
+    "logo": "img/exportvm.svg",
+    "icon": "export"
    },
    {
     "id": "firewallvm",
@@ -59,16 +61,11 @@
     "icon": "network"
    },
    {
-    "id": "exportvm",
-    "label": "{{{i18n.VMSExport}}}",
-    "logo": "img/exportvm.svg",
-    "icon": "export"
-   },
-   {
     "id": "deletevm",
     "label": "{{{i18n.VMSDelete}}}",
     "logo": "img/deletevm.svg",
-    "icon": "trash"
+    "icon": "trash",
+    "danger": true
    }
   ]
  },
@@ -110,8 +107,6 @@
    "VMDetailHost": "Host",
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
-   "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk",
    "VMDetailIPAddresses": "IP addresses",
    "VMDetailNoVnets": "This machine is not attached to any virtual network.",
    "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
@@ -123,7 +118,10 @@
    "VMDetailSnapshotRestore": "Restore",
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
-   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
+   "VMSMigrate": "Migrate to another host",
+   "VMDetailMore": "More",
+   "VMDetailSubOn": "on"
   },
   "hi": {
    "VMSPowerOpVM": "Power",
@@ -162,8 +160,6 @@
    "VMDetailHost": "Host",
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
-   "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk",
    "VMDetailIPAddresses": "IP addresses",
    "VMDetailNoVnets": "This machine is not attached to any virtual network.",
    "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
@@ -175,7 +171,10 @@
    "VMDetailSnapshotRestore": "Restore",
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
-   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
+   "VMSMigrate": "Migrate to another host",
+   "VMDetailMore": "More",
+   "VMDetailSubOn": "on"
   },
   "ja": {
    "VMSPowerOpVM": "Power",
@@ -214,8 +213,6 @@
    "VMDetailHost": "Host",
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
-   "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk",
    "VMDetailIPAddresses": "IP addresses",
    "VMDetailNoVnets": "This machine is not attached to any virtual network.",
    "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
@@ -227,7 +224,10 @@
    "VMDetailSnapshotRestore": "Restore",
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
-   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
+   "VMSMigrate": "Migrate to another host",
+   "VMDetailMore": "More",
+   "VMDetailSubOn": "on"
   },
   "zh": {
    "VMSPowerOpVM": "Power",
@@ -266,8 +266,6 @@
    "VMDetailHost": "Host",
    "VMDetailProject": "Project",
    "VMDetailOrg": "Organization",
-   "VMSAddDisk": "Attach disk",
-   "VMSRemoveDisk": "Detach disk",
    "VMDetailIPAddresses": "IP addresses",
    "VMDetailNoVnets": "This machine is not attached to any virtual network.",
    "VMDetailNoRulesets": "No firewall ruleset is applied to this machine.",
@@ -279,7 +277,10 @@
    "VMDetailSnapshotRestore": "Restore",
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
-   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state."
+   "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
+   "VMSMigrate": "Migrate to another host",
+   "VMDetailMore": "More",
+   "VMDetailSubOn": "on"
   }
  }
 }

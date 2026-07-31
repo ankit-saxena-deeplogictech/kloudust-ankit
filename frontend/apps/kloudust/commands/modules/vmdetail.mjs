@@ -9,8 +9,10 @@
  * creation command, with disksjson already parsed into vm.disks — and falls
  * back to the pinned row if the lookup fails. getVMVnets and listSnapshots
  * (which accepts an optional VM name) fill the networking and snapshot
- * sections. Every action button opens its registered command, which reads the
- * same pinned row; the snapshot row actions pin _snapshots_form_data instead,
+ * sections. Actions live in the page head: entries the rolelist marks
+ * "primary" render as buttons, the rest fall into a More menu (with "danger"
+ * getting the separated, red treatment). Each opens its registered command,
+ * which reads the same pinned row; the snapshot row actions pin _snapshots_form_data instead,
  * which is the contract restoresnapshot and deletesnapshot already read.
  *
  * Live state (running/stopped) is deliberately not shown: the vms table has
@@ -34,9 +36,33 @@ const HTML_TEMPLATE = `
             <span class="current">{{vm.name_raw}}</span>
         </nav>
         <h1>{{vm.name_raw}}</h1>
-        {{#vm.description}}<p class="sub">{{.}}</p>{{/vm.description}}
+        {{#subline}}<p class="sub">{{{.}}}</p>{{/subline}}
     </div>
     <div class="page-actions">
+    {{#primaryactions}}
+        <span class="btn btn-secondary" role="button" tabindex="0"
+            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].vmdetail.runCommand('{{id}}')">
+            {{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="">{{/iconsvg}}{{label}}
+        </span>
+    {{/primaryactions}}
+    {{#moreactions.length}}
+        <div class="menu-wrap">
+            <button class="btn btn-secondary" aria-haspopup="true" aria-expanded="false"
+                onclick="event.stopPropagation(); monkshu_env.apps[APP_CONSTANTS.APP_NAME].main.toggleMenu(this)">
+                {{i18n.VMDetailMore}}
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="menu" role="menu">
+            {{#moreactions}}
+                {{#separatorbefore}}<hr>{{/separatorbefore}}
+                <button {{#danger}}class="danger"{{/danger}}
+                    onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].vmdetail.runCommand('{{id}}')">
+                    {{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="">{{/iconsvg}}{{label}}
+                </button>
+            {{/moreactions}}
+            </div>
+        </div>
+    {{/moreactions.length}}
         <span class="iconbtn" role="button" tabindex="0" aria-label="Close"
             onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.closeForm()">
             <svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -171,19 +197,6 @@ const HTML_TEMPLATE = `
     </div>
 </div>
 
-<div class="card">
-    <div class="card-head"><h3>{{i18n.VMDetailActions}}</h3></div>
-    <div class="card-body cluster">
-    {{#actions}}
-        <span class="btn {{#isdanger}}btn-danger-outline{{/isdanger}}{{^isdanger}}btn-secondary{{/isdanger}}" role="button" tabindex="0"
-            onclick="monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager.cmdClicked('{{id}}')">
-            {{{iconsvg}}}{{^iconsvg}}<img class="cmdicon" src="{{{logo}}}" alt="" width="16" height="16">{{/iconsvg}}{{label}}
-        </span>
-    {{/actions}}
-    </div>
-    <div class="card-foot">{{i18n.VMDetailActionsFoot}}</div>
-</div>
-
 </div>
 `;
 
@@ -262,10 +275,26 @@ async function getHTML(formObject, cmdmanager) {
 
     const cmdlist = (await import(`${APP_CONSTANTS.LIB_PATH}/cmdlist.mjs`)).cmdlist;
     const actions = (await cmdlist.getCommands(undefined, formObject)) || [];
-    for (const action of actions) {cmdmanager.registerCommand(action); action.isdanger = action.id.includes("delete");}
+    for (const action of actions) cmdmanager.registerCommand(action);
+
+    // The rolelist decides which actions earn a button in the page head and
+    // which fall into More, so the split is data, not hardcoded here.
+    const primaryactions = actions.filter(action => action.primary);
+    const moreactions = actions.filter(action => !action.primary);
+    // A rule above the destructive entry, the way the wireframe separates it.
+    const firstDanger = moreactions.findIndex(action => action.danger);
+    if (firstDanger > 0) moreactions[firstDanger].separatorbefore = true;
+
+    // "Public web tier · ubuntu-server-24_04 · on kdHostDO1" — each part only
+    // appears when we actually have it.
+    const subline = [vm.description, vm.os,
+        vm.hostname ? `${i18nL.VMDetailSubOn||"on"} ${vm.hostname}` : undefined]
+        .filter(part => part && String(part).trim() != "")
+        .map(part => $$.libutil.encodeHTMLEntities(String(part))).join(" &middot; ");
 
     return await $$.librouter.expandPageData(HTML_TEMPLATE, undefined,
-        {i18n: i18nL, vm, kpis, props, networkprops, actions,
+        {i18n: i18nL, vm, kpis, props, networkprops, subline, primaryactions,
+         moreactions: moreactions.length ? moreactions : undefined,
          disks: disks.length ? disks : undefined, snapshots: snapshots.length ? snapshots : undefined,
          vnetlist: vnetlist.length ? vnetlist : undefined,
          rulesetlist: rulesetlist.length ? rulesetlist : undefined});
@@ -328,4 +357,9 @@ async function _command(cmd, project, resultKey) {
     } catch (err) {LOG.error(`VM detail lookup failed for ${cmd}: ${err}`); return undefined;}
 }
 
-export const vmdetail = {getHTML, selectTab, openSnapshotCommand};
+function runCommand(commandID) {
+    const cmdmanager = monkshu_env.apps[APP_CONSTANTS.APP_NAME].cmdmanager;
+    cmdmanager.registerCommand({id: commandID}); cmdmanager.cmdClicked(commandID);
+}
+
+export const vmdetail = {getHTML, selectTab, openSnapshotCommand, runCommand};
