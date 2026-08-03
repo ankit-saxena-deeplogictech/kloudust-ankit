@@ -25,12 +25,6 @@
     "icon": "resize"
    },
    {
-    "id": "livemigrate",
-    "label": "{{{i18n.VMSMigrate}}}",
-    "logo": "img/monitor.svg",
-    "icon": "migrate"
-   },
-   {
     "id": "clonevm",
     "label": "{{{i18n.VMSClone}}}",
     "logo": "img/clonevm.svg",
@@ -119,7 +113,6 @@
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
-   "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
    "VMDetailSubOn": "on",
    "VMDetailPrimaryDisk": "Primary (boot) disk"
@@ -173,7 +166,6 @@
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
-   "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
    "VMDetailSubOn": "on",
    "VMDetailPrimaryDisk": "Primary (boot) disk"
@@ -227,7 +219,6 @@
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
-   "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
    "VMDetailSubOn": "on",
    "VMDetailPrimaryDisk": "Primary (boot) disk"
@@ -281,7 +272,6 @@
    "VMDetailSnapshotDelete": "Delete",
    "VMDetailNoSnapshotsTitle": "No snapshots",
    "VMDetailNoSnapshotsMessage": "Use Snapshot to capture this machine's current state.",
-   "VMSMigrate": "Migrate to another host",
    "VMDetailMore": "More",
    "VMDetailSubOn": "on",
    "VMDetailPrimaryDisk": "Primary (boot) disk"
